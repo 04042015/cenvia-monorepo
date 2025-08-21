@@ -2,57 +2,61 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import NewsCard from "./NewsCard";
 
-type Article = {
-  id: number;
+type Post = {
+  id: string;
   title: string;
-  image_url: string | null;
-  category: string;
-  created_at: string;
   excerpt: string;
+  thumbnail: string | null;
+  category: { name: string } | null;
+  published_at: string;
 };
 
 const NewsGrid = () => {
-  const [newsData, setNewsData] = useState<Article[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchNews = async () => {
+    const fetchPosts = async () => {
       const { data, error } = await supabase
         .from("posts")
-        .select("id, title, image_url, category, created_at, excerpt, status")
+        .select(`
+          id,
+          title,
+          excerpt,
+          thumbnail,
+          published_at,
+          category:categories(name)
+        `)
         .eq("status", "published")
-        .order("created_at", { ascending: false });
+        .order("published_at", { ascending: false })
+        .limit(12);
 
       if (error) {
-        console.error("Error fetching news:", error.message);
+        console.error("Error fetching posts:", error);
       } else {
-        setNewsData(data || []);
+        setPosts(data || []);
       }
       setLoading(false);
     };
 
-    fetchNews();
+    fetchPosts();
   }, []);
 
-  if (loading) return <p className="text-center py-10">Loading berita...</p>;
-  if (!loading && newsData.length === 0)
-    return <p className="text-center py-10">Belum ada berita tersedia.</p>;
+  if (loading) {
+    return <div className="text-center">Loading...</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {newsData.map((article) => (
+      {posts.map((post) => (
         <NewsCard
-          key={article.id}
-          id={article.id}
-          title={article.title}
-          image={article.image_url || "/default-news.jpg"}
-          category={article.category}
-          timeAgo={new Date(article.created_at).toLocaleDateString("id-ID", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })}
-          excerpt={article.excerpt}
+          key={post.id}
+          id={post.id}
+          title={post.title}
+          excerpt={post.excerpt}
+          image={post.thumbnail || "/placeholder.jpg"}
+          category={post.category?.name || "Uncategorized"}
+          timeAgo={new Date(post.published_at).toLocaleDateString()}
         />
       ))}
     </div>
