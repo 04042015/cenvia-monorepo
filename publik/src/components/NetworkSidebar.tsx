@@ -1,35 +1,31 @@
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-// --- Supabase client ---
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL!,
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY!
-);
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  logo: string | null;
-}
+import { supabase } from "@/lib/supabaseClient";
 
 interface NetworkSidebarProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  color: string;
+  icon: string | null;
+}
+
 const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
   const [categories, setCategories] = useState<Category[]>([]);
 
-  // Ambil data kategori dari Supabase
+  // Fetch categories dari Supabase
   useEffect(() => {
     const fetchCategories = async () => {
       const { data, error } = await supabase
         .from("categories")
-        .select("id, name, slug, logo");
+        .select("id, name, slug, color, icon")
+        .order("name", { ascending: true });
 
       if (error) {
         console.error("Error fetching categories:", error);
@@ -38,8 +34,10 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
       }
     };
 
-    fetchCategories();
-  }, []);
+    if (isOpen) {
+      fetchCategories();
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -54,12 +52,11 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
       {/* Sidebar */}
       <div
         className={`
-          fixed top-0 right-0 h-full w-80 bg-white shadow-lg z-50 
-          transform transition-transform duration-300
-          ${isOpen ? "translate-x-0" : "translate-x-full"}
-        `}
+        fixed top-0 right-0 h-full w-80 bg-white shadow-lg z-50 transform transition-transform duration-300
+        ${isOpen ? "translate-x-0" : "translate-x-full"}
+      `}
       >
-        <div className="p-6 overflow-y-auto h-full">
+        <div className="p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-gray-800">🌐 Network</h2>
@@ -73,23 +70,27 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
             </Button>
           </div>
 
-          {/* KANAL Section */}
+          {/* Categories */}
           <div>
             <h3 className="text-lg font-semibold text-primary mb-4 border-b border-gray-200 pb-2">
-              KATEGORI
+              Semua Kategori
             </h3>
             <div className="grid grid-cols-2 gap-3">
               {categories.map((cat) => (
                 <a
                   key={cat.id}
-                  href={`/${cat.slug}`}
+                  href={`/kategori/${cat.slug}`}
                   className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-primary hover:text-white transition-all duration-200 text-sm font-medium"
                 >
-                  <img
-                    src={cat.logo || "/icons/default.svg"}
-                    alt={cat.name}
-                    className="w-5 h-5 object-contain"
-                  />
+                  {cat.icon ? (
+                    <img
+                      src={cat.icon}
+                      alt={cat.name}
+                      className="w-5 h-5 object-contain"
+                    />
+                  ) : (
+                    <span>📁</span>
+                  )}
                   {cat.name}
                 </a>
               ))}
