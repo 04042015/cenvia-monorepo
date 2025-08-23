@@ -14,7 +14,6 @@ const Footer = () => {
     { name: "Z Campus", count: "287" }
   ];
 
-
   return (
     <footer className="bg-gray-900 text-white">
       {/* Main Footer Content */}
@@ -24,16 +23,17 @@ const Footer = () => {
           {/* Logo and Description */}
           <div className="lg:col-span-1">
             <div className="flex items-center mb-4">
-              <div className="bg-primary text-white p-2 rounded-lg mr-3">
-                <div className="text-xl font-bold">📰</div>
-              </div>
+              <img
+                src="/icons/logo-cenvia.svg"
+                alt="CENVIA"
+                className="w-12 h-12 mr-3"
+              />
               <div>
-                <h3 className="text-2xl font-bold">LANGSA</h3>
-                <h4 className="text-lg">POST</h4>
+                <h3 className="text-2xl font-bold">CENVIA</h3>
               </div>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed mb-6">
-              Portal berita terdepan yang menyajikan informasi akurat, terpercaya, dan terkini untuk masyarakat Indonesia.
+              Portal berita terkini yang menyajikan informasi akurat, terpercaya, dan aktual untuk masyarakat Indonesia.
             </p>
             
             {/* Social Media */}
@@ -76,14 +76,13 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-
       </div>
 
       {/* Copyright */}
       <div className="bg-gray-950 py-4">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between text-sm text-gray-400">
-            <p>&copy; 2025 LangsaPost. All rights reserved.</p>
+            <p>&copy; 2025 CENVIA. All rights reserved.</p>
             <p>Powered by Indonesian Digital Media</p>
           </div>
         </div>
