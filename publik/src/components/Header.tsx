@@ -59,20 +59,22 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
         </div>
       </div>
 
-      {/* ✅ Main header with logo & search */}
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <div className="bg-white text-primary p-3 rounded-lg mr-4">
-              <div className="text-2xl font-bold">📰</div>
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold">LANGSA</h1>
-              <h2 className="text-xl">POST</h2>
-            </div>
-          </div>
-
+    {/* ✅ Main header with logo & search */}
+<div className="container mx-auto px-4 py-4">
+  <div className="flex items-center justify-between">
+    
+    {/* Logo + Nama */}
+    <div className="flex items-center gap-3">
+      <img
+        src="/icons/logo-cenvia.svg"
+        alt="CENVIA"
+        className="w-12 h-12 object-contain"
+      />
+      <div>
+        <h1 className="text-3xl font-bold text-primary">CENVIA</h1>
+        <h2 className="text-sm text-gray-600 tracking-wide">Portal Berita</h2>
+      </div>
+    </div>
           {/* Search */}
           <div className="hidden md:flex items-center gap-2">
             <div className="relative">
