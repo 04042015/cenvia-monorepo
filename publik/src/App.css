@@ -1,8 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 🌐 Font global system stack */
+body {
+  @apply font-sans bg-white text-gray-900;
+}
+
+/* Centering dan max-width masih jalan */
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  @apply font-sans;
 }
 
 .logo {
