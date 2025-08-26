@@ -59,9 +59,13 @@ const PostPage = () => {
 
       if (error) {
         console.error("Error fetching post:", error);
-      } else {
+      } else if (data) {
         setPost(data);
+
+        // ✅ Increment views (aman, tidak overwrite)
+        await supabase.rpc("increment_views", { post_id: data.id });
       }
+
       setLoading(false);
     };
 
@@ -119,7 +123,7 @@ const PostPage = () => {
             : ""}
         </span>
         <span>•</span>
-        <span>{post.views} views</span>
+        <span>{post.views + 1} views</span> {/* +1 biar realtime di UI */}
       </div>
 
       {/* Konten */}
