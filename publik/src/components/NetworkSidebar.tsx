@@ -78,10 +78,10 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
             <div className="grid grid-cols-2 gap-3">
               {categories.map((cat) => (
                 <a
-                  key={cat.id}
-                  href={`/kategori/${cat.slug}`}
-                  className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-primary hover:text-white transition-all duration-200 text-sm font-medium"
-                >
+                   key={cat.id}
+                    href={`/category/${cat.slug}`}
+                     className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-primary hover:text-white transition-all duration-200 text-sm font-medium"
+               >
                   {cat.icon ? (
                     <img
                       src={cat.icon}
