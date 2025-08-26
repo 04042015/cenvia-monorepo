@@ -7,7 +7,6 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import CategoryPage from "./pages/CategoryPage"; // ✅ tambahkan import
 import PostPage from "./pages/PostPage"; // ✅ import baru
-import PostDetail from "./pages/PostDetail";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +21,6 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/kategori/:slug" element={<CategoryPage />} /> {/* ✅ route kategori */}
             <Route path="/post/:slug" element={<PostPage />} /> {/* ✅ route baru */}
-            <Route path="/post/:slug" element={<PostDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
