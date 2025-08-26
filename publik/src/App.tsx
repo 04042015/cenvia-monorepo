@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import CategoryPage from "./pages/CategoryPage"; // ✅ tambahkan import
 import PostPage from "./pages/PostPage"; // ✅ import baru
+import PostDetail from "./pages/PostDetail";
 
 const queryClient = new QueryClient();
 
