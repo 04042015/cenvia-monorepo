@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import CategoryPage from "./pages/CategoryPage"; // ✅ tambahkan import
+import PostPage from "./pages/PostPage"; // ✅ import baru
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/kategori/:slug" element={<CategoryPage />} /> {/* ✅ route kategori */}
+            <Route path="/post/:slug" element={<PostPage />} /> {/* ✅ route baru */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
