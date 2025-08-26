@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import CategoryPage from "./pages/CategoryPage"; // ✅ tambahkan import
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ const App = () => (
         <div className="font-sans"> {/* 🔑 apply font-sans di root */}
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/kategori/:slug" element={<CategoryPage />} /> {/* ✅ route kategori */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
