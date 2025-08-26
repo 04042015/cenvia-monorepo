@@ -27,10 +27,13 @@ const PostPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<any>(null);
 
   useEffect(() => {
     const fetchPost = async () => {
       setLoading(true);
+      setError(null);
+
       const { data, error } = await supabase
         .from("posts")
         .select(`
@@ -59,11 +62,9 @@ const PostPage = () => {
 
       if (error) {
         console.error("Error fetching post:", error);
-      } else if (data) {
+        setError(error);
+      } else {
         setPost(data);
-
-        // ✅ Increment views (aman, tidak overwrite)
-        await supabase.rpc("increment_views", { post_id: data.id });
       }
 
       setLoading(false);
@@ -76,6 +77,14 @@ const PostPage = () => {
     return (
       <div className="container mx-auto px-4 py-10 text-center text-gray-500">
         Loading...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-10 text-center text-red-500">
+        Terjadi error saat memuat artikel: {error.message}
       </div>
     );
   }
@@ -123,7 +132,7 @@ const PostPage = () => {
             : ""}
         </span>
         <span>•</span>
-        <span>{post.views + 1} views</span> {/* +1 biar realtime di UI */}
+        <span>{post.views} views</span>
       </div>
 
       {/* Konten */}
