@@ -21,6 +21,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/kategori/:slug" element={<CategoryPage />} /> {/* ✅ route kategori */}
             <Route path="/post/:slug" element={<PostPage />} /> {/* ✅ route baru */}
+            <Route path="/post/:slug" element={<PostDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
