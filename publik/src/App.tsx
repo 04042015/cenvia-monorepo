@@ -1,6 +1,6 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import PostPage from "./pages/PostPage";
+import PostPage from "./pages/PostPage"; // ✅ tambahkan ini
 
 export default function App() {
   return (
@@ -18,3 +18,4 @@ export default function App() {
     </div>
   );
 }
+
