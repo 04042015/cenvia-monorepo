@@ -1,3 +1,3 @@
 export default function PostPage() {
-  return <h1>TEST PAGE</h1>;
+  return <h2>Ini halaman Post ✅</h2>;
 }
