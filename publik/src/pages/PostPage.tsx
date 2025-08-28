@@ -1,3 +1,6 @@
+import { useParams } from "react-router-dom";
+
 export default function PostPage() {
-  return <h2>Ini halaman Post ✅</h2>;
+  const { slug } = useParams();
+  return <h1>Slug: {slug}</h1>;
 }
