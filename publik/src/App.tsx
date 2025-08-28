@@ -12,10 +12,12 @@ export default function App() {
       </nav>
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/post" element={<PostPage />} />
-      </Routes>
+       <Route path="/" element={<HomePage />} />
+       <Route path="/post" element={<PostPage />} /> {/* ✅ rute uji */}
+     </Routes>
+
     </div>
   );
 }
+
 
