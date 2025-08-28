@@ -14,12 +14,12 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;        /* bold default */
 }
 
+/* Root harus full width, tanpa padding/centering global */
 #root {
-  width: 100%;
-  min-height: 100vh;
+  max-width: none;
   margin: 0;
   padding: 0;
-  text-align: left; /* biar teks default rata kiri */
+  text-align: initial;
   @apply font-sans bg-white text-gray-900;
 }
 
