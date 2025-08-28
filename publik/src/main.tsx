@@ -4,7 +4,7 @@ import App from "./App";
 
 // ✅ Import global styles
 import "./index.css";  // Wajib untuk Tailwind
-import "./app.css";    // Opsional kalau kamu punya styling tambahan
+import "./App.css";    // Opsional kalau kamu punya styling tambahan
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
