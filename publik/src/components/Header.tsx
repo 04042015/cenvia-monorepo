@@ -76,23 +76,23 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
       </div>
     </div>
           {/* Search */}
-          <div className="hidden md:flex items-center gap-2">
-            <div className="relative">
-              <Input 
-                placeholder="Search..." 
-                className="w-64 bg-white/10 border-white/20 text-white placeholder:text-white/70 pr-10"
-              />
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/70" />
-            </div>
-            <Button 
-              variant="secondary" 
-              size="sm" 
-              className="bg-white text-primary hover:bg-white/90"
-              onClick={onNetworkClick}
-            >
-              🌐 Network
-            </Button>
-          </div>
+          <div className="flex items-center gap-2">
+  <div className="relative">
+    <Input 
+      placeholder="Search..." 
+      className="w-64 bg-white/10 border-white/20 text-white placeholder:text-white/70 pr-10"
+    />
+    <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/70" />
+  </div>
+  <Button 
+    variant="secondary" 
+    size="sm" 
+    className="bg-white text-primary hover:bg-white/90"
+    onClick={onNetworkClick}
+  >
+    🌐 Network
+  </Button>
+</div>
         </div>
 
         {/* ✅ Navigation dari Supabase */}
