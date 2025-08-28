@@ -1,27 +1,20 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+import { Routes, Route, Link } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import PostPage from "./pages/PostPage";
 
-const queryClient = new QueryClient();
+export default function App() {
+  return (
+    <div style={{ padding: "2rem" }}>
+      <h1>🚀 React Router Minimal</h1>
+      <nav style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+        <Link to="/">Home</Link>
+        <Link to="/post">Post</Link>
+      </nav>
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
-
-export default App;
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/post" element={<PostPage />} />
+      </Routes>
+    </div>
+  );
+}
