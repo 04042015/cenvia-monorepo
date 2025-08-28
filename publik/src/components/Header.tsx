@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import {
-  Search,
-  Facebook,
-  Twitter,
-  Instagram,
-  Youtube,
-  Linkedin,
-} from "lucide-react";
+import { Search, Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -17,7 +10,9 @@ interface HeaderProps {
 
 const Header = ({ onNetworkClick }: HeaderProps) => {
   const [navigationItems, setNavigationItems] = useState<string[]>([]);
+  const [breakingNews, setBreakingNews] = useState<string[]>([]);
 
+  // 🔹 Fetch kategori
   useEffect(() => {
     const fetchCategories = async () => {
       const { data, error } = await supabase
@@ -35,36 +30,54 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
     fetchCategories();
   }, []);
 
+  // 🔹 Fetch Breaking News (3 artikel terbaru)
+  useEffect(() => {
+    const fetchBreakingNews = async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("title, slug")
+        .eq("status", "published")
+        .order("published_at", { ascending: false })
+        .limit(3);
+
+      if (error) {
+        console.error("Error fetching breaking news:", error);
+      } else if (data) {
+        setBreakingNews(data.map((post) => post.title));
+      }
+    };
+
+    fetchBreakingNews();
+  }, []);
+
   return (
     <header className="bg-primary text-primary-foreground">
-      {/* ✅ Top bar with breaking news */}
-      <div className="bg-primary border-b border-primary-foreground/20">
-        <div className="container mx-auto px-4 py-2">
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-2 flex-1 overflow-hidden">
-              <div className="bg-white text-primary px-3 py-1 rounded text-xs font-bold shrink-0">
-                ⚡ BREAKING NEWS
-              </div>
-              <div className="hidden md:block overflow-hidden">
-                <span className="breaking-news-scroll inline-block">
-                  Pemerintah Umumkan Kebijakan Baru untuk Perekonomian Nasional •
-                  DPR Setujui RUU Omnibus Law Terbaru • Indonesia Raih Medali
-                  Emas di Kejuaraan Dunia
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 md:gap-4 shrink-0">
-              <span className="text-xs hidden lg:block">
-                RABU, 13/08/2025 | FOLLOW US:
+      {/* ✅ Breaking News Bar */}
+      <div className="w-full bg-[#1a1a1a] text-white border-b border-primary-foreground/20">
+        <div className="container mx-auto px-4 py-2 flex items-center justify-between text-sm">
+          {/* Breaking News Marquee */}
+          <div className="flex items-center gap-2 flex-1 overflow-hidden">
+            <span className="px-2 py-1 rounded text-xs font-bold bg-red-600">
+              ⚡ Breaking News
+            </span>
+            <div className="overflow-hidden whitespace-nowrap w-full">
+              <span className="animate-marquee inline-block">
+                {breakingNews.length > 0
+                  ? breakingNews.join(" • ")
+                  : "Belum ada berita terbaru"}
               </span>
-              <span className="text-xs lg:hidden">FOLLOW:</span>
-              <div className="flex items-center gap-1 md:gap-2">
-                <Facebook className="w-3 h-3 hover:text-white/80 cursor-pointer" />
-                <Twitter className="w-3 h-3 hover:text-white/80 cursor-pointer" />
-                <Instagram className="w-3 h-3 hover:text-white/80 cursor-pointer" />
-                <Youtube className="w-3 h-3 hover:text-white/80 cursor-pointer" />
-                <Linkedin className="w-3 h-3 hover:text-white/80 cursor-pointer" />
-              </div>
+            </div>
+          </div>
+
+          {/* Follow Us (hanya desktop) */}
+          <div className="hidden md:flex items-center gap-2 md:gap-4 shrink-0">
+            <span className="text-xs">FOLLOW US:</span>
+            <div className="flex items-center gap-2">
+              <Facebook className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
+              <Twitter className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
+              <Instagram className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
+              <Youtube className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
+              <Linkedin className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
             </div>
           </div>
         </div>
@@ -82,13 +95,11 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
             />
             <div>
               <h1 className="text-3xl font-bold text-primary">CENVIA</h1>
-              <h2 className="text-sm text-gray-600 tracking-wide">
-                Portal Berita
-              </h2>
+              <h2 className="text-sm text-gray-600 tracking-wide">Portal Berita</h2>
             </div>
           </div>
 
-          {/* Search + Network */}
+          {/* Search + Network Button */}
           <div className="flex items-center gap-2 flex-1 md:flex-none">
             <div className="relative w-full md:w-auto">
               <Input
@@ -107,40 +118,40 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
             </Button>
           </div>
         </div>
+      </div>
 
-        {/* ✅ Navigation dari Supabase */}
-        <nav className="mt-4 border-t border-primary-foreground/20 pt-4">
-          {/* Desktop */}
-          <ul className="hidden md:flex items-center gap-6 text-sm">
+      {/* ✅ Navigation dari Supabase */}
+      <nav className="mt-4 border-t border-primary-foreground/20 pt-4">
+        {/* Desktop */}
+        <ul className="hidden md:flex items-center gap-6 text-sm">
+          {navigationItems.map((item, index) => (
+            <li key={index}>
+              <a
+                href={`/category/${item.toLowerCase()}`}
+                className="hover:text-white/80 transition-colors font-medium"
+              >
+                {item}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        {/* Mobile */}
+        <div className="md:hidden overflow-x-auto scrollbar-hide">
+          <ul className="flex items-center gap-4 text-sm min-w-max pb-2">
             {navigationItems.map((item, index) => (
               <li key={index}>
                 <a
                   href={`/category/${item.toLowerCase()}`}
-                  className="hover:text-white/80 transition-colors font-medium"
+                  className="hover:text-white/80 transition-colors font-medium whitespace-nowrap"
                 >
                   {item}
                 </a>
               </li>
             ))}
           </ul>
-
-          {/* Mobile */}
-          <div className="md:hidden overflow-x-auto scrollbar-hide">
-            <ul className="flex items-center gap-4 text-sm min-w-max pb-2">
-              {navigationItems.map((item, index) => (
-                <li key={index}>
-                  <a
-                    href={`/category/${item.toLowerCase()}`}
-                    className="hover:text-white/80 transition-colors font-medium whitespace-nowrap"
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </nav>
-      </div>
+        </div>
+      </nav>
     </header>
   );
 };
