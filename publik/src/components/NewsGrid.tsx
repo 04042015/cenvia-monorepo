@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import NewsCard from "./NewsCard";
-import { Link } from "react-router-dom";
 
 type Post = {
   id: string;
@@ -50,21 +49,21 @@ const NewsGrid = () => {
   }
 
   if (posts.length === 0) {
-    return <div className="text-center">Belum ada artikel.</div>;
+    return <div className="text-center text-gray-500">Belum ada artikel.</div>;
   }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {posts.map((post) => (
-        <Link key={post.id} to={`/post/${post.slug}`}>
-          <NewsCard
-            title={post.title}
-            excerpt={post.excerpt}
-            image={post.thumbnail || "/placeholder.jpg"}
-            category={post.category?.name || "Uncategorized"}
-            timeAgo={new Date(post.published_at).toLocaleDateString("id-ID")}
-          />
-        </Link>
+        <NewsCard
+          key={post.id}
+          slug={post.slug}
+          title={post.title}
+          excerpt={post.excerpt}
+          image={post.thumbnail || "/placeholder.jpg"}
+          category={post.category?.name || "Uncategorized"}
+          timeAgo={new Date(post.published_at).toLocaleDateString("id-ID")}
+        />
       ))}
     </div>
   );
