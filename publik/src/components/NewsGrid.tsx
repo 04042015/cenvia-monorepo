@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import NewsCard from "./NewsCard";
-import { Link } from "react-router-dom"; // ✅ tambahkan
+import { Link } from "react-router-dom";
 
 type Post = {
   id: string;
   title: string;
-  slug: string; // ✅ tambahkan slug
+  slug: string;
   excerpt: string;
   thumbnail: string | null;
   category: { name: string } | null;
@@ -24,7 +24,7 @@ const NewsGrid = () => {
         .select(`
           id,
           title,
-          slug,  -- ✅ ambil slug dari Supabase
+          slug,
           excerpt,
           thumbnail,
           published_at,
@@ -49,17 +49,20 @@ const NewsGrid = () => {
     return <div className="text-center">Loading...</div>;
   }
 
+  if (posts.length === 0) {
+    return <div className="text-center">Belum ada artikel.</div>;
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {posts.map((post) => (
         <Link key={post.id} to={`/post/${post.slug}`}>
           <NewsCard
-            id={post.id}
             title={post.title}
             excerpt={post.excerpt}
             image={post.thumbnail || "/placeholder.jpg"}
             category={post.category?.name || "Uncategorized"}
-            timeAgo={new Date(post.published_at).toLocaleDateString()}
+            timeAgo={new Date(post.published_at).toLocaleDateString("id-ID")}
           />
         </Link>
       ))}
