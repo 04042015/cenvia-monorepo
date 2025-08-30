@@ -40,7 +40,7 @@ const Category = () => {
 
   if (loading) {
     return (
-      <main className="p-6">
+      <main className="p-6 font-abel">
         <h1 className="text-xl font-semibold">Kategori: {slug}</h1>
         <p className="text-gray-500 mt-2">Memuat artikel...</p>
       </main>
@@ -48,7 +48,7 @@ const Category = () => {
   }
 
   return (
-    <main className="p-6">
+    <main className="p-6 font-abel">
       <h1 className="text-2xl font-bold mb-4 capitalize">Kategori: {slug}</h1>
 
       {articles.length === 0 ? (
