@@ -57,7 +57,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
         <div className="container mx-auto px-4 py-2 flex items-center justify-between text-sm">
           {/* Breaking News Marquee */}
           <div className="flex items-center gap-2 flex-1 overflow-hidden">
-            <span className="flex items-center gap-1 font-bold text-sm">
+            <span className="flex items-center gap-1 font-bold text-sm whitespace-nowrap">
               <span className="material-symbols-outlined text-red-500">
                 trending_up
              </span>
