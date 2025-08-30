@@ -91,6 +91,7 @@ export default {
       },
       fontFamily: {
         sans: [
+          "Abel",
           "-apple-system",
           "BlinkMacSystemFont",
           '"Segoe UI"',
