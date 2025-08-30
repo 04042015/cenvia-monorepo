@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient"; // ✅ pastikan path sesuai project-mu
+import { supabase } from "@/lib/supabaseClient";
 
 type Article = {
   id: string;
@@ -23,7 +23,7 @@ const Category = () => {
       const { data, error } = await supabase
         .from("articles")
         .select("id, title, slug, excerpt, created_at")
-        .eq("category", slug) // ✅ ambil sesuai kategori
+        .eq("category", slug)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -40,7 +40,7 @@ const Category = () => {
 
   if (loading) {
     return (
-      <main className="p-6 font-abel">
+      <main className="p-6">
         <h1 className="text-xl font-semibold">Kategori: {slug}</h1>
         <p className="text-gray-500 mt-2">Memuat artikel...</p>
       </main>
@@ -48,7 +48,7 @@ const Category = () => {
   }
 
   return (
-    <main className="p-6 font-abel">
+    <main className="p-6">
       <h1 className="text-2xl font-bold mb-4 capitalize">Kategori: {slug}</h1>
 
       {articles.length === 0 ? (
