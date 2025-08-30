@@ -59,8 +59,8 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
           <div className="flex items-center gap-2 flex-1 overflow-hidden">
             <span className="flex items-center gap-1 font-bold text-sm">
               <span className="material-symbols-outlined text-red-500">
-                bolt
-              </span>
+                trending_up
+             </span>
               Breaking News
             </span>
             <div className="overflow-hidden whitespace-nowrap w-full">
