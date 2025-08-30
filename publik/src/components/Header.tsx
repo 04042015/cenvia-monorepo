@@ -61,7 +61,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
               <span className="material-symbols-outlined text-red-500">
                 trending_up
              </span>
-              Breaking News
+              BRAKING NEWS  |
             </span>
             <div className="overflow-hidden whitespace-nowrap w-full">
               <span className="animate-marquee inline-block">
