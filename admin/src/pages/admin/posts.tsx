@@ -1,3 +1,4 @@
+// admin/src/pages/admin/posts.tsx
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Eye, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -47,7 +48,6 @@ export default function Posts() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [editingPost, setEditingPost] = useState<Post | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -85,18 +85,13 @@ export default function Posts() {
     if (!confirm('Are you sure you want to delete this post?')) return;
 
     try {
-      const { error } = await supabase
-        .from('posts')
-        .delete()
-        .eq('id', id);
-
+      const { error } = await supabase.from('posts').delete().eq('id', id);
       if (error) throw error;
-      
+
       toast({
         title: "Success",
         description: "Post deleted successfully",
       });
-      
       fetchPosts();
     } catch (error) {
       console.error('Error deleting post:', error);
@@ -115,19 +110,18 @@ export default function Posts() {
     try {
       const { error } = await supabase
         .from('posts')
-        .update({ 
+        .update({
           status: newStatus,
-          published_at: publishedAt
+          published_at: publishedAt,
         })
         .eq('id', post.id);
 
       if (error) throw error;
-      
+
       toast({
         title: "Success",
         description: `Post ${newStatus === 'published' ? 'published' : 'unpublished'} successfully`,
       });
-      
       fetchPosts();
     } catch (error) {
       console.error('Error updating post:', error);
@@ -139,9 +133,10 @@ export default function Posts() {
     }
   };
 
-  const filteredPosts = posts.filter(post =>
-    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (post.categories?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPosts = posts.filter(
+    (post) =>
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (post.categories?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getStatusBadge = (status: string) => {
@@ -217,16 +212,16 @@ export default function Posts() {
                 {filteredPosts.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-8">
-                      {searchTerm ? 'No posts found matching your search.' : 'No posts created yet.'}
+                      {searchTerm
+                        ? 'No posts found matching your search.'
+                        : 'No posts created yet.'}
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredPosts.map((post) => (
                     <TableRow key={post.id}>
                       <TableCell className="font-medium">
-                        <div className="max-w-xs truncate">
-                          {post.title}
-                        </div>
+                        <div className="max-w-xs truncate">{post.title}</div>
                         {post.excerpt && (
                           <div className="text-sm text-muted-foreground max-w-xs truncate">
                             {post.excerpt}
@@ -245,12 +240,8 @@ export default function Posts() {
                           <span className="text-muted-foreground">No category</span>
                         )}
                       </TableCell>
-                      <TableCell>
-                        {post.profiles?.full_name || 'Unknown'}
-                      </TableCell>
-                      <TableCell>
-                        {getStatusBadge(post.status)}
-                      </TableCell>
+                      <TableCell>{post.profiles?.full_name || 'Unknown'}</TableCell>
+                      <TableCell>{getStatusBadge(post.status)}</TableCell>
                       <TableCell>
                         <div className="flex items-center">
                           <Eye className="mr-1 h-3 w-3" />
