@@ -1,271 +1,173 @@
-import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { supabase } from "@/lib/supabaseClient";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const postSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  content: z.string().min(1, 'Content is required'),
-  excerpt: z.string().optional(),
-  category_id: z.string().optional(),
-  status: z.enum(['draft', 'published']).default('draft'),
+const schema = z.object({
+  title: z.string().min(5, "Title must be at least 5 characters"),
+  excerpt: z.string().max(200, "Excerpt max 200 characters").optional(),
+  content: z.string().min(10, "Content is required"),
+  category_id: z.string().uuid("Please select a category"),
+  status: z.enum(["draft", "published", "archived"]),
+  image: z.any().optional(),
 });
 
-type PostFormValues = z.infer<typeof postSchema>;
+type FormData = z.infer<typeof schema>;
 
-interface Category {
-  id: string;
-  name: string;
-  color: string;
-}
+export function PostForm({ onSuccess }: { onSuccess?: () => void }) {
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+  const [uploading, setUploading] = useState(false);
 
-interface PostFormProps {
-  post?: any;
-  onSuccess: () => void;
-}
-
-export function PostForm({ post, onSuccess }: PostFormProps) {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
-  const { user } = useAuth();
-
-  const form = useForm<PostFormValues>({
-    resolver: zodResolver(postSchema),
-    defaultValues: {
-      title: post?.title || '',
-      content: post?.content || '',
-      excerpt: post?.excerpt || '',
-      category_id: post?.category_id || 'none',
-      status: post?.status || 'draft',
-    },
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: { status: "draft" },
   });
 
+  const title = watch("title");
+
+  // Auto-generate slug
   useEffect(() => {
+    if (title) {
+      const slug = title
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-");
+      setValue("slug", slug, { shouldValidate: true });
+    }
+  }, [title, setValue]);
+
+  // Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const { data, error } = await supabase.from("categories").select("id, name");
+      if (!error && data) setCategories(data);
+    };
     fetchCategories();
   }, []);
 
-  const fetchCategories = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('name');
+  // Upload ke Supabase storage
+  const uploadImage = async (file: File) => {
+    setUploading(true);
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${crypto.randomUUID()}.${fileExt}`;
+    const filePath = `posts/${fileName}`;
 
-      if (error) throw error;
-      setCategories(data || []);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
+    const { error } = await supabase.storage.from("asset").upload(filePath, file);
+    setUploading(false);
+
+    if (error) throw error;
+
+    const { data } = supabase.storage.from("asset").getPublicUrl(filePath);
+    return data.publicUrl;
   };
 
-  const generateSlug = (title: string): string => {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9 -]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim();
-  };
-
-  const onSubmit = async (values: PostFormValues) => {
-    if (!user) {
-      toast({
-        title: "Error",
-        description: "You must be logged in to create posts",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setLoading(true);
+  const onSubmit = async (formData: FormData) => {
     try {
-      const slug = generateSlug(values.title);
-      const postData = {
-        title: values.title,
-        content: values.content,
-        excerpt: values.excerpt || null,
-        category_id: values.category_id === 'none' ? null : values.category_id,
-        status: values.status,
-        slug,
-        author_id: user.id,
-        published_at: values.status === 'published' ? new Date().toISOString() : null,
-      };
+      let imageUrl = null;
 
-      let result;
-      if (post) {
-        result = await supabase
-          .from('posts')
-          .update(postData)
-          .eq('id', post.id)
-          .select();
-      } else {
-        result = await supabase
-          .from('posts')
-          .insert(postData)
-          .select();
+      if (formData.image && formData.image[0]) {
+        imageUrl = await uploadImage(formData.image[0]);
       }
 
-      if (result.error) throw result.error;
+      // Cek slug unik
+      let slug = (title || "").toLowerCase().replace(/\s+/g, "-");
+      let suffix = 1;
+      while (true) {
+        const { data } = await supabase.from("posts").select("id").eq("slug", slug).single();
+        if (!data) break; // slug unik
+        slug = `${slug}-${suffix++}`;
+      }
 
-      toast({
-        title: "Success",
-        description: `Post ${post ? 'updated' : 'created'} successfully`,
-      });
+      const { error } = await supabase.from("posts").insert([
+        {
+          title: formData.title,
+          slug,
+          excerpt: formData.excerpt,
+          content: formData.content,
+          category_id: formData.category_id,
+          status: formData.status,
+          image_url: imageUrl,
+          published_at: formData.status === "published" ? new Date().toISOString() : null,
+          // author_id bisa isi dari user login
+        },
+      ]);
 
-      onSuccess();
-    } catch (error) {
-      console.error('Error saving post:', error);
-      toast({
-        title: "Error",
-        description: `Failed to ${post ? 'update' : 'create'} post`,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
+      if (error) throw error;
+      if (onSuccess) onSuccess();
+    } catch (err) {
+      console.error("Error creating post:", err);
     }
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter post title..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div>
+        <label className="block font-medium">Title</label>
+        <Input {...register("title")} placeholder="Enter post title" />
+        {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
+      </div>
 
-        <FormField
-          control={form.control}
-          name="excerpt"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Excerpt</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Brief description of the post..."
-                  rows={3}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <div>
+        <label className="block font-medium">Excerpt</label>
+        <Textarea {...register("excerpt")} placeholder="Brief description..." />
+        {errors.excerpt && <p className="text-red-500 text-sm">{errors.excerpt.message}</p>}
+      </div>
 
-        <FormField
-          control={form.control}
-          name="content"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Content</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Write your post content here..."
-                  rows={12}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <div>
+        <label className="block font-medium">Content</label>
+        <Textarea {...register("content")} placeholder="Write your post..." rows={8} />
+        {errors.content && <p className="text-red-500 text-sm">{errors.content.message}</p>}
+      </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="category_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="none">No Category</SelectItem>
-                    {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        <div className="flex items-center">
-                          <div
-                            className="w-3 h-3 rounded-full mr-2"
-                            style={{ backgroundColor: category.color }}
-                          />
-                          {category.name}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      <div>
+        <label className="block font-medium">Image</label>
+        <Input type="file" accept="image/*" {...register("image")} />
+        {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
+      </div>
 
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+      <div>
+        <label className="block font-medium">Category</label>
+        <Select onValueChange={(val) => setValue("category_id", val)} defaultValue="">
+          <SelectTrigger>
+            <SelectValue placeholder="Select category" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((cat) => (
+              <SelectItem key={cat.id} value={cat.id}>
+                {cat.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors.category_id && <p className="text-red-500 text-sm">{errors.category_id.message}</p>}
+      </div>
 
-        <div className="flex justify-end space-x-4">
-          <Button
-            type="submit"
-            disabled={loading}
-            className="bg-primary hover:bg-primary-dark"
-          >
-            {loading ? 'Saving...' : post ? 'Update Post' : 'Create Post'}
-          </Button>
-        </div>
-      </form>
-    </Form>
+      <div>
+        <label className="block font-medium">Status</label>
+        <Select onValueChange={(val) => setValue("status", val)} defaultValue="draft">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="draft">Draft</SelectItem>
+            <SelectItem value="published">Published</SelectItem>
+            <SelectItem value="archived">Archived</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Slug disembunyikan, auto-generate */}
+      <input type="hidden" {...register("slug")} />
+
+      <Button type="submit" disabled={uploading}>
+        {uploading ? "Uploading..." : "Create Post"}
+      </Button>
+    </form>
   );
 }
