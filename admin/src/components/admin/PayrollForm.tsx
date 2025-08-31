@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -67,7 +66,7 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
   const form = useForm<PayrollFormValues>({
     resolver: zodResolver(payrollSchema),
     defaultValues: {
-      employee_id: payroll?.employee_id || undefined, // ✅ ganti dari '' ke undefined
+      employee_id: payroll?.employee_id || undefined, // ✅ biar ga kosong string
       period_year: payroll?.period_year || currentDate.getFullYear(),
       period_month: payroll?.period_month || currentDate.getMonth() + 1,
       base_salary: payroll?.base_salary || 0,
@@ -122,7 +121,7 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
     setLoading(true);
     try {
       const payrollData = {
-        employee_id: values.employee_id,
+        employee_id: values.employee_id, // ✅ simpan UUID employee
         period_year: values.period_year,
         period_month: values.period_month,
         base_salary: values.base_salary,
@@ -133,7 +132,6 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
         status: 'draft' as const,
       };
 
-      // Check if payroll already exists for this employee and period
       const { data: existingPayroll } = await supabase
         .from('payroll')
         .select('id')
@@ -153,14 +151,12 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
 
       let result;
       if (payroll) {
-        // Update existing payroll
         result = await supabase
           .from('payroll')
           .update(payrollData)
           .eq('id', payroll.id)
           .select();
       } else {
-        // Create new payroll
         result = await supabase
           .from('payroll')
           .insert(payrollData)
@@ -212,12 +208,12 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Employee</FormLabel>
-              <Select 
+              <Select
                 onValueChange={(value) => {
                   field.onChange(value);
                   handleEmployeeChange(value);
-                }} 
-                value={field.value ?? undefined} // ✅ pastikan tidak pernah ''
+                }}
+                value={field.value ?? ""}
                 disabled={!!payroll}
               >
                 <FormControl>
@@ -243,6 +239,7 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
           )}
         />
 
+        {/* Year & Month */}
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -250,8 +247,8 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Year</FormLabel>
-                <Select 
-                  onValueChange={(value) => field.onChange(parseInt(value))} 
+                <Select
+                  onValueChange={(value) => field.onChange(parseInt(value))}
                   value={field.value.toString()}
                   disabled={!!payroll}
                 >
@@ -272,15 +269,14 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="period_month"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Month</FormLabel>
-                <Select 
-                  onValueChange={(value) => field.onChange(parseInt(value))} 
+                <Select
+                  onValueChange={(value) => field.onChange(parseInt(value))}
                   value={field.value.toString()}
                   disabled={!!payroll}
                 >
@@ -303,6 +299,7 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
           />
         </div>
 
+        {/* Base Salary */}
         <FormField
           control={form.control}
           name="base_salary"
@@ -322,6 +319,7 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
           )}
         />
 
+        {/* Bonus & Deductions */}
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -341,7 +339,6 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="deductions"
@@ -362,6 +359,7 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
           />
         </div>
 
+        {/* Net Salary */}
         <div className="p-4 bg-accent rounded-lg">
           <div className="flex justify-between items-center">
             <span className="font-medium">Net Salary:</span>
@@ -372,11 +370,7 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
         </div>
 
         <div className="flex justify-end space-x-4">
-          <Button
-            type="submit"
-            disabled={loading}
-            className="bg-primary hover:bg-primary-dark"
-          >
+          <Button type="submit" disabled={loading}>
             {loading ? 'Saving...' : payroll ? 'Update Payroll' : 'Create Payroll'}
           </Button>
         </div>
