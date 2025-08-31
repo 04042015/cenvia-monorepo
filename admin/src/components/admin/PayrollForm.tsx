@@ -67,7 +67,7 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
   const form = useForm<PayrollFormValues>({
     resolver: zodResolver(payrollSchema),
     defaultValues: {
-      employee_id: payroll?.employee_id || '',
+      employee_id: payroll?.employee_id || undefined, // ✅ ganti dari '' ke undefined
       period_year: payroll?.period_year || currentDate.getFullYear(),
       period_month: payroll?.period_month || currentDate.getMonth() + 1,
       base_salary: payroll?.base_salary || 0,
@@ -217,7 +217,7 @@ export function PayrollForm({ payroll, onSuccess }: PayrollFormProps) {
                   field.onChange(value);
                   handleEmployeeChange(value);
                 }} 
-                value={field.value}
+                value={field.value ?? undefined} // ✅ pastikan tidak pernah ''
                 disabled={!!payroll}
               >
                 <FormControl>
