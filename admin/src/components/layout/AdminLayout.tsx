@@ -48,7 +48,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           {/* Header */}
           <header className="h-16 border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
             <div className="flex items-center justify-between h-full px-6">
-              <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
+              <SidebarTrigger className="p-2 rounded-full bg-muted hover:bg-primary/10 text-foreground hover:text-primary transition-colors" />
               
               <div className="flex items-center gap-4">
                 <div className="text-sm text-muted-foreground">
