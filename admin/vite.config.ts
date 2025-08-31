@@ -8,15 +8,26 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    // Tambahkan historyApiFallback untuk development agar refresh di nested route tetap jalan
+    fs: {
+      strict: true,
+    }
   },
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
+    mode === "development" && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  // ⚡ Tambahkan ini supaya build Vite kompatibel dengan SPA di Vercel
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
     },
   },
 }));
