@@ -1,12 +1,12 @@
 import { ReactNode, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "./AdminSidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface AdminLayoutProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export function AdminLayout({ children }: AdminLayoutProps) {
@@ -60,7 +60,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
           {/* Main Content */}
           <div className="p-6 overflow-auto h-[calc(100vh-4rem)]">
-            {children}
+            {children ? children : <Outlet />}
           </div>
         </main>
       </div>
