@@ -293,7 +293,6 @@ export default function Payroll() {
                 <SelectValue placeholder="Year" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Years</SelectItem>
                 {generateYears().map((year) => (
                   <SelectItem key={year} value={year}>{year}</SelectItem>
                 ))}
@@ -304,7 +303,6 @@ export default function Payroll() {
                 <SelectValue placeholder="Month" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Months</SelectItem>
                 {MONTHS.map((month, index) => (
                   <SelectItem key={month} value={(index + 1).toString()}>
                     {month}
