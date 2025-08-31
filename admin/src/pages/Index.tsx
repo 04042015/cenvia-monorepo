@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Shield, BarChart3, Users, FileText } from "lucide-react";
@@ -7,16 +6,6 @@ import { ArrowRight, Shield, BarChart3, Users, FileText } from "lucide-react";
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-hero">
-      {/* Helmet for favicon + title */}
-      <Helmet>
-        <title>Cenvia.id - Admin Dashboard</title>
-        <link
-          rel="icon"
-          href="https://kuoawzlabmwhvfcahcfm.supabase.co/storage/v1/object/public/assets/logo-cenvia.jpg"
-          type="image/jpeg"
-        />
-      </Helmet>
-
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
