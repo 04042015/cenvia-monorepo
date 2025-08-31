@@ -14,7 +14,7 @@ const Index = () => {
             <img
               src="https://kuoawzlabmwhvfcahcfm.supabase.co/storage/v1/object/public/assets/logo-cenvia.jpg"
               alt="Cenvia Logo"
-              className="w-10 h-10 rounded-xl"
+              className="w-10 h-10 rounded-lg"
             />
             <span className="text-primary-foreground font-bold text-xl">Cenvia.id</span>
           </div>
