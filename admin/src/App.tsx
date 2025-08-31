@@ -11,6 +11,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import Posts from "./pages/admin/posts";
 import Payroll from "./pages/admin/Payroll";
 import { AdminLayout } from "./components/layout/AdminLayout";
+import PostCreate from "./pages/admin/PostCreate";
 
 const queryClient = new QueryClient();
 
@@ -24,7 +25,9 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Login />} />
           <Route path="/auth/register" element={<Register />} />
-          
+          <Route path="/admin/posts" element={<Posts />} />
+          <Route path="/admin/posts/create" element={<PostCreate />} />
+
           {/* Admin Routes */}
           <Route path="/admin" element={
             <AdminLayout>
