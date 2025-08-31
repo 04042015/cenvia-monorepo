@@ -22,30 +22,28 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Login />} />
           <Route path="/auth/register" element={<Register />} />
-          <Route path="/dashboard/posts" element={<Posts />} />
-          <Route path="/admin/posts/create" element={<PostCreate />} />
 
-          {/* Admin Routes */}
-          <Route path="/admin" element={
-            <AdminLayout>
-              <Dashboard />
-            </AdminLayout>
-          } />
-          <Route path="/admin/posts" element={
-            <AdminLayout>
-              <Posts />
-            </AdminLayout>
-          } />
-          <Route path="/admin/payroll" element={
-            <AdminLayout>
-              <Payroll />
-            </AdminLayout>
-          } />
-          
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          {/* Dashboard Routes (pakai AdminLayout) */}
+          <Route path="/dashboard" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="posts" element={<Posts />} />
+            <Route path="payroll" element={<Payroll />} />
+            <Route path="posts/create" element={<PostCreate />} />
+          </Route>
+
+          {/* (Opsional) legacy admin routes masih tetap bisa diakses */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="posts" element={<Posts />} />
+            <Route path="payroll" element={<Payroll />} />
+            <Route path="posts/create" element={<PostCreate />} />
+          </Route>
+
+          {/* Catch-all 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
