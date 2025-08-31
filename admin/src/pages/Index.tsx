@@ -1,9 +1,24 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Shield, BarChart3, Users, FileText } from "lucide-react";
 
 const Index = () => {
+  useEffect(() => {
+    // Set title
+    document.title = "Cenvia.id - Admin Dashboard";
+
+    // Set favicon
+    const link: HTMLLinkElement =
+      document.querySelector("link[rel~='icon']") || document.createElement("link");
+    link.rel = "icon";
+    link.type = "image/jpeg";
+    link.href =
+      "https://kuoawzlabmwhvfcahcfm.supabase.co/storage/v1/object/public/assets/logo-cenvia.jpg";
+    document.head.appendChild(link);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-hero">
       {/* Header */}
