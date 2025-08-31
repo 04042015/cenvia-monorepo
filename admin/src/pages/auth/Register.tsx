@@ -77,16 +77,16 @@ export default function Register() {
     }
   };
 
-  return (
+   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-elevated">
         <CardHeader className="text-center">
-          {/* Logo */}
-          <div className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <img 
-              src="/logo.png" 
-              alt="Cenvia Logo" 
-              className="w-16 h-16 object-contain"
+          {/* Ganti placeholder C dengan logo Cenvia */}
+          <div className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4 bg-white shadow">
+            <img
+              src="https://kuoawzlabmwhvfcahcfm.supabase.co/storage/v1/object/public/assets/logo-cenvia.jpg"
+              alt="Cenvia Logo"
+              className="w-12 h-12 object-contain rounded"
             />
           </div>
           <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
