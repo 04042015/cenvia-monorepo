@@ -81,8 +81,13 @@ export default function Register() {
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-elevated">
         <CardHeader className="text-center">
-          <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-primary-foreground font-bold text-2xl">C</span>
+          {/* Logo */}
+          <div className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <img 
+              src="/logo.png" 
+              alt="Cenvia Logo" 
+              className="w-16 h-16 object-contain"
+            />
           </div>
           <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
           <CardDescription>
