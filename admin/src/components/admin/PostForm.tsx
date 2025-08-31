@@ -109,19 +109,19 @@ export function PostForm({ onSuccess }: { onSuccess?: () => void }) {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
         <label className="block font-medium">Title</label>
-        <Input {...register("title")} placeholder="Enter post title" />
+        <Input {...register("title")} placeholder="Masukkan judul Berita" />
         {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
       </div>
 
       <div>
-        <label className="block font-medium">Excerpt</label>
-        <Textarea {...register("excerpt")} placeholder="Brief description..." />
+        <label className="block font-medium">Ringkasan</label>
+        <Textarea {...register("excerpt")} placeholder="Deskripsi singkat..." />
         {errors.excerpt && <p className="text-red-500 text-sm">{errors.excerpt.message}</p>}
       </div>
 
       <div>
-        <label className="block font-medium">Content</label>
-        <Textarea {...register("content")} placeholder="Write your post..." rows={8} />
+        <label className="block font-medium">Isi</label>
+        <Textarea {...register("content")} placeholder="Tulis postingan Anda..." rows={8} />
         {errors.content && <p className="text-red-500 text-sm">{errors.content.message}</p>}
       </div>
 
