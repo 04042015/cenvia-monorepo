@@ -10,9 +10,12 @@ const Index = () => {
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary-foreground rounded-xl flex items-center justify-center">
-              <span className="text-primary font-bold text-xl">C</span>
-            </div>
+            {/* Logo */}
+            <img
+              src="https://kuoawzlabmwhvfcahcfm.supabase.co/storage/v1/object/public/assets/logo-cenvia.jpg"
+              alt="Cenvia Logo"
+              className="w-10 h-10 rounded-xl"
+            />
             <span className="text-primary-foreground font-bold text-xl">Cenvia.id</span>
           </div>
           
