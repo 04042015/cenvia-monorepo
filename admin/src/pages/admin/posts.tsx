@@ -24,6 +24,7 @@ import { PostForm } from '@/components/admin/PostForm';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom'; // ⬅️ tambahan
 
 interface Post {
   id: string;
@@ -47,9 +48,9 @@ export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+  const navigate = useNavigate(); // ⬅️ tambahan
 
   useEffect(() => {
     fetchPosts();
@@ -124,7 +125,7 @@ export default function Posts() {
       });
       fetchPosts();
     } catch (error) {
-      console.error('Error updating post:', error);
+      console.error('Error updating post status:', error);
       toast({
         title: "Error",
         description: "Failed to update post status",
@@ -159,25 +160,13 @@ export default function Posts() {
             Create and manage blog posts and articles
           </p>
         </div>
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-primary hover:bg-primary-dark">
-              <Plus className="mr-2 h-4 w-4" />
-              Create Post
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Create New Post</DialogTitle>
-            </DialogHeader>
-            <PostForm
-              onSuccess={() => {
-                setIsCreateDialogOpen(false);
-                fetchPosts();
-              }}
-            />
-          </DialogContent>
-        </Dialog>
+        <Button
+          className="bg-primary hover:bg-primary-dark"
+          onClick={() => navigate("/admin/posts/create")} // ⬅️ langsung navigate
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Create Post
+        </Button>
       </div>
 
       <Card>
