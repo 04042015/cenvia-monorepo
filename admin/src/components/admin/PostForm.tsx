@@ -5,7 +5,6 @@ import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -58,7 +57,7 @@ export function PostForm({ post, onSuccess }: PostFormProps) {
       title: post?.title || '',
       content: post?.content || '',
       excerpt: post?.excerpt || '',
-      category_id: post?.category_id || '',
+      category_id: post?.category_id || 'none',
       status: post?.status || 'draft',
     },
   });
@@ -107,7 +106,7 @@ export function PostForm({ post, onSuccess }: PostFormProps) {
         title: values.title,
         content: values.content,
         excerpt: values.excerpt || null,
-        category_id: values.category_id || null,
+        category_id: values.category_id === 'none' ? null : values.category_id,
         status: values.status,
         slug,
         author_id: user.id,
@@ -116,14 +115,12 @@ export function PostForm({ post, onSuccess }: PostFormProps) {
 
       let result;
       if (post) {
-        // Update existing post
         result = await supabase
           .from('posts')
           .update(postData)
           .eq('id', post.id)
           .select();
       } else {
-        // Create new post
         result = await supabase
           .from('posts')
           .insert(postData)
@@ -217,7 +214,7 @@ export function PostForm({ post, onSuccess }: PostFormProps) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="">No Category</SelectItem>
+                    <SelectItem value="none">No Category</SelectItem>
                     {categories.map((category) => (
                       <SelectItem key={category.id} value={category.id}>
                         <div className="flex items-center">
