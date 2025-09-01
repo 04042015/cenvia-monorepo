@@ -30,3 +30,14 @@ export async function deleteArticle(id: number) {
   const { error } = await supabase.from("articles").delete().eq("id", id);
   if (error) throw error;
 }
+
+export async function incrementArticleViews(id: number) {
+  const { data, error } = await supabase
+    .from("articles")
+    .update({ views: supabase.raw("views + 1") })
+    .eq("id", id)
+    .select();
+
+  if (error) throw error;
+  return data;
+}
