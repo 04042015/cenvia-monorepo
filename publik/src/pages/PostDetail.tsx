@@ -15,28 +15,27 @@ const PostDetail = () => {
         .eq("slug", slug)
         .single();
 
-      if (error) {
+      if (error || !data) {
         console.error("Gagal ambil post:", error);
         return;
       }
 
-      // Increment views via RPC (aman dari race condition)
+      // Increment views via RPC
       const { error: rpcError } = await supabase.rpc("increment_post_views", {
         post_id: data.id,
       });
-
       if (rpcError) {
         console.error("Gagal increment views:", rpcError);
       }
 
-      // Ambil ulang post supaya views terbaru langsung tampil di UI
+      // Ambil ulang post biar views sinkron
       const { data: refreshed, error: refreshError } = await supabase
         .from("posts")
         .select("*")
         .eq("id", data.id)
         .single();
 
-      if (refreshError) {
+      if (refreshError || !refreshed) {
         console.error("Gagal refresh post:", refreshError);
         setPost(data); // fallback
         return;
