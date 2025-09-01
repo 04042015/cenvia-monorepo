@@ -20,19 +20,22 @@ const PostDetail = () => {
         return;
       }
 
-      // Tambahkan +1 views ke database
-      const newViews = (data.views || 0) + 1;
-      const { error: updateError } = await supabase
+      // Increment views langsung di DB (aman dari race condition)
+      const { data: updatedData, error: updateError } = await supabase
         .from("posts")
-        .update({ views: newViews })
-        .eq("id", data.id);
+        .update({ views: (data.views ?? 0) + 1 })
+        .eq("id", data.id)
+        .select()
+        .single();
 
       if (updateError) {
         console.error("Gagal update views:", updateError);
+        setPost(data); // fallback pakai data lama
+        return;
       }
 
       // Set post dengan views terbaru agar langsung tampil di UI
-      setPost({ ...data, views: newViews });
+      setPost(updatedData);
     };
 
     if (slug) fetchPost();
