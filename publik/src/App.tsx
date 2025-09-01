@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import PostPage from "./pages/PostPage"; // ✅
+import PostDetail from "./pages/PostDetail"; // ✅
 import Layout from "./components/Layout"; // ✅
 import Category from "./pages/Category";
 
@@ -20,7 +20,7 @@ const App = () => (
         <Layout>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/post/:slug" element={<PostPage />} />
+            <Route path="/post/:slug" element={<PostDetail />} />
             <Route path="/category/:slug" element={<Category />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -31,4 +31,5 @@ const App = () => (
 );
 
 export default App;
+
 
