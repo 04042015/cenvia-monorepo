@@ -193,8 +193,13 @@ const PostDetail = () => {
           >
             <Linkedin className="w-5 h-5" />
           </a>
-            <FaReddit className="w-5 h-5" />
-          </a>
+          <a
+            href={`https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(post.title)}`}
+            target="_blank" rel="noopener noreferrer"
+            className="p-2 rounded-full bg-orange-600 text-white hover:bg-orange-700"
+          >
+           <FaReddit className="w-5 h-5" />
+         </a>
           <button
             onClick={handleCopyLink}
             className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700"
