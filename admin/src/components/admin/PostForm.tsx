@@ -85,18 +85,18 @@ export function PostForm({ onSuccess }: { onSuccess?: () => void }) {
       }
 
       const { error } = await supabase.from("posts").insert([
-        {
-          title: formData.title,
-          slug,
-          excerpt: formData.excerpt,
-          content: formData.content,
-          category_id: formData.category_id,
-          status: formData.status,
-          image_url: imageUrl,
-          published_at: formData.status === "published" ? new Date().toISOString() : null,
-          // author_id bisa isi dari user login
-        },
-      ]);
+  {
+    title: formData.title,
+    slug,
+    excerpt: formData.excerpt,
+    content: formData.content,
+    category_id: formData.category_id,
+    status: formData.status,
+    thumbnail: imageUrl,  // ✅ gunakan thumbnail
+    author_id: (await supabase.auth.getUser()).data.user?.id, // ✅ ambil dari user login
+    published_at: formData.status === "published" ? new Date().toISOString() : null,
+  },
+]);
 
       if (error) throw error;
       if (onSuccess) onSuccess();
