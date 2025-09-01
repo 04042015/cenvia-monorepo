@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { supabase } from "@/lib/supabaseClient";
+// ✅ Samakan client supabase di seluruh project
+import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+// (opsional, kalau kamu sudah punya hook auth sendiri, gunakan itu)
+import { useAuth } from "@/hooks/useAuth";
 
 const schema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
@@ -15,13 +18,17 @@ const schema = z.object({
   category_id: z.string().uuid("Please select a category"),
   status: z.enum(["draft", "published", "archived"]),
   image: z.any().optional(),
+  // slug tidak perlu divalidasi dari form; kita generate sendiri
 });
 
 type FormData = z.infer<typeof schema>;
 
+const BUCKET_NAME = "asset"; // 🔁 ganti jika kamu membuat bucket dengan nama lain
+
 export function PostForm({ onSuccess }: { onSuccess?: () => void }) {
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
   const [uploading, setUploading] = useState(false);
+  const { user } = useAuth(); // pastikan hook ini return user.id
 
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -30,15 +37,17 @@ export function PostForm({ onSuccess }: { onSuccess?: () => void }) {
 
   const title = watch("title");
 
-  // Auto-generate slug
+  // Auto-generate slug (bersihkan tanda baca yang bikin 406)
   useEffect(() => {
     if (title) {
       const slug = title
         .toLowerCase()
         .trim()
-        .replace(/[^\w\s-]/g, "")
-        .replace(/\s+/g, "-");
-      setValue("slug", slug, { shouldValidate: true });
+        .replace(/[^\p{L}\p{N}\s-]/gu, "") // hapus tanda baca (kompatibel Unicode)
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-");
+      // slug tidak diperlukan di form, tapi kalau mau simpan hidden bisa
+      setValue("slug" as any, slug);
     }
   }, [title, setValue]);
 
@@ -54,54 +63,91 @@ export function PostForm({ onSuccess }: { onSuccess?: () => void }) {
   // Upload ke Supabase storage
   const uploadImage = async (file: File) => {
     setUploading(true);
-    const fileExt = file.name.split(".").pop();
-    const fileName = `${crypto.randomUUID()}.${fileExt}`;
-    const filePath = `posts/${fileName}`;
+    try {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${crypto.randomUUID()}.${fileExt}`;
+      const filePath = `posts/${fileName}`;
 
-    const { error } = await supabase.storage.from("asset").upload(filePath, file);
-    setUploading(false);
+      const { error: uploadErr } = await supabase
+        .storage
+        .from(BUCKET_NAME)
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: false,
+        });
 
-    if (error) throw error;
+      if (uploadErr) {
+        // Error ini termasuk "Bucket not found"
+        throw uploadErr;
+      }
 
-    const { data } = supabase.storage.from("asset").getPublicUrl(filePath);
-    return data.publicUrl;
+      const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
+      return data.publicUrl; // hanya valid jika bucket PUBLIC
+    } finally {
+      setUploading(false);
+    }
   };
 
   const onSubmit = async (formData: FormData) => {
     try {
-      let imageUrl = null;
+      if (!user?.id) {
+        throw new Error("User not authenticated. Please login first.");
+      }
 
+      let imageUrl: string | null = null;
       if (formData.image && formData.image[0]) {
         imageUrl = await uploadImage(formData.image[0]);
       }
 
-      // Cek slug unik
-      let slug = (title || "").toLowerCase().replace(/\s+/g, "-");
+      // Buat slug unik (bersih dari tanda baca)
+      const baseSlug = (formData.title || "")
+        .toLowerCase()
+        .trim()
+        .replace(/[^\p{L}\p{N}\s-]/gu, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-");
+
+      let slug = baseSlug;
       let suffix = 1;
       while (true) {
-        const { data } = await supabase.from("posts").select("id").eq("slug", slug).single();
+        const { data, error } = await supabase
+          .from("posts")
+          .select("id")
+          .eq("slug", slug)
+          .maybeSingle(); // hindari throw kalau tidak ada
+
+        if (error) {
+          // kalau ada error selain "no rows", keluarin biar kelihatan
+          throw error;
+        }
         if (!data) break; // slug unik
-        slug = `${slug}-${suffix++}`;
+        slug = `${baseSlug}-${suffix++}`;
       }
 
-      const { error } = await supabase.from("posts").insert([
-  {
-    title: formData.title,
-    slug,
-    excerpt: formData.excerpt,
-    content: formData.content,
-    category_id: formData.category_id,
-    status: formData.status,
-    thumbnail: imageUrl,  // ✅ gunakan thumbnail
-    author_id: (await supabase.auth.getUser()).data.user?.id, // ✅ ambil dari user login
-    published_at: formData.status === "published" ? new Date().toISOString() : null,
-  },
-]);
+      const { error: insertErr } = await supabase.from("posts").insert([
+        {
+          title: formData.title,
+          slug,
+          excerpt: formData.excerpt ?? null,
+          content: formData.content,
+          category_id: formData.category_id,
+          status: formData.status,
+          thumbnail: imageUrl,               // ✅ kolom yang benar
+          author_id: user.id,                // ✅ kolom NOT NULL
+          published_at: formData.status === "published" ? new Date().toISOString() : null,
+        },
+      ]);
 
-      if (error) throw error;
-      if (onSuccess) onSuccess();
+      if (insertErr) throw insertErr;
+
+      onSuccess?.();
     } catch (err) {
       console.error("Error creating post:", err);
+      alert(
+        err?.message?.includes("Bucket")
+          ? `Storage bucket "${BUCKET_NAME}" tidak ditemukan. Buat dulu di Supabase Storage (Public), atau ganti BUCKET_NAME di kode.`
+          : `Gagal membuat post: ${err?.message ?? err}`
+      );
     }
   };
 
@@ -148,22 +194,8 @@ export function PostForm({ onSuccess }: { onSuccess?: () => void }) {
         {errors.category_id && <p className="text-red-500 text-sm">{errors.category_id.message}</p>}
       </div>
 
-      <div>
-        <label className="block font-medium">Status</label>
-        <Select onValueChange={(val) => setValue("status", val)} defaultValue="draft">
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="draft">Draft</SelectItem>
-            <SelectItem value="published">Published</SelectItem>
-            <SelectItem value="archived">Archived</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Slug disembunyikan, auto-generate */}
-      <input type="hidden" {...register("slug")} />
+      {/* slug hidden kalau mau dipakai */}
+      <input type="hidden" {...register("slug" as any)} />
 
       <Button type="submit" disabled={uploading}>
         {uploading ? "Uploading..." : "Create Post"}
