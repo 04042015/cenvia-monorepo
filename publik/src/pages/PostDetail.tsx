@@ -2,6 +2,16 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import dayjs from "dayjs";
+import {
+  Facebook,
+  Twitter,
+  MessageCircle,
+  Send,
+  Linkedin,
+  Reddit,
+  Link as LinkIcon,
+  Share2,
+} from "lucide-react";
 
 interface Post {
   id: string;
@@ -86,10 +96,16 @@ const PostDetail = () => {
 
   if (!post) return <p className="text-center py-10">Loading...</p>;
 
+  const shareUrl = `${window.location.origin}/post/${post.slug}`;
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    alert("Link artikel berhasil disalin 📋");
+  };
+
   return (
     <div className="container mx-auto px-4 py-6">
       {/* Breadcrumb */}
-      <nav className="text-sm text-gray-500 mb-4">
+      <nav className="text-sm text-gray-500 mb-4 text-center">
         <Link to="/" className="hover:underline">Home</Link>
         <span className="mx-1">›</span>
         <Link
@@ -105,14 +121,14 @@ const PostDetail = () => {
 
       {/* Title */}
       <h1
-        className="text-3xl sm:text-4xl font-extrabold mb-3 leading-snug"
+        className="text-3xl sm:text-4xl font-extrabold mb-3 leading-snug text-center"
         style={{ color: post.category.color }}
       >
         {post.title}
       </h1>
 
       {/* Meta info */}
-      <div className="flex items-center text-sm text-gray-600 mb-5 flex-wrap gap-3">
+      <div className="flex flex-wrap justify-center items-center text-sm text-gray-600 mb-5 gap-2">
         {post.author?.avatar_url && (
           <img
             src={post.author.avatar_url}
@@ -136,16 +152,73 @@ const PostDetail = () => {
         <span>{post.views} views</span>
       </div>
 
+      {/* Share */}
+      <div className="text-center mb-6">
+        <h3 className="font-semibold mb-2 flex items-center justify-center gap-2">
+          <Share2 className="w-4 h-4" /> Bagikan
+        </h3>
+        <div className="flex justify-center flex-wrap gap-3">
+          <a
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+            target="_blank" rel="noopener noreferrer"
+            className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700"
+          >
+            <Facebook className="w-5 h-5" />
+          </a>
+          <a
+            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
+            target="_blank" rel="noopener noreferrer"
+            className="p-2 rounded-full bg-sky-500 text-white hover:bg-sky-600"
+          >
+            <Twitter className="w-5 h-5" />
+          </a>
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(post.title + " " + shareUrl)}`}
+            target="_blank" rel="noopener noreferrer"
+            className="p-2 rounded-full bg-green-500 text-white hover:bg-green-600"
+          >
+            <MessageCircle className="w-5 h-5" />
+          </a>
+          <a
+            href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
+            target="_blank" rel="noopener noreferrer"
+            className="p-2 rounded-full bg-blue-400 text-white hover:bg-blue-500"
+          >
+            <Send className="w-5 h-5" />
+          </a>
+          <a
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+            target="_blank" rel="noopener noreferrer"
+            className="p-2 rounded-full bg-blue-700 text-white hover:bg-blue-800"
+          >
+            <Linkedin className="w-5 h-5" />
+          </a>
+          <a
+            href={`https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(post.title)}`}
+            target="_blank" rel="noopener noreferrer"
+            className="p-2 rounded-full bg-orange-600 text-white hover:bg-orange-700"
+          >
+            <Reddit className="w-5 h-5" />
+          </a>
+          <button
+            onClick={handleCopyLink}
+            className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700"
+          >
+            <LinkIcon className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+
       {/* Thumbnail */}
       {post.thumbnail && (
         <figure className="mb-6">
           <img
             src={post.thumbnail}
             alt={post.title}
-            className="w-full rounded-lg shadow-md"
+            className="w-full max-w-3xl mx-auto rounded-lg shadow-md"
           />
           {post.excerpt && (
-            <figcaption className="text-xs text-gray-500 mt-1 italic">
+            <figcaption className="text-xs text-gray-500 mt-1 italic text-center">
               {post.excerpt}
             </figcaption>
           )}
