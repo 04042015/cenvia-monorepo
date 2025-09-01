@@ -3,6 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import dayjs from "dayjs";
 
+console.log("✅ PostDetail loaded");
+
 interface Post {
   id: string;
   title: string;
