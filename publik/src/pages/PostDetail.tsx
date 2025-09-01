@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import dayjs from "dayjs";
+import "dayjs/locale/id";
 
 const PostDetail = () => {
   const { slug } = useParams();
@@ -9,13 +10,14 @@ const PostDetail = () => {
 
   useEffect(() => {
     const fetchPost = async () => {
+      // Ambil artikel beserta author & kategori
       const { data, error } = await supabase
         .from("posts")
         .select(
           `
           *,
-          author:profiles(full_name, avatar_url),
-          category:categories(name, slug, color)
+          author:profiles(id, full_name, avatar_url),
+          category:categories(id, name, slug)
         `
         )
         .eq("slug", slug)
@@ -26,26 +28,34 @@ const PostDetail = () => {
         return;
       }
 
-      // Increment views
+      // Increment views via RPC
       const { error: rpcError } = await supabase.rpc("increment_post_views", {
         post_id: data.id,
       });
-      if (rpcError) console.error("Gagal increment views:", rpcError);
+      if (rpcError) {
+        console.error("Gagal increment views:", rpcError);
+      }
 
-      // Ambil ulang biar sinkron views
-      const { data: refreshed } = await supabase
+      // Ambil ulang post biar views sinkron
+      const { data: refreshed, error: refreshError } = await supabase
         .from("posts")
         .select(
           `
           *,
-          author:profiles(full_name, avatar_url),
-          category:categories(name, slug, color)
+          author:profiles(id, full_name, avatar_url),
+          category:categories(id, name, slug)
         `
         )
         .eq("id", data.id)
         .single();
 
-      setPost(refreshed || data);
+      if (refreshError || !refreshed) {
+        console.error("Gagal refresh post:", refreshError);
+        setPost(data); // fallback
+        return;
+      }
+
+      setPost(refreshed);
     };
 
     if (slug) fetchPost();
@@ -54,60 +64,45 @@ const PostDetail = () => {
   if (!post) return <p>Loading...</p>;
 
   return (
-    <div className="container mx-auto px-4 md:px-8 lg:px-20 py-6">
+    <div className="container mx-auto p-4">
+      {/* Judul */}
+      <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+
+      {/* Info meta */}
+      <div className="flex flex-wrap items-center text-sm text-gray-500 gap-2 mb-6">
+        {post.author?.full_name && (
+          <>
+            <span>{post.author.full_name}</span>
+            <span>•</span>
+          </>
+        )}
+        <span>
+          {dayjs(post.published_at || post.created_at)
+            .locale("id")
+            .format("DD MMMM YYYY")}
+        </span>
+        <span>•</span>
+        <span>{post.views} views</span>
+        {post.category?.name && (
+          <>
+            <span>•</span>
+            <span className="text-blue-600">{post.category.name}</span>
+          </>
+        )}
+      </div>
+
       {/* Thumbnail */}
       {post.thumbnail && (
         <img
           src={post.thumbnail}
           alt={post.title}
-          className="w-full rounded-xl shadow mb-6 max-h-[500px] object-cover"
+          className="w-full rounded-lg mb-6"
         />
       )}
 
-      {/* Judul */}
-      <h1 className="text-3xl md:text-4xl font-bold mb-3 leading-snug">
-        {post.title}
-      </h1>
-
-      {/* Excerpt */}
-      {post.excerpt && (
-        <p className="text-lg text-gray-600 mb-4 italic">{post.excerpt}</p>
-      )}
-
-      {/* Meta info */}
-      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-6">
-        <span>{dayjs(post.published_at).format("DD MMMM YYYY HH:mm")}</span>
-        <span>•</span>
-        {post.author && (
-          <span className="flex items-center gap-2">
-            {post.author.avatar_url && (
-              <img
-                src={post.author.avatar_url}
-                alt={post.author.full_name}
-                className="w-6 h-6 rounded-full object-cover"
-              />
-            )}
-            {post.author.full_name}
-          </span>
-        )}
-        {post.category && (
-          <>
-            <span>•</span>
-            <span
-              className="px-2 py-1 rounded text-white text-xs font-medium"
-              style={{ backgroundColor: post.category.color || "#333" }}
-            >
-              {post.category.name}
-            </span>
-          </>
-        )}
-        <span>•</span>
-        <span>{post.views} views</span>
-      </div>
-
       {/* Konten */}
       <div
-        className="prose prose-lg max-w-none"
+        className="prose max-w-none"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
     </div>
