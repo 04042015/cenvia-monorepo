@@ -22,11 +22,15 @@ const PostDetail = () => {
 
       setPost(data);
 
-      // Tambahkan +1 views
-      await supabase
+      // Tambahkan +1 views langsung di database
+      const { error: updateError } = await supabase
         .from("posts")
-        .update({ views: data.views + 1 })
+        .update({ views: (data.views || 0) + 1 })
         .eq("id", data.id);
+
+      if (updateError) {
+        console.error("Gagal update views:", updateError);
+      }
     };
 
     if (slug) fetchPost();
@@ -37,7 +41,9 @@ const PostDetail = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-      <p className="text-gray-500 text-sm mb-6">Views: {post.views}</p>
+      <p className="text-gray-500 text-sm mb-6">
+        Views: {post.views}
+      </p>
       <div
         className="prose max-w-none"
         dangerouslySetInnerHTML={{ __html: post.content }}
