@@ -1,110 +1,246 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import dayjs from "dayjs";
-import "dayjs/locale/id";
+
+interface Post {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string | null;
+  thumbnail: string | null;
+  views: number;
+  created_at: string;
+  published_at: string | null;
+  author: {
+    full_name: string;
+    avatar_url: string | null;
+  };
+  category: {
+    id: string;
+    name: string;
+    slug: string;
+    color: string;
+  };
+  tags?: string[];
+}
 
 const PostDetail = () => {
   const { slug } = useParams();
-  const [post, setPost] = useState<any>(null);
+  const [post, setPost] = useState<Post | null>(null);
+  const [related, setRelated] = useState<Post[]>([]);
+  const [recommended, setRecommended] = useState<Post[]>([]);
+  const [others, setOthers] = useState<Post[]>([]);
 
   useEffect(() => {
     const fetchPost = async () => {
-      // Ambil artikel beserta author & kategori
       const { data, error } = await supabase
         .from("posts")
         .select(
           `
           *,
-          author:profiles(id, full_name, avatar_url),
-          category:categories(id, name, slug)
+          author:profiles(full_name, avatar_url),
+          category:categories(id, name, slug, color)
         `
         )
         .eq("slug", slug)
         .single();
 
-      if (error || !data) {
+      if (error) {
         console.error("Gagal ambil post:", error);
         return;
       }
 
-      // Increment views via RPC
-      const { error: rpcError } = await supabase.rpc("increment_post_views", {
-        post_id: data.id,
-      });
-      if (rpcError) {
-        console.error("Gagal increment views:", rpcError);
-      }
+      // Increment views
+      await supabase.rpc("increment_post_views", { post_id: data.id });
 
-      // Ambil ulang post biar views sinkron
-      const { data: refreshed, error: refreshError } = await supabase
+      setPost(data);
+
+      // Fetch related (same category)
+      const { data: relatedPosts } = await supabase
         .from("posts")
-        .select(
-          `
-          *,
-          author:profiles(id, full_name, avatar_url),
-          category:categories(id, name, slug)
-        `
-        )
-        .eq("id", data.id)
-        .single();
+        .select("id, title, slug, thumbnail, category:categories(id, name, color)")
+        .eq("category_id", data.category_id)
+        .neq("id", data.id)
+        .limit(4);
 
-      if (refreshError || !refreshed) {
-        console.error("Gagal refresh post:", refreshError);
-        setPost(data); // fallback
-        return;
-      }
+      if (relatedPosts) setRelated(relatedPosts);
 
-      setPost(refreshed);
+      // Fetch recommended (random)
+      const { data: recommendedPosts } = await supabase
+        .from("posts")
+        .select("id, title, slug, thumbnail")
+        .neq("id", data.id)
+        .limit(4);
+
+      if (recommendedPosts) setRecommended(recommendedPosts);
+
+      // Fetch others (different categories)
+      const { data: otherPosts } = await supabase
+        .from("posts")
+        .select("id, title, slug, thumbnail")
+        .neq("category_id", data.category_id)
+        .limit(4);
+
+      if (otherPosts) setOthers(otherPosts);
     };
 
     if (slug) fetchPost();
   }, [slug]);
 
-  if (!post) return <p>Loading...</p>;
+  if (!post) return <p className="text-center py-10">Loading...</p>;
 
   return (
-    <div className="container mx-auto p-4">
-      {/* Judul */}
-      <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+    <div className="container mx-auto px-4 py-6">
+      {/* Breadcrumb */}
+      <nav className="text-sm text-gray-500 mb-4">
+        <Link to="/" className="hover:underline">Home</Link> ›{" "}
+        <Link to={`/category/${post.category.slug}`} style={{ color: post.category.color }}>
+          {post.category.name}
+        </Link> › <span>{post.title}</span>
+      </nav>
 
-      {/* Info meta */}
-      <div className="flex flex-wrap items-center text-sm text-gray-500 gap-2 mb-6">
+      {/* Title */}
+      <h1
+        className="text-4xl font-extrabold mb-3 leading-snug"
+        style={{ color: post.category.color }}
+      >
+        {post.title}
+      </h1>
+
+      {/* Meta info */}
+      <div className="flex items-center text-sm text-gray-600 mb-4 flex-wrap gap-2">
         {post.author?.full_name && (
-          <>
-            <span>{post.author.full_name}</span>
-            <span>•</span>
-          </>
+          <span className="font-medium">{post.author.full_name}</span>
         )}
-        <span>
-          {dayjs(post.published_at || post.created_at)
-            .locale("id")
-            .format("DD MMMM YYYY")}
+        <span>•</span>
+        <span>{dayjs(post.published_at || post.created_at).format("DD MMMM YYYY")}</span>
+        <span>•</span>
+        <span
+          className="font-semibold"
+          style={{ color: post.category.color }}
+        >
+          {post.category.name}
         </span>
         <span>•</span>
         <span>{post.views} views</span>
-        {post.category?.name && (
-          <>
-            <span>•</span>
-            <span className="text-blue-600">{post.category.name}</span>
-          </>
-        )}
       </div>
 
       {/* Thumbnail */}
       {post.thumbnail && (
-        <img
-          src={post.thumbnail}
-          alt={post.title}
-          className="w-full rounded-lg mb-6"
-        />
+        <figure className="mb-4">
+          <img
+            src={post.thumbnail}
+            alt={post.title}
+            className="w-full rounded-lg shadow"
+          />
+          {post.excerpt && (
+            <figcaption className="text-xs text-gray-500 mt-1">
+              {post.excerpt}
+            </figcaption>
+          )}
+        </figure>
       )}
 
-      {/* Konten */}
-      <div
-        className="prose max-w-none"
+      {/* Content */}
+      <article
+        className="prose max-w-none text-justify mb-8"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
+
+      {/* Baca Juga */}
+      <div className="border-l-4 border-red-500 pl-3 mb-8">
+        <h2 className="font-bold text-lg mb-2">Baca Juga</h2>
+        <ul className="list-disc list-inside space-y-1 text-blue-600">
+          {related.slice(0, 2).map((p) => (
+            <li key={p.id}>
+              <Link to={`/post/${p.slug}`} className="hover:underline">
+                {p.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Tags */}
+      {post.tags && post.tags.length > 0 && (
+        <div className="mb-8">
+          <h3 className="font-semibold mb-2">Tags:</h3>
+          <div className="flex flex-wrap gap-2">
+            {post.tags.map((tag, i) => (
+              <span
+                key={i}
+                className="px-3 py-1 text-sm bg-gray-200 rounded-full"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Related News */}
+      <section className="mb-8">
+        <h2 className="text-xl font-bold mb-4">Berita Terkait</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {related.map((p) => (
+            <Link
+              key={p.id}
+              to={`/post/${p.slug}`}
+              className="block border rounded-lg overflow-hidden hover:shadow-lg"
+            >
+              {p.thumbnail && (
+                <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />
+              )}
+              <div className="p-3 text-sm font-medium">{p.title}</div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Recommended For You */}
+      <section className="mb-8">
+        <h2 className="text-xl font-bold mb-4">Rekomendasi Untukmu</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {recommended.map((p) => (
+            <Link
+              key={p.id}
+              to={`/post/${p.slug}`}
+              className="block border rounded-lg overflow-hidden hover:shadow-lg"
+            >
+              {p.thumbnail && (
+                <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />
+              )}
+              <div className="p-3 text-sm font-medium">{p.title}</div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Other News */}
+      <section className="mb-8">
+        <h2 className="text-xl font-bold mb-4">Berita Cenvia Lainnya</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {others.map((p) => (
+            <Link
+              key={p.id}
+              to={`/post/${p.slug}`}
+              className="block border rounded-lg overflow-hidden hover:shadow-lg"
+            >
+              {p.thumbnail && (
+                <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />
+              )}
+              <div className="p-3 text-sm font-medium">{p.title}</div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="mt-10 border-t pt-6 text-center text-sm text-gray-500">
+        <p>© {new Date().getFullYear()} Cenvia. Semua Hak Dilindungi.</p>
+      </footer>
     </div>
   );
 };
