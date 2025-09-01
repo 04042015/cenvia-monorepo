@@ -52,12 +52,9 @@ const PostDetail = () => {
         return;
       }
 
-      // Increment views
       await supabase.rpc("increment_post_views", { post_id: data.id });
-
       setPost(data);
 
-      // Fetch related (same category)
       const { data: relatedPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail, category:categories(id, name, color)")
@@ -67,7 +64,6 @@ const PostDetail = () => {
 
       if (relatedPosts) setRelated(relatedPosts);
 
-      // Fetch recommended (random)
       const { data: recommendedPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail")
@@ -76,7 +72,6 @@ const PostDetail = () => {
 
       if (recommendedPosts) setRecommended(recommendedPosts);
 
-      // Fetch others (different categories)
       const { data: otherPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail")
@@ -95,22 +90,36 @@ const PostDetail = () => {
     <div className="container mx-auto px-4 py-6">
       {/* Breadcrumb */}
       <nav className="text-sm text-gray-500 mb-4">
-        <Link to="/" className="hover:underline">Home</Link> ›{" "}
-        <Link to={`/category/${post.category.slug}`} style={{ color: post.category.color }}>
+        <Link to="/" className="hover:underline">Home</Link>
+        <span className="mx-1">›</span>
+        <Link
+          to={`/category/${post.category.slug}`}
+          style={{ color: post.category.color }}
+          className="font-medium"
+        >
           {post.category.name}
-        </Link> › <span>{post.title}</span>
+        </Link>
+        <span className="mx-1">›</span>
+        <span>{post.title}</span>
       </nav>
 
       {/* Title */}
       <h1
-        className="text-4xl font-extrabold mb-3 leading-snug"
+        className="text-3xl sm:text-4xl font-extrabold mb-3 leading-snug"
         style={{ color: post.category.color }}
       >
         {post.title}
       </h1>
 
       {/* Meta info */}
-      <div className="flex items-center text-sm text-gray-600 mb-4 flex-wrap gap-2">
+      <div className="flex items-center text-sm text-gray-600 mb-5 flex-wrap gap-3">
+        {post.author?.avatar_url && (
+          <img
+            src={post.author.avatar_url}
+            alt={post.author.full_name}
+            className="w-7 h-7 rounded-full object-cover"
+          />
+        )}
         {post.author?.full_name && (
           <span className="font-medium">{post.author.full_name}</span>
         )}
@@ -129,14 +138,14 @@ const PostDetail = () => {
 
       {/* Thumbnail */}
       {post.thumbnail && (
-        <figure className="mb-4">
+        <figure className="mb-6">
           <img
             src={post.thumbnail}
             alt={post.title}
-            className="w-full rounded-lg shadow"
+            className="w-full rounded-lg shadow-md"
           />
           {post.excerpt && (
-            <figcaption className="text-xs text-gray-500 mt-1">
+            <figcaption className="text-xs text-gray-500 mt-1 italic">
               {post.excerpt}
             </figcaption>
           )}
@@ -145,33 +154,35 @@ const PostDetail = () => {
 
       {/* Content */}
       <article
-        className="prose max-w-none text-justify mb-8"
+        className="prose max-w-none text-justify mb-10 prose-lg"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
       {/* Baca Juga */}
-      <div className="border-l-4 border-red-500 pl-3 mb-8">
-        <h2 className="font-bold text-lg mb-2">Baca Juga</h2>
-        <ul className="list-disc list-inside space-y-1 text-blue-600">
-          {related.slice(0, 2).map((p) => (
-            <li key={p.id}>
-              <Link to={`/post/${p.slug}`} className="hover:underline">
-                {p.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {related.length > 0 && (
+        <div className="border-l-4 border-red-500 pl-3 mb-10">
+          <h2 className="font-bold text-lg mb-2">Baca Juga</h2>
+          <ul className="space-y-1 text-blue-600">
+            {related.slice(0, 2).map((p) => (
+              <li key={p.id}>
+                <Link to={`/post/${p.slug}`} className="hover:underline">
+                  {p.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Tags */}
       {post.tags && post.tags.length > 0 && (
-        <div className="mb-8">
+        <div className="mb-10">
           <h3 className="font-semibold mb-2">Tags:</h3>
           <div className="flex flex-wrap gap-2">
             {post.tags.map((tag, i) => (
               <span
                 key={i}
-                className="px-3 py-1 text-sm bg-gray-200 rounded-full"
+                className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer"
               >
                 #{tag}
               </span>
@@ -181,14 +192,14 @@ const PostDetail = () => {
       )}
 
       {/* Related News */}
-      <section className="mb-8">
+      <section className="mb-10">
         <h2 className="text-xl font-bold mb-4">Berita Terkait</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {related.map((p) => (
             <Link
               key={p.id}
               to={`/post/${p.slug}`}
-              className="block border rounded-lg overflow-hidden hover:shadow-lg"
+              className="block border rounded-lg overflow-hidden hover:shadow-md transition"
             >
               {p.thumbnail && (
                 <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />
@@ -200,14 +211,14 @@ const PostDetail = () => {
       </section>
 
       {/* Recommended For You */}
-      <section className="mb-8">
+      <section className="mb-10">
         <h2 className="text-xl font-bold mb-4">Rekomendasi Untukmu</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {recommended.map((p) => (
             <Link
               key={p.id}
               to={`/post/${p.slug}`}
-              className="block border rounded-lg overflow-hidden hover:shadow-lg"
+              className="block border rounded-lg overflow-hidden hover:shadow-md transition"
             >
               {p.thumbnail && (
                 <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />
@@ -219,14 +230,14 @@ const PostDetail = () => {
       </section>
 
       {/* Other News */}
-      <section className="mb-8">
+      <section className="mb-10">
         <h2 className="text-xl font-bold mb-4">Berita Cenvia Lainnya</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {others.map((p) => (
             <Link
               key={p.id}
               to={`/post/${p.slug}`}
-              className="block border rounded-lg overflow-hidden hover:shadow-lg"
+              className="block border rounded-lg overflow-hidden hover:shadow-md transition"
             >
               {p.thumbnail && (
                 <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />
@@ -238,7 +249,7 @@ const PostDetail = () => {
       </section>
 
       {/* Footer */}
-      <footer className="mt-10 border-t pt-6 text-center text-sm text-gray-500">
+      <footer className="mt-12 border-t pt-6 text-center text-sm text-gray-500">
         <p>© {new Date().getFullYear()} Cenvia. Semua Hak Dilindungi.</p>
       </footer>
     </div>
