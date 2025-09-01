@@ -23,7 +23,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const BUCKET_NAME = "asset"; // 🔁 ganti jika kamu membuat bucket dengan nama lain
+const BUCKET_NAME = "assets"; // 🔁 ganti jika kamu membuat bucket dengan nama lain
 
 export function PostForm({ onSuccess }: { onSuccess?: () => void }) {
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
@@ -70,7 +70,7 @@ export function PostForm({ onSuccess }: { onSuccess?: () => void }) {
 
       const { error: uploadErr } = await supabase
         .storage
-        .from(BUCKET_NAME)
+        .from("assets")
         .upload(filePath, file, {
           cacheControl: "3600",
           upsert: false,
@@ -81,7 +81,7 @@ export function PostForm({ onSuccess }: { onSuccess?: () => void }) {
         throw uploadErr;
       }
 
-      const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
+      const { data } = supabase.storage.from("assets").getPublicUrl(filePath);
       return data.publicUrl; // hanya valid jika bucket PUBLIC
     } finally {
       setUploading(false);
