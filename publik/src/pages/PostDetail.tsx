@@ -20,22 +20,29 @@ const PostDetail = () => {
         return;
       }
 
-      // Increment views langsung di DB (aman dari race condition)
-      const { data: updatedData, error: updateError } = await supabase
+      // Increment views via RPC (aman dari race condition)
+      const { error: rpcError } = await supabase.rpc("increment_post_views", {
+        post_id: data.id,
+      });
+
+      if (rpcError) {
+        console.error("Gagal increment views:", rpcError);
+      }
+
+      // Ambil ulang post supaya views terbaru langsung tampil di UI
+      const { data: refreshed, error: refreshError } = await supabase
         .from("posts")
-        .update({ views: (data.views ?? 0) + 1 })
+        .select("*")
         .eq("id", data.id)
-        .select()
         .single();
 
-      if (updateError) {
-        console.error("Gagal update views:", updateError);
-        setPost(data); // fallback pakai data lama
+      if (refreshError) {
+        console.error("Gagal refresh post:", refreshError);
+        setPost(data); // fallback
         return;
       }
 
-      // Set post dengan views terbaru agar langsung tampil di UI
-      setPost(updatedData);
+      setPost(refreshed);
     };
 
     if (slug) fetchPost();
