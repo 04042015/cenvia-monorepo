@@ -8,10 +8,10 @@ import {
   MessageCircle,
   Send,
   Linkedin,
-  Reddit,
   Link as LinkIcon,
   Share2,
 } from "lucide-react";
+import { FaReddit } from "react-icons/fa";
 
 interface Post {
   id: string;
@@ -193,12 +193,7 @@ const PostDetail = () => {
           >
             <Linkedin className="w-5 h-5" />
           </a>
-          <a
-            href={`https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(post.title)}`}
-            target="_blank" rel="noopener noreferrer"
-            className="p-2 rounded-full bg-orange-600 text-white hover:bg-orange-700"
-          >
-            <Reddit className="w-5 h-5" />
+            <FaReddit className="w-5 h-5" />
           </a>
           <button
             onClick={handleCopyLink}
