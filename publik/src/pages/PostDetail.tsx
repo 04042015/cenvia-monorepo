@@ -326,11 +326,6 @@ const PostDetail = () => {
           ))}
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="mt-12 border-t pt-6 text-center text-sm text-gray-500">
-        <p>© {new Date().getFullYear()} Cenvia. Semua Hak Dilindungi.</p>
-      </footer>
     </div>
   );
 };
