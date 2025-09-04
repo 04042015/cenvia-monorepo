@@ -46,18 +46,17 @@ const PostDetail = () => {
   useEffect(() => {
   const fetchPost = async () => {
     const { data, error } = await supabase
-      .from("posts")
-      .select(
-        `
-        id, title, slug, content, excerpt, thumbnail, views, created_at, published_at,
-        author_id,
-        author:profiles!posts_author_id_fkey(full_name, avatar_url),
-        category:categories(id, name, slug, color),
-        tags
-      `
-      )
-      .eq("slug", slug)
-      .single();
+  .from("posts")
+  .select(`
+    id, title, slug, content, excerpt, thumbnail, views, created_at, published_at,
+    author_id,
+    profiles!posts_author_id_fkey(full_name, avatar_url),
+    category:categories(id, name, slug, color),
+    tags
+  `)
+  .eq("slug", slug)
+  .single();
+
 
     if (error) {
       console.error("Gagal ambil post:", error);
