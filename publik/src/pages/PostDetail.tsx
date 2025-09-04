@@ -24,10 +24,11 @@ interface Post {
   views: number;
   created_at: string;
   published_at: string | null;
+  author_id: string | null; // ✅ tambahkan ini
   author: {
     full_name: string;
     avatar_url: string | null;
-  };
+  } | null; // ✅ buat nullable
   category: {
     id: string;
     name: string;
@@ -53,7 +54,7 @@ const PostDetail = () => {
           author_id, category_id,
           author:profiles!posts_author_id_fkey(full_name, avatar_url),
           category:categories(id, name, slug, color)
-        `) // ← alias ke "author" + tambahkan category_id
+        `)
         .eq("slug", slug)
         .single();
 
@@ -62,9 +63,11 @@ const PostDetail = () => {
         return;
       }
 
+      // ✅ increment views
       await supabase.rpc("increment_post_views", { post_id: data.id });
       setPost(data);
 
+      // Related
       const { data: relatedPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail, category:categories(id, name, color)")
@@ -74,6 +77,7 @@ const PostDetail = () => {
 
       if (relatedPosts) setRelated(relatedPosts);
 
+      // Recommended
       const { data: recommendedPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail")
@@ -82,6 +86,7 @@ const PostDetail = () => {
 
       if (recommendedPosts) setRecommended(recommendedPosts);
 
+      // Others
       const { data: otherPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail")
@@ -158,6 +163,7 @@ const PostDetail = () => {
           <Share2 className="w-4 h-4" /> Bagikan
         </h3>
         <div className="flex justify-center flex-wrap gap-3">
+          {/* share buttons */}
           <a
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
             target="_blank" rel="noopener noreferrer"
@@ -231,7 +237,7 @@ const PostDetail = () => {
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
-      {/* Baca Juga */}
+      {/* Related News */}
       {related.length > 0 && (
         <div className="border-l-4 border-red-500 pl-3 mb-10">
           <h2 className="font-bold text-lg mb-2">Baca Juga</h2>
@@ -264,7 +270,7 @@ const PostDetail = () => {
         </div>
       )}
 
-      {/* Related News */}
+      {/* Related / Recommended / Others */}
       <section className="mb-10">
         <h2 className="text-xl font-bold mb-4">Berita Terkait</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -283,7 +289,6 @@ const PostDetail = () => {
         </div>
       </section>
 
-      {/* Recommended For You */}
       <section className="mb-10">
         <h2 className="text-xl font-bold mb-4">Rekomendasi Untukmu</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -302,7 +307,6 @@ const PostDetail = () => {
         </div>
       </section>
 
-      {/* Other News */}
       <section className="mb-10">
         <h2 className="text-xl font-bold mb-4">Berita Cenvia Lainnya</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
