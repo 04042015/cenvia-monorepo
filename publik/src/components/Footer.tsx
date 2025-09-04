@@ -1,18 +1,28 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 import { Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
 
+type Category = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
 const Footer = () => {
-  const exploreCategories = [
-    { name: "News", count: "2.1K" },
-    { name: "Ekobiz", count: "892" },
-    { name: "Spotlight", count: "1.5K" },
-    { name: "Lifestyle", count: "1.2K" },
-    { name: "Arena", count: "967" },
-    { name: "Tekingame", count: "543" },
-    { name: "Otogaz", count: "654" },
-    { name: "Fadami", count: "432" },
-    { name: "Hiling", count: "321" },
-    { name: "Z Campus", count: "287" }
-  ];
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("id, name, slug")
+        .limit(10);
+
+      if (!error && data) setCategories(data);
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <footer className="bg-gray-900 text-white">
@@ -26,10 +36,10 @@ const Footer = () => {
               <img
                 src="/icons/logo-cenvia.svg"
                 alt="CENVIA"
-                className="w-12 h-12 mr-3 rounded-lg" // ✅ sudut tumpul
+                className="w-12 h-12 mr-3 rounded-lg"
               />
               <div>
-                <h3 className="text-2xl font-bold text-white">CENVIA</h3> {/* ✅ warna putih */}
+                <h3 className="text-2xl font-bold text-white">CENVIA</h3>
               </div>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed mb-6">
@@ -50,14 +60,13 @@ const Footer = () => {
           <div className="lg:col-span-2">
             <h3 className="text-xl font-bold mb-6 text-primary">EXPLORE Our Site</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {exploreCategories.map((category, index) => (
+              {categories.map((category) => (
                 <a
-                  key={index}
-                  href="#"
+                  key={category.id}
+                  href={`/category/${category.slug}`}
                   className="flex items-center justify-between p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors duration-200"
                 >
                   <span className="font-medium">{category.name}</span>
-                  <span className="text-sm text-gray-400">({category.count})</span>
                 </a>
               ))}
             </div>
