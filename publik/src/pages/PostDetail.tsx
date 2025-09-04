@@ -44,55 +44,58 @@ const PostDetail = () => {
   const [others, setOthers] = useState<Post[]>([]);
 
   useEffect(() => {
-    const fetchPost = async () => {
-      const { data, error } = await supabase
-        .from("posts")
-        .select(
-          `
-          *,
-          author:profiles(full_name, avatar_url),
-          category:categories(id, name, slug, color)
+  const fetchPost = async () => {
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
         `
-        )
-        .eq("slug", slug)
-        .single();
+        id, title, slug, content, excerpt, thumbnail, views, created_at, published_at,
+        author_id,
+        author:profiles!posts_author_id_fkey(full_name, avatar_url),
+        category:categories(id, name, slug, color),
+        tags
+      `
+      )
+      .eq("slug", slug)
+      .single();
 
-      if (error) {
-        console.error("Gagal ambil post:", error);
-        return;
-      }
+    if (error) {
+      console.error("Gagal ambil post:", error);
+      return;
+    }
 
-      await supabase.rpc("increment_post_views", { post_id: data.id });
-      setPost(data);
+    await supabase.rpc("increment_post_views", { post_id: data.id });
+    setPost(data);
 
-      const { data: relatedPosts } = await supabase
-        .from("posts")
-        .select("id, title, slug, thumbnail, category:categories(id, name, color)")
-        .eq("category_id", data.category_id)
-        .neq("id", data.id)
-        .limit(4);
+    const { data: relatedPosts } = await supabase
+      .from("posts")
+      .select("id, title, slug, thumbnail, category:categories(id, name, color)")
+      .eq("category_id", data.category_id)
+      .neq("id", data.id)
+      .limit(4);
 
-      if (relatedPosts) setRelated(relatedPosts);
+    if (relatedPosts) setRelated(relatedPosts);
 
-      const { data: recommendedPosts } = await supabase
-        .from("posts")
-        .select("id, title, slug, thumbnail")
-        .neq("id", data.id)
-        .limit(4);
+    const { data: recommendedPosts } = await supabase
+      .from("posts")
+      .select("id, title, slug, thumbnail")
+      .neq("id", data.id)
+      .limit(4);
 
-      if (recommendedPosts) setRecommended(recommendedPosts);
+    if (recommendedPosts) setRecommended(recommendedPosts);
 
-      const { data: otherPosts } = await supabase
-        .from("posts")
-        .select("id, title, slug, thumbnail")
-        .neq("category_id", data.category_id)
-        .limit(4);
+    const { data: otherPosts } = await supabase
+      .from("posts")
+      .select("id, title, slug, thumbnail")
+      .neq("category_id", data.category_id)
+      .limit(4);
 
-      if (otherPosts) setOthers(otherPosts);
-    };
+    if (otherPosts) setOthers(otherPosts);
+  };
 
-    if (slug) fetchPost();
-  }, [slug]);
+  if (slug) fetchPost();
+}, [slug]);
+
 
   if (!post) return <p className="text-center py-10">Loading...</p>;
 
