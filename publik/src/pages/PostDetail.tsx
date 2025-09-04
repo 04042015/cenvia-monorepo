@@ -1,3 +1,4 @@
+// publik/src/pages/PostDetail.tsx
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
@@ -44,57 +45,54 @@ const PostDetail = () => {
   const [others, setOthers] = useState<Post[]>([]);
 
   useEffect(() => {
-  const fetchPost = async () => {
-    const { data, error } = await supabase
-  .from("posts")
-  .select(`
-    id, title, slug, content, excerpt, thumbnail, views, created_at, published_at,
-    author_id,
-    profiles!posts_author_id_fkey(full_name, avatar_url),
-    category:categories(id, name, slug, color),
-    tags
-  `)
-  .eq("slug", slug)
-  .single();
+    const fetchPost = async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select(`
+          id, title, slug, content, excerpt, thumbnail, views, created_at, published_at,
+          author_id,
+          profiles!posts_author_id_fkey(full_name, avatar_url),
+          category:categories(id, name, slug, color)
+        `) // 🔹 Hapus "tags" dari query
+        .eq("slug", slug)
+        .single();
 
+      if (error) {
+        console.error("Gagal ambil post:", error);
+        return;
+      }
 
-    if (error) {
-      console.error("Gagal ambil post:", error);
-      return;
-    }
+      await supabase.rpc("increment_post_views", { post_id: data.id });
+      setPost(data);
 
-    await supabase.rpc("increment_post_views", { post_id: data.id });
-    setPost(data);
+      const { data: relatedPosts } = await supabase
+        .from("posts")
+        .select("id, title, slug, thumbnail, category:categories(id, name, color)")
+        .eq("category_id", data.category_id)
+        .neq("id", data.id)
+        .limit(4);
 
-    const { data: relatedPosts } = await supabase
-      .from("posts")
-      .select("id, title, slug, thumbnail, category:categories(id, name, color)")
-      .eq("category_id", data.category_id)
-      .neq("id", data.id)
-      .limit(4);
+      if (relatedPosts) setRelated(relatedPosts);
 
-    if (relatedPosts) setRelated(relatedPosts);
+      const { data: recommendedPosts } = await supabase
+        .from("posts")
+        .select("id, title, slug, thumbnail")
+        .neq("id", data.id)
+        .limit(4);
 
-    const { data: recommendedPosts } = await supabase
-      .from("posts")
-      .select("id, title, slug, thumbnail")
-      .neq("id", data.id)
-      .limit(4);
+      if (recommendedPosts) setRecommended(recommendedPosts);
 
-    if (recommendedPosts) setRecommended(recommendedPosts);
+      const { data: otherPosts } = await supabase
+        .from("posts")
+        .select("id, title, slug, thumbnail")
+        .neq("category_id", data.category_id)
+        .limit(4);
 
-    const { data: otherPosts } = await supabase
-      .from("posts")
-      .select("id, title, slug, thumbnail")
-      .neq("category_id", data.category_id)
-      .limit(4);
+      if (otherPosts) setOthers(otherPosts);
+    };
 
-    if (otherPosts) setOthers(otherPosts);
-  };
-
-  if (slug) fetchPost();
-}, [slug]);
-
+    if (slug) fetchPost();
+  }, [slug]);
 
   if (!post) return <p className="text-center py-10">Loading...</p>;
 
@@ -160,6 +158,7 @@ const PostDetail = () => {
           <Share2 className="w-4 h-4" /> Bagikan
         </h3>
         <div className="flex justify-center flex-wrap gap-3">
+          {/* Share buttons tetap sama */}
           <a
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
             target="_blank" rel="noopener noreferrer"
@@ -200,8 +199,8 @@ const PostDetail = () => {
             target="_blank" rel="noopener noreferrer"
             className="p-2 rounded-full bg-orange-600 text-white hover:bg-orange-700"
           >
-           <FaReddit className="w-5 h-5" />
-         </a>
+            <FaReddit className="w-5 h-5" />
+          </a>
           <button
             onClick={handleCopyLink}
             className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700"
