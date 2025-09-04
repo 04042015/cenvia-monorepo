@@ -24,11 +24,11 @@ interface Post {
   views: number;
   created_at: string;
   published_at: string | null;
-  author_id: string | null; // ✅ tambahkan ini
+  author_id: string | null;
   author: {
     full_name: string;
     avatar_url: string | null;
-  } | null; // ✅ buat nullable
+  } | null;
   category: {
     id: string;
     name: string;
@@ -63,7 +63,7 @@ const PostDetail = () => {
         return;
       }
 
-      // ✅ increment views
+      // increment views
       await supabase.rpc("increment_post_views", { post_id: data.id });
       setPost(data);
 
@@ -141,8 +141,10 @@ const PostDetail = () => {
             className="w-7 h-7 rounded-full object-cover"
           />
         )}
-        {post.author?.full_name && (
+        {post.author?.full_name ? (
           <span className="font-medium">{post.author.full_name}</span>
+        ) : (
+          <span className="italic">Anonim</span>
         )}
         <span>•</span>
         <span>{dayjs(post.published_at || post.created_at).format("DD MMMM YYYY")}</span>
@@ -233,11 +235,11 @@ const PostDetail = () => {
 
       {/* Content */}
       <article
-        className="prose max-w-none text-justify mb-10 prose-lg"
+        className="prose prose-lg max-w-none text-justify mb-10"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
-      {/* Related News */}
+      {/* Baca Juga */}
       {related.length > 0 && (
         <div className="border-l-4 border-red-500 pl-3 mb-10">
           <h2 className="font-bold text-lg mb-2">Baca Juga</h2>
@@ -325,11 +327,6 @@ const PostDetail = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="mt-12 border-t pt-6 text-center text-sm text-gray-500">
-        <p>© {new Date().getFullYear()} Cenvia. Semua Hak Dilindungi.</p>
-      </footer>
-    </div>
   );
 };
 
