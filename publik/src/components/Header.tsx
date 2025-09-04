@@ -97,8 +97,8 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
               className="w-12 h-12 object-contain"
             />
             <div>
-              <h1 className="text-3xl font-bold text-primary">CENVIA</h1>
-              <h2 className="text-sm text-gray-600 tracking-wide">Portal Berita</h2>
+              <h1 className="text-3xl font-bold text-white">CENVIA</h1>
+              <h2 className="text-sm text-gray-300 tracking-wide">Portal Berita</h2>
             </div>
           </div>
 
