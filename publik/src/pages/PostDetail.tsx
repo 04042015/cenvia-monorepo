@@ -34,13 +34,7 @@ interface Post {
     slug: string;
     color: string;
   };
-  tags?: {
-    tag: {
-      id: string;
-      name: string;
-      slug: string;
-    };
-  }[];
+  tags?: string[];
 }
 
 const PostDetail = () => {
@@ -56,11 +50,10 @@ const PostDetail = () => {
         .from("posts")
         .select(`
           id, title, slug, content, excerpt, thumbnail, views, created_at, published_at,
-          author_id,
-          profiles!posts_author_id_fkey(full_name, avatar_url),
-          category:categories(id, name, slug, color),
-          tags:post_tags(tag:tags(id, name, slug))
-        `)
+          author_id, category_id,
+          author:profiles!posts_author_id_fkey(full_name, avatar_url),
+          category:categories(id, name, slug, color)
+        `) // ← alias ke "author" + tambahkan category_id
         .eq("slug", slug)
         .single();
 
@@ -165,7 +158,6 @@ const PostDetail = () => {
           <Share2 className="w-4 h-4" /> Bagikan
         </h3>
         <div className="flex justify-center flex-wrap gap-3">
-          {/* Share buttons tetap sama */}
           <a
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
             target="_blank" rel="noopener noreferrer"
@@ -260,14 +252,13 @@ const PostDetail = () => {
         <div className="mb-10">
           <h3 className="font-semibold mb-2">Tags:</h3>
           <div className="flex flex-wrap gap-2">
-            {post.tags.map((pt) => (
-              <Link
-                key={pt.tag.id}
-                to={`/tag/${pt.tag.slug}`}
-                className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded-full"
+            {post.tags.map((tag, i) => (
+              <span
+                key={i}
+                className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer"
               >
-                #{pt.tag.name}
-              </Link>
+                #{tag}
+              </span>
             ))}
           </div>
         </div>
