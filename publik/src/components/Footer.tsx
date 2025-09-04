@@ -26,10 +26,10 @@ const Footer = () => {
               <img
                 src="/icons/logo-cenvia.svg"
                 alt="CENVIA"
-                className="w-12 h-12 mr-3"
+                className="w-12 h-12 mr-3 rounded-lg" // ✅ sudut tumpul
               />
               <div>
-                <h3 className="text-2xl font-bold">CENVIA</h3>
+                <h3 className="text-2xl font-bold text-white">CENVIA</h3> {/* ✅ warna putih */}
               </div>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed mb-6">
