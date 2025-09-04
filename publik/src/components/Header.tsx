@@ -60,7 +60,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
             <span className="flex items-center gap-1 font-bold text-sm whitespace-nowrap">
               <span className="material-symbols-outlined text-red-500">
                 trending_up
-             </span>
+              </span>
               BRAKING NEWS  |
             </span>
             <div className="overflow-hidden whitespace-nowrap w-full">
@@ -97,7 +97,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
               className="w-12 h-12 object-contain"
             />
             <div>
-              <h1 className="text-3xl font-bold text-white">CENVIA</h1>
+              <h1 className="text-2xl font-bold text-white">CENVIA</h1>
               <h2 className="text-sm text-gray-300 tracking-wide">Portal Berita</h2>
             </div>
           </div>
