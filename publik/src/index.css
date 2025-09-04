@@ -118,7 +118,7 @@ All colors MUST be HSL.
   }
 }
 
-/* Breaking news scrolling animation */
+/* Breaking news scrolling animation (existing) */
 @keyframes scroll-text {
   0% {
     transform: translateX(100%);
@@ -133,6 +133,25 @@ All colors MUST be HSL.
   white-space: nowrap;
 }
 
+/* ✅ Added: marquee animation to match class used in Header.tsx */
+@keyframes marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 15s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
 /* Hide scrollbar for mobile navigation */
 .scrollbar-hide {
   -ms-overflow-style: none;
@@ -141,4 +160,4 @@ All colors MUST be HSL.
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
-}
+    }
