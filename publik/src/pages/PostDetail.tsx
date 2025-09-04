@@ -34,7 +34,13 @@ interface Post {
     slug: string;
     color: string;
   };
-  tags?: string[];
+  tags?: {
+    tag: {
+      id: string;
+      name: string;
+      slug: string;
+    };
+  }[];
 }
 
 const PostDetail = () => {
@@ -52,8 +58,9 @@ const PostDetail = () => {
           id, title, slug, content, excerpt, thumbnail, views, created_at, published_at,
           author_id,
           profiles!posts_author_id_fkey(full_name, avatar_url),
-          category:categories(id, name, slug, color)
-        `) // 🔹 Hapus "tags" dari query
+          category:categories(id, name, slug, color),
+          tags:post_tags(tag:tags(id, name, slug))
+        `)
         .eq("slug", slug)
         .single();
 
@@ -253,13 +260,14 @@ const PostDetail = () => {
         <div className="mb-10">
           <h3 className="font-semibold mb-2">Tags:</h3>
           <div className="flex flex-wrap gap-2">
-            {post.tags.map((tag, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer"
+            {post.tags.map((pt) => (
+              <Link
+                key={pt.tag.id}
+                to={`/tag/${pt.tag.slug}`}
+                className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded-full"
               >
-                #{tag}
-              </span>
+                #{pt.tag.name}
+              </Link>
             ))}
           </div>
         </div>
