@@ -1,21 +1,19 @@
+// publik/src/pages/Index.tsx
 import { useState } from "react";
-import { Link } from "react-router-dom"; // ✅ tambahkan ini
-import Header from "@/components/Header";
 import NewsGrid from "@/components/NewsGrid";
 import RightSidebar from "@/components/RightSidebar";
 import NetworkSidebar from "@/components/NetworkSidebar";
-import Footer from "@/components/Footer";
 
 const Index = () => {
   const [isNetworkSidebarOpen, setIsNetworkSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
-      <Header onNetworkClick={() => setIsNetworkSidebarOpen(true)} />
       <NetworkSidebar 
         isOpen={isNetworkSidebarOpen} 
         onClose={() => setIsNetworkSidebarOpen(false)} 
       />
+
       <main className="container mx-auto px-4 py-8">
         {/* Desktop: 4 columns (3 news + 1 sidebar), Tablet: 2 columns (news + sidebar), Mobile: 1 column (stacked) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -27,7 +25,6 @@ const Index = () => {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };
