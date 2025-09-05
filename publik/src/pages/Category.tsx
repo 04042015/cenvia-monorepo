@@ -1,8 +1,7 @@
+// publik/src/pages/Category.tsx
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 type Article = {
   id: string;
@@ -55,8 +54,6 @@ const Category = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="mb-4">
           <Link
@@ -98,8 +95,6 @@ const Category = () => {
           </ul>
         )}
       </main>
-
-      <Footer />
     </div>
   );
 };
