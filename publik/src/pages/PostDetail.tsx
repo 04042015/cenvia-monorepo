@@ -24,9 +24,8 @@ interface Post {
   views: number;
   created_at: string;
   published_at: string | null;
-  author_id: string | null;
   author: {
-    full_name: string;
+    full_name: string | null;
     avatar_url: string | null;
   } | null;
   category: {
@@ -51,11 +50,12 @@ const PostDetail = () => {
         .from("posts")
         .select(`
           id, title, slug, content, excerpt, thumbnail, views, created_at, published_at,
-          author_id, category_id,
+          category_id,
           author:profiles!posts_author_id_fkey(full_name, avatar_url),
           category:categories(id, name, slug, color)
         `)
         .eq("slug", slug)
+        .eq("status", "published")
         .single();
 
       if (error) {
@@ -74,7 +74,6 @@ const PostDetail = () => {
         .eq("category_id", data.category_id)
         .neq("id", data.id)
         .limit(4);
-
       if (relatedPosts) setRelated(relatedPosts);
 
       // Recommended
@@ -83,7 +82,6 @@ const PostDetail = () => {
         .select("id, title, slug, thumbnail")
         .neq("id", data.id)
         .limit(4);
-
       if (recommendedPosts) setRecommended(recommendedPosts);
 
       // Others
@@ -92,7 +90,6 @@ const PostDetail = () => {
         .select("id, title, slug, thumbnail")
         .neq("category_id", data.category_id)
         .limit(4);
-
       if (otherPosts) setOthers(otherPosts);
     };
 
@@ -104,7 +101,7 @@ const PostDetail = () => {
   const shareUrl = `${window.location.origin}/post/${post.slug}`;
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareUrl);
-    alert("Link artikel berhasil disalin 📋");
+    alert("Link artikel berhasil disalin");
   };
 
   return (
@@ -137,22 +134,17 @@ const PostDetail = () => {
         {post.author?.avatar_url && (
           <img
             src={post.author.avatar_url}
-            alt={post.author.full_name}
+            alt={post.author.full_name || "Anonim"}
             className="w-7 h-7 rounded-full object-cover"
           />
         )}
-        {post.author?.full_name ? (
-          <span className="font-medium">{post.author.full_name}</span>
-        ) : (
-          <span className="italic">Anonim</span>
-        )}
+        <span className="font-medium">
+          {post.author?.full_name || "Anonim"}
+        </span>
         <span>•</span>
         <span>{dayjs(post.published_at || post.created_at).format("DD MMMM YYYY")}</span>
         <span>•</span>
-        <span
-          className="font-semibold"
-          style={{ color: post.category.color }}
-        >
+        <span className="font-semibold" style={{ color: post.category.color }}>
           {post.category.name}
         </span>
         <span>•</span>
@@ -165,53 +157,25 @@ const PostDetail = () => {
           <Share2 className="w-4 h-4" /> Bagikan
         </h3>
         <div className="flex justify-center flex-wrap gap-3">
-          {/* share buttons */}
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-            target="_blank" rel="noopener noreferrer"
-            className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700"
-          >
+          <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700">
             <Facebook className="w-5 h-5" />
           </a>
-          <a
-            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
-            target="_blank" rel="noopener noreferrer"
-            className="p-2 rounded-full bg-sky-500 text-white hover:bg-sky-600"
-          >
+          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-sky-500 text-white hover:bg-sky-600">
             <Twitter className="w-5 h-5" />
           </a>
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(post.title + " " + shareUrl)}`}
-            target="_blank" rel="noopener noreferrer"
-            className="p-2 rounded-full bg-green-500 text-white hover:bg-green-600"
-          >
+          <a href={`https://wa.me/?text=${encodeURIComponent(post.title + " " + shareUrl)}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-green-500 text-white hover:bg-green-600">
             <MessageCircle className="w-5 h-5" />
           </a>
-          <a
-            href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
-            target="_blank" rel="noopener noreferrer"
-            className="p-2 rounded-full bg-blue-400 text-white hover:bg-blue-500"
-          >
+          <a href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-blue-400 text-white hover:bg-blue-500">
             <Send className="w-5 h-5" />
           </a>
-          <a
-            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
-            target="_blank" rel="noopener noreferrer"
-            className="p-2 rounded-full bg-blue-700 text-white hover:bg-blue-800"
-          >
+          <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-blue-700 text-white hover:bg-blue-800">
             <Linkedin className="w-5 h-5" />
           </a>
-          <a
-            href={`https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(post.title)}`}
-            target="_blank" rel="noopener noreferrer"
-            className="p-2 rounded-full bg-orange-600 text-white hover:bg-orange-700"
-          >
+          <a href={`https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(post.title)}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-orange-600 text-white hover:bg-orange-700">
             <FaReddit className="w-5 h-5" />
           </a>
-          <button
-            onClick={handleCopyLink}
-            className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700"
-          >
+          <button onClick={handleCopyLink} className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700">
             <LinkIcon className="w-5 h-5" />
           </button>
         </div>
@@ -220,11 +184,7 @@ const PostDetail = () => {
       {/* Thumbnail */}
       {post.thumbnail && (
         <figure className="mb-6">
-          <img
-            src={post.thumbnail}
-            alt={post.title}
-            className="w-full max-w-3xl mx-auto rounded-lg shadow-md"
-          />
+          <img src={post.thumbnail} alt={post.title} className="w-full max-w-3xl mx-auto rounded-lg shadow-md" />
           {post.excerpt && (
             <figcaption className="text-xs text-gray-500 mt-1 italic text-center">
               {post.excerpt}
@@ -261,10 +221,7 @@ const PostDetail = () => {
           <h3 className="font-semibold mb-2">Tags:</h3>
           <div className="flex flex-wrap gap-2">
             {post.tags.map((tag, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer"
-              >
+              <span key={i} className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer">
                 #{tag}
               </span>
             ))}
@@ -277,14 +234,8 @@ const PostDetail = () => {
         <h2 className="text-xl font-bold mb-4">Berita Terkait</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {related.map((p) => (
-            <Link
-              key={p.id}
-              to={`/post/${p.slug}`}
-              className="block border rounded-lg overflow-hidden hover:shadow-md transition"
-            >
-              {p.thumbnail && (
-                <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />
-              )}
+            <Link key={p.id} to={`/post/${p.slug}`} className="block border rounded-lg overflow-hidden hover:shadow-md transition">
+              {p.thumbnail && <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />}
               <div className="p-3 text-sm font-medium">{p.title}</div>
             </Link>
           ))}
@@ -295,14 +246,8 @@ const PostDetail = () => {
         <h2 className="text-xl font-bold mb-4">Rekomendasi Untukmu</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {recommended.map((p) => (
-            <Link
-              key={p.id}
-              to={`/post/${p.slug}`}
-              className="block border rounded-lg overflow-hidden hover:shadow-md transition"
-            >
-              {p.thumbnail && (
-                <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />
-              )}
+            <Link key={p.id} to={`/post/${p.slug}`} className="block border rounded-lg overflow-hidden hover:shadow-md transition">
+              {p.thumbnail && <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />}
               <div className="p-3 text-sm font-medium">{p.title}</div>
             </Link>
           ))}
@@ -313,14 +258,8 @@ const PostDetail = () => {
         <h2 className="text-xl font-bold mb-4">Berita Cenvia Lainnya</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {others.map((p) => (
-            <Link
-              key={p.id}
-              to={`/post/${p.slug}`}
-              className="block border rounded-lg overflow-hidden hover:shadow-md transition"
-            >
-              {p.thumbnail && (
-                <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />
-              )}
+            <Link key={p.id} to={`/post/${p.slug}`} className="block border rounded-lg overflow-hidden hover:shadow-md transition">
+              {p.thumbnail && <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />}
               <div className="p-3 text-sm font-medium">{p.title}</div>
             </Link>
           ))}
