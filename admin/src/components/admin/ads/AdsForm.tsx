@@ -1,184 +1,114 @@
-import React, { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { supabase } from "@/lib/supabaseClient";
+import { Button } from "@/components/ui/button";
 
-export default function AdsForm() {
-  const [formData, setFormData] = useState({
-    title: "",
-    image_url: "",
-    link_url: "",
-    description: "",
-    position: "sidebar",
-    status: "active",
-    start_date: "",
-    end_date: "",
+const schema = z.object({
+  title: z.string().min(3, "Judul minimal 3 karakter"),
+  image_url: z.string().url("Masukkan URL gambar yang valid"),
+  link_url: z.string().url("Masukkan URL link yang valid"),
+  description: z.string().optional(),
+  position: z.enum(["sidebar", "header", "footer"]),
+  status: z.enum(["active", "inactive"]),
+  start_date: z.string(),
+  end_date: z.string(),
+});
+
+export type AdFormValues = z.infer<typeof schema>;
+
+interface Props {
+  initialData?: any;
+  onSuccess: () => void;
+  onCancel: () => void;
+}
+
+export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<AdFormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: initialData || {
+      title: "",
+      image_url: "",
+      link_url: "",
+      description: "",
+      position: "sidebar",
+      status: "active",
+      start_date: "",
+      end_date: "",
+    },
   });
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  useEffect(() => {
+    if (initialData) reset(initialData);
+  }, [initialData, reset]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
-
-    const { error } = await supabase.from("ads").insert([formData]);
-
-    if (error) {
-      console.error("Error inserting ad:", error.message);
-      setMessage("❌ Gagal menambahkan iklan: " + error.message);
+  const onSubmit = async (values: AdFormValues) => {
+    if (initialData) {
+      await supabase.from("ads").update(values).eq("id", initialData.id);
     } else {
-      setMessage("✅ Iklan berhasil ditambahkan!");
-      setFormData({
-        title: "",
-        image_url: "",
-        link_url: "",
-        description: "",
-        position: "sidebar",
-        status: "active",
-        start_date: "",
-        end_date: "",
-      });
+      await supabase.from("ads").insert([values]);
     }
-    setLoading(false);
+    onSuccess();
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">Tambah Iklan Baru</h2>
-
-      {message && (
-        <p
-          className={`mb-4 text-sm ${
-            message.startsWith("✅") ? "text-green-600" : "text-red-600"
-          }`}
-        >
-          {message}
-        </p>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Judul */}
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div>
+        <label className="block mb-1 font-medium">Judul</label>
+        <input {...register("title")} className="w-full border p-2 rounded" />
+        {errors.title && <p className="text-red-500">{errors.title.message}</p>}
+      </div>
+      <div>
+        <label className="block mb-1 font-medium">Gambar (URL)</label>
+        <input {...register("image_url")} className="w-full border p-2 rounded" />
+        {errors.image_url && <p className="text-red-500">{errors.image_url.message}</p>}
+      </div>
+      <div>
+        <label className="block mb-1 font-medium">Link (URL)</label>
+        <input {...register("link_url")} className="w-full border p-2 rounded" />
+        {errors.link_url && <p className="text-red-500">{errors.link_url.message}</p>}
+      </div>
+      <div>
+        <label className="block mb-1 font-medium">Deskripsi</label>
+        <textarea {...register("description")} className="w-full border p-2 rounded" />
+      </div>
+      <div>
+        <label className="block mb-1 font-medium">Posisi</label>
+        <select {...register("position")} className="w-full border p-2 rounded">
+          <option value="sidebar">Sidebar</option>
+          <option value="header">Header</option>
+          <option value="footer">Footer</option>
+        </select>
+      </div>
+      <div>
+        <label className="block mb-1 font-medium">Status</label>
+        <select {...register("status")} className="w-full border p-2 rounded">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Judul</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-            className="w-full border rounded p-2"
-          />
+          <label className="block mb-1 font-medium">Tanggal Mulai</label>
+          <input type="date" {...register("start_date")} className="w-full border p-2 rounded" />
         </div>
-
-        {/* Gambar */}
         <div>
-          <label className="block text-sm font-medium mb-1">URL Gambar</label>
-          <input
-            type="text"
-            name="image_url"
-            value={formData.image_url}
-            onChange={handleChange}
-            required
-            className="w-full border rounded p-2"
-          />
+          <label className="block mb-1 font-medium">Tanggal Akhir</label>
+          <input type="date" {...register("end_date")} className="w-full border p-2 rounded" />
         </div>
-
-        {/* Link */}
-        <div>
-          <label className="block text-sm font-medium mb-1">URL Link</label>
-          <input
-            type="text"
-            name="link_url"
-            value={formData.link_url}
-            onChange={handleChange}
-            required
-            className="w-full border rounded p-2"
-          />
-        </div>
-
-        {/* Deskripsi */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Deskripsi</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows={3}
-            className="w-full border rounded p-2"
-          />
-        </div>
-
-        {/* Posisi */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Posisi</label>
-          <select
-            name="position"
-            value={formData.position}
-            onChange={handleChange}
-            className="w-full border rounded p-2"
-          >
-            <option value="sidebar">Sidebar</option>
-            <option value="header">Header</option>
-            <option value="footer">Footer</option>
-            <option value="article">Artikel</option>
-          </select>
-        </div>
-
-        {/* Status */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Status</label>
-          <select
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            className="w-full border rounded p-2"
-          >
-            <option value="active">Aktif</option>
-            <option value="inactive">Nonaktif</option>
-          </select>
-        </div>
-
-        {/* Tanggal Mulai */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Tanggal Mulai</label>
-          <input
-            type="date"
-            name="start_date"
-            value={formData.start_date}
-            onChange={handleChange}
-            required
-            className="w-full border rounded p-2"
-          />
-        </div>
-
-        {/* Tanggal Berakhir */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Tanggal Berakhir</label>
-          <input
-            type="date"
-            name="end_date"
-            value={formData.end_date}
-            onChange={handleChange}
-            required
-            className="w-full border rounded p-2"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg"
-        >
-          {loading ? "Menyimpan..." : "Tambah Iklan"}
-        </button>
-      </form>
-    </div>
+      </div>
+      <div className="flex justify-end gap-2">
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Batal
+        </Button>
+        <Button type="submit">{initialData ? "Update" : "Tambah"}</Button>
+      </div>
+    </form>
   );
 }
