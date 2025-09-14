@@ -1,3 +1,4 @@
+// admin/src/App.tsx
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,7 +14,6 @@ import Payroll from "./pages/admin/Payroll";
 import { AdminLayout } from "./components/layout/AdminLayout";
 import PostCreate from "./pages/admin/PostCreate";
 import Ads from "./pages/admin/Ads";
-
 
 const queryClient = new QueryClient();
 
@@ -44,6 +44,7 @@ const App = () => (
             <Route path="posts" element={<Posts />} />
             <Route path="payroll" element={<Payroll />} />
             <Route path="posts/create" element={<PostCreate />} />
+            <Route path="ads" element={<Ads />} /> {/* ✅ tambahkan ini */}
           </Route>
 
           {/* Catch-all 404 */}
