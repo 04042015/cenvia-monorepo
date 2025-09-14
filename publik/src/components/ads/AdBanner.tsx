@@ -1,10 +1,11 @@
 import React from "react";
 
 interface AdProps {
+  id: string;
   title: string;
   image_url: string;
   link_url: string;
-  description?: string;
+  description?: string | null;
 }
 
 export default function AdBanner({ title, image_url, link_url, description }: AdProps) {
