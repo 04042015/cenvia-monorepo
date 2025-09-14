@@ -1,7 +1,7 @@
-// publik/src/pages/HomePage.tsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
+import AdBanner from "@/components/ads/AdBanner";
 
 interface Post {
   id: string;
@@ -11,8 +11,19 @@ interface Post {
   excerpt?: string | null;
 }
 
+interface Ad {
+  id: string;
+  title: string;
+  image_url: string;
+  link_url: string;
+  description?: string | null;
+  position: string;
+  status: string;
+}
+
 export default function HomePage() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [ads, setAds] = useState<Ad[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,48 +35,66 @@ export default function HomePage() {
         .order("published_at", { ascending: false })
         .limit(10);
 
-      if (error) {
-        console.error("Error fetching posts:", error);
-      } else {
-        setPosts(data || []);
-      }
-      setLoading(false);
+      if (!error) setPosts(data || []);
     };
 
-    fetchPosts();
+    const fetchAds = async () => {
+      const today = new Date().toISOString().split("T")[0];
+      const { data, error } = await supabase
+        .from("ads")
+        .select("*")
+        .eq("status", "active")
+        .eq("position", "sidebar") // bisa diganti "header" dll
+        .lte("start_date", today)
+        .gte("end_date", today);
+
+      if (!error) setAds(data || []);
+    };
+
+    Promise.all([fetchPosts(), fetchAds()]).finally(() => setLoading(false));
   }, []);
 
   if (loading) {
-    return <p className="text-center py-6">Loading posts...</p>;
-  }
-
-  if (posts.length === 0) {
-    return <p className="text-center py-6 text-gray-500">Belum ada artikel.</p>;
+    return <p className="text-center py-6">Loading...</p>;
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {posts.map((post) => (
-        <Link
-          key={post.id}
-          to={`/post/${post.slug}`}
-          className="block border rounded-lg overflow-hidden hover:shadow-md transition"
-        >
-          {post.thumbnail && (
-            <img
-              src={post.thumbnail}
-              alt={post.title}
-              className="h-48 w-full object-cover"
-            />
-          )}
-          <div className="p-4">
-            <h2 className="text-lg font-bold mb-2">{post.title}</h2>
-            {post.excerpt && (
-              <p className="text-sm text-gray-600">{post.excerpt}</p>
-            )}
-          </div>
-        </Link>
-      ))}
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      {/* Artikel */}
+      <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {posts.length === 0 ? (
+          <p className="text-center py-6 text-gray-500">Belum ada artikel.</p>
+        ) : (
+          posts.map((post) => (
+            <Link
+              key={post.id}
+              to={`/post/${post.slug}`}
+              className="block border rounded-lg overflow-hidden hover:shadow-md transition"
+            >
+              {post.thumbnail && (
+                <img
+                  src={post.thumbnail}
+                  alt={post.title}
+                  className="h-48 w-full object-cover"
+                />
+              )}
+              <div className="p-4">
+                <h2 className="text-lg font-bold mb-2">{post.title}</h2>
+                {post.excerpt && (
+                  <p className="text-sm text-gray-600">{post.excerpt}</p>
+                )}
+              </div>
+            </Link>
+          ))
+        )}
+      </div>
+
+      {/* Sidebar Ads */}
+      <aside className="lg:col-span-1 space-y-4">
+        {ads.map((ad) => (
+          <AdBanner key={ad.id} {...ad} />
+        ))}
+      </aside>
     </div>
   );
-            }
+}
