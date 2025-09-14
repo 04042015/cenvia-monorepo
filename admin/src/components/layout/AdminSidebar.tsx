@@ -46,9 +46,11 @@ export function AdminSidebar() {
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted/50";
 
-  const filteredMenuItems = menuItems.filter(item => 
-    !item.adminOnly || isAdmin()
-  );
+  // ✅ tampilkan menu adminOnly untuk role "admin" & "superadmin"
+  const filteredMenuItems = menuItems.filter(item => {
+    if (!item.adminOnly) return true;
+    return isAdmin() || profile?.role === "superadmin";
+  });
 
   const handleSignOut = async () => {
     await signOut();
@@ -58,22 +60,21 @@ export function AdminSidebar() {
   return (
     <Sidebar className="w-64">
       <SidebarContent className="bg-gradient-primary text-primary-foreground">
-{/* Header */}
-<div className="p-4 border-b border-primary-foreground/20">
-  <div className="flex items-center gap-2">
-    {/* Logo */}
-    <img
-      src="https://kuoawzlabmwhvfcahcfm.supabase.co/storage/v1/object/public/assets/logo-cenvia.jpg"
-      alt="Cenvia Logo"
-      className="w-8 h-8 rounded-lg"
-    />
-    <div>
-      <h1 className="font-bold text-lg">Cenvia.id</h1>
-      <p className="text-primary-foreground/80 text-xs">Admin Dashboard</p>
-    </div>
-  </div>
-</div>
-
+        {/* Header */}
+        <div className="p-4 border-b border-primary-foreground/20">
+          <div className="flex items-center gap-2">
+            {/* Logo */}
+            <img
+              src="https://kuoawzlabmwhvfcahcfm.supabase.co/storage/v1/object/public/assets/logo-cenvia.jpg"
+              alt="Cenvia Logo"
+              className="w-8 h-8 rounded-lg"
+            />
+            <div>
+              <h1 className="font-bold text-lg">Cenvia.id</h1>
+              <p className="text-primary-foreground/80 text-xs">Admin Dashboard</p>
+            </div>
+          </div>
+        </div>
 
         {/* User Profile */}
         <div className="p-4 border-b border-primary-foreground/20">
