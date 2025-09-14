@@ -1,3 +1,4 @@
+// publik/src/pages/HomePage.tsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
@@ -44,7 +45,6 @@ export default function HomePage() {
         .from("ads")
         .select("*")
         .eq("status", "active")
-        .eq("position", "sidebar") // bisa diganti "header" dll
         .lte("start_date", today)
         .gte("end_date", today);
 
@@ -58,43 +58,69 @@ export default function HomePage() {
     return <p className="text-center py-6">Loading...</p>;
   }
 
+  // Filter iklan berdasarkan posisi
+  const headerAds = ads.filter((ad) => ad.position === "header");
+  const sidebarAds = ads.filter((ad) => ad.position === "sidebar");
+  const footerAds = ads.filter((ad) => ad.position === "footer");
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-      {/* Artikel */}
-      <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {posts.length === 0 ? (
-          <p className="text-center py-6 text-gray-500">Belum ada artikel.</p>
-        ) : (
-          posts.map((post) => (
-            <Link
-              key={post.id}
-              to={`/post/${post.slug}`}
-              className="block border rounded-lg overflow-hidden hover:shadow-md transition"
-            >
-              {post.thumbnail && (
-                <img
-                  src={post.thumbnail}
-                  alt={post.title}
-                  className="h-48 w-full object-cover"
-                />
-              )}
-              <div className="p-4">
-                <h2 className="text-lg font-bold mb-2">{post.title}</h2>
-                {post.excerpt && (
-                  <p className="text-sm text-gray-600">{post.excerpt}</p>
+    <div className="space-y-6">
+      {/* Header Ads */}
+      {headerAds.length > 0 && (
+        <div className="space-y-4">
+          {headerAds.map((ad) => (
+            <AdBanner key={ad.id} {...ad} />
+          ))}
+        </div>
+      )}
+
+      {/* Konten utama */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Artikel */}
+        <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {posts.length === 0 ? (
+            <p className="text-center py-6 text-gray-500">Belum ada artikel.</p>
+          ) : (
+            posts.map((post) => (
+              <Link
+                key={post.id}
+                to={`/post/${post.slug}`}
+                className="block border rounded-lg overflow-hidden hover:shadow-md transition"
+              >
+                {post.thumbnail && (
+                  <img
+                    src={post.thumbnail}
+                    alt={post.title}
+                    className="h-48 w-full object-cover"
+                  />
                 )}
-              </div>
-            </Link>
-          ))
-        )}
+                <div className="p-4">
+                  <h2 className="text-lg font-bold mb-2">{post.title}</h2>
+                  {post.excerpt && (
+                    <p className="text-sm text-gray-600">{post.excerpt}</p>
+                  )}
+                </div>
+              </Link>
+            ))
+          )}
+        </div>
+
+        {/* Sidebar Ads */}
+        <aside className="lg:col-span-1 space-y-4">
+          {sidebarAds.map((ad) => (
+            <AdBanner key={ad.id} {...ad} />
+          ))}
+        </aside>
       </div>
 
-      {/* Sidebar Ads */}
-      <aside className="lg:col-span-1 space-y-4">
-        {ads.map((ad) => (
-          <AdBanner key={ad.id} {...ad} />
-        ))}
-      </aside>
+      {/* Footer Ads */}
+      {footerAds.length > 0 && (
+        <div className="space-y-4">
+          {footerAds.map((ad) => (
+            <AdBanner key={ad.id} {...ad} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
