@@ -4,32 +4,32 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
-interface Ad {
+interface ScriptAd {
   id: string;
   title: string;
-  script: string;
+  code: string;
   position: string;
-  status: boolean;
+  status: string;
 }
 
 export default function PopupAd() {
-  const [ads, setAds] = useState<Ad[]>([]);
+  const [ads, setAds] = useState<ScriptAd[]>([]);
 
   useEffect(() => {
     async function fetchPopupAds() {
       const { data, error } = await supabase
-        .from("ads")
+        .from("script_ads")
         .select("*")
         .eq("position", "popup")
-        .eq("status", true);
+        .eq("status", "active");
 
       if (!error && data) {
         setAds(data);
 
-        // Suntikkan script popup
+        // Suntikkan script popup ke body
         data.forEach((ad) => {
           const wrapper = document.createElement("div");
-          wrapper.innerHTML = ad.script;
+          wrapper.innerHTML = ad.code;
 
           const scripts = wrapper.querySelectorAll("script");
           scripts.forEach((oldScript) => {
@@ -48,5 +48,5 @@ export default function PopupAd() {
     fetchPopupAds();
   }, []);
 
-  return null; // tidak ada UI khusus, hanya inject script
+  return null; // Tidak ada UI, hanya inject script ke halaman
 }
