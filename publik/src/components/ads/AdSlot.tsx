@@ -3,24 +3,24 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
-interface Ad {
+interface ScriptAd {
   id: string;
   title: string;
-  script: string;
+  code: string;
   position: string;
-  status: boolean;
+  status: string;
 }
 
 export default function AdSlot({ position }: { position: string }) {
-  const [ads, setAds] = useState<Ad[]>([]);
+  const [ads, setAds] = useState<ScriptAd[]>([]);
 
   useEffect(() => {
     const fetchAds = async () => {
       const { data, error } = await supabase
-        .from("ads")
+        .from("script_ads")
         .select("*")
         .eq("position", position)
-        .eq("status", true);
+        .eq("status", "active");
 
       if (!error && data) {
         setAds(data);
@@ -38,7 +38,7 @@ export default function AdSlot({ position }: { position: string }) {
 
         // buat wrapper
         const wrapper = document.createElement("div");
-        wrapper.innerHTML = ad.script;
+        wrapper.innerHTML = ad.code;
         container.appendChild(wrapper);
 
         // eksekusi ulang semua <script>
