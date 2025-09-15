@@ -27,13 +27,13 @@ const NewsCard = ({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    // Simpan tujuan klik
+    // tujuan artikel
     const targetPath = `/post/${slug}`;
 
-    // Biarkan script iklan jalan dulu, lalu arahkan ke artikel
+    // kasih jeda biar iklan sempat muncul
     setTimeout(() => {
       navigate(targetPath);
-    }, 300);
+    }, 500);
   };
 
   return (
