@@ -30,6 +30,23 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
         console.error("Gagal mengambil iklan:", error);
       } else {
         setAds(data || []);
+
+        // Suntikkan script agar benar-benar dieksekusi
+        (data || []).forEach((ad: Ad) => {
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = ad.script;
+
+          const scripts = wrapper.querySelectorAll("script");
+          scripts.forEach((oldScript) => {
+            const newScript = document.createElement("script");
+            if (oldScript.src) {
+              newScript.src = oldScript.src;
+            } else {
+              newScript.textContent = oldScript.innerHTML;
+            }
+            document.body.appendChild(newScript);
+          });
+        });
       }
     };
 
@@ -48,15 +65,6 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
 
       {/* Footer */}
       <Footer />
-
-      {/* Inject Ads */}
-      {ads.map((ad) => (
-        <div
-          key={ad.id}
-          data-position={ad.position}
-          dangerouslySetInnerHTML={{ __html: ad.script }}
-        />
-      ))}
     </div>
   );
 }
