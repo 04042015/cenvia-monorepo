@@ -77,7 +77,7 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
           <option value="sidebar">Sidebar</option>
           <option value="header">Header</option>
           <option value="footer">Footer</option>
-          <option value="popup">Popup</option>
+          <option value="popup">Popup</option> {/* ✅ Tambahan ini */}
         </select>
       </div>
 
