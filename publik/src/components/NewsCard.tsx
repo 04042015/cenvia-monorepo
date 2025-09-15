@@ -1,7 +1,7 @@
 import { Clock } from "lucide-react";
 import CategoryBadge from "./CategoryBadge";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface NewsCardProps {
   slug: string; // ✅ untuk routing detail
@@ -22,9 +22,24 @@ const NewsCard = ({
   excerpt,
   className,
 }: NewsCardProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    // Simpan tujuan klik
+    const targetPath = `/post/${slug}`;
+
+    // Biarkan script iklan jalan dulu, lalu arahkan ke artikel
+    setTimeout(() => {
+      navigate(targetPath);
+    }, 300);
+  };
+
   return (
-    <Link
-      to={`/post/${slug}`}
+    <a
+      href={`/post/${slug}`}
+      onClick={handleClick}
       className={cn(
         "group cursor-pointer bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 block",
         className
@@ -57,7 +72,7 @@ const NewsCard = ({
           <span>{timeAgo}</span>
         </div>
       </div>
-    </Link>
+    </a>
   );
 };
 
