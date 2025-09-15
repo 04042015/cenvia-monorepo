@@ -10,7 +10,7 @@ const schema = z.object({
   title: z.string().min(3, "Judul minimal 3 karakter"),
   code: z.string().min(10, "Script code harus diisi"),
   position: z.string().min(3, "Posisi harus dipilih"),
-  status: z.enum(["active", "inactive"]),
+  status: z.enum(["active", "inactive"]).default("active"),
 });
 
 export type AdFormValues = z.infer<typeof schema>;
@@ -42,10 +42,15 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
   }, [initialData, reset]);
 
   const onSubmit = async (values: AdFormValues) => {
+    const payload = {
+      ...values,
+      status: values.status || "active", // ✅ default selalu active
+    };
+
     if (initialData) {
-      await supabase.from("script_ads").update(values).eq("id", initialData.id);
+      await supabase.from("script_ads").update(payload).eq("id", initialData.id);
     } else {
-      await supabase.from("script_ads").insert([values]);
+      await supabase.from("script_ads").insert([payload]);
     }
     onSuccess();
   };
@@ -77,7 +82,7 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
           <option value="sidebar">Sidebar</option>
           <option value="header">Header</option>
           <option value="footer">Footer</option>
-          <option value="popup">Popup</option> {/* ✅ Tambahan ini */}
+          <option value="popup">Popup</option> {/* ✅ ditambahkan */}
         </select>
       </div>
 
