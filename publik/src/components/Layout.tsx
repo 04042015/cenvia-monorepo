@@ -1,5 +1,5 @@
 // publik/src/components/Layout.tsx
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { supabase } from "@/lib/supabaseClient";
@@ -15,15 +15,34 @@ interface ScriptAd {
 }
 
 export default function Layout({ children, onNetworkClick }: LayoutProps) {
-  const [scripts, setScripts] = useState<ScriptAd[]>([]);
-
   useEffect(() => {
     fetchScripts();
   }, []);
 
   async function fetchScripts() {
     const { data, error } = await supabase.from("script_ads").select("*");
-    if (!error && data) setScripts(data);
+    if (!error && data) {
+      data.forEach((ad: ScriptAd) => {
+        // buat wrapper untuk parsing
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = ad.code;
+
+        const scriptEl = wrapper.querySelector("script");
+        if (scriptEl) {
+          const script = document.createElement("script");
+          script.type = "text/javascript";
+          script.async = true;
+
+          if (scriptEl.src) {
+            script.src = scriptEl.src;
+          } else if (scriptEl.innerHTML) {
+            script.innerHTML = scriptEl.innerHTML;
+          }
+
+          document.body.appendChild(script);
+        }
+      });
+    }
   }
 
   return (
@@ -38,14 +57,6 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
 
       {/* Footer */}
       <Footer />
-
-      {/* Inject Script Ads */}
-      {scripts.map((ad) => (
-        <div
-          key={ad.id}
-          dangerouslySetInnerHTML={{ __html: ad.code }}
-        />
-      ))}
     </div>
   );
 }
