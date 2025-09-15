@@ -160,4 +160,52 @@ All colors MUST be HSL.
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
-    }
+}
+
+/* ================================
+   ✅ Popup Ads Styling with Close
+   ================================ */
+.popup-ad-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  max-width: 350px;
+  background: #fff;
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.popup-ad-container.dark {
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+}
+
+.popup-ad-content {
+  position: relative;
+  padding: 10px;
+}
+
+.popup-ad-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: hsl(var(--destructive));
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-ad-close:hover {
+  background: hsl(var(--destructive-foreground));
+  color: hsl(var(--destructive));
+}
