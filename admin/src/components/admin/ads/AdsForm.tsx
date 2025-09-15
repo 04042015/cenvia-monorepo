@@ -10,7 +10,7 @@ const schema = z.object({
   title: z.string().min(3, "Judul minimal 3 karakter"),
   code: z.string().min(10, "Script code harus diisi"),
   position: z.string().min(3, "Posisi harus dipilih"),
-  status: z.enum(["active", "inactive"]).default("active"),
+  // ❌ status dihapus dari schema
 });
 
 export type AdFormValues = z.infer<typeof schema>;
@@ -33,7 +33,6 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
       title: "",
       code: "",
       position: "sidebar",
-      status: "active",
     },
   });
 
@@ -42,9 +41,10 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
   }, [initialData, reset]);
 
   const onSubmit = async (values: AdFormValues) => {
+    // ✅ status selalu "active" tanpa dropdown
     const payload = {
       ...values,
-      status: values.status || "active", // ✅ default selalu active
+      status: "active",
     };
 
     if (initialData) {
@@ -82,16 +82,7 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
           <option value="sidebar">Sidebar</option>
           <option value="header">Header</option>
           <option value="footer">Footer</option>
-          <option value="popup">Popup</option> {/* ✅ ditambahkan */}
-        </select>
-      </div>
-
-      {/* Status */}
-      <div>
-        <label className="block mb-1 font-medium">Status</label>
-        <select {...register("status")} className="w-full border p-2 rounded">
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
+          <option value="popup">Popup</option>
         </select>
       </div>
 
