@@ -1,26 +1,27 @@
+// publik/src/components/ads/PopupAd.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
-interface ScriptAd {
+interface Ad {
   id: string;
-  name: string;
-  script_code: string;
+  title: string;
+  script: string;
   position: string;
-  status: string;
+  status: boolean;
 }
 
 export default function PopupAd() {
-  const [ads, setAds] = useState<ScriptAd[]>([]);
+  const [ads, setAds] = useState<Ad[]>([]);
 
   useEffect(() => {
     async function fetchPopupAds() {
       const { data, error } = await supabase
-        .from("script_ads")
+        .from("ads")
         .select("*")
         .eq("position", "popup")
-        .eq("status", "active");
+        .eq("status", true);
 
       if (!error && data) {
         setAds(data);
@@ -28,7 +29,7 @@ export default function PopupAd() {
         // Suntikkan script popup
         data.forEach((ad) => {
           const wrapper = document.createElement("div");
-          wrapper.innerHTML = ad.script_code;
+          wrapper.innerHTML = ad.script;
 
           const scripts = wrapper.querySelectorAll("script");
           scripts.forEach((oldScript) => {
