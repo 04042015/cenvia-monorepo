@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 
 const schema = z.object({
   title: z.string().min(3, "Judul minimal 3 karakter"),
-  code: z.string().min(3, "Script code minimal 3 karakter"),
-  position: z.enum(["sidebar", "header", "footer", "popup", "homepage"]),
+  code: z.string().min(10, "Script code harus diisi"),
+  position: z.string().min(3, "Posisi harus dipilih"),
   status: z.enum(["active", "inactive"]),
 });
 
@@ -64,8 +64,8 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
         <label className="block mb-1 font-medium">Script Code</label>
         <textarea
           {...register("code")}
-          className="w-full border p-2 rounded h-32"
-          placeholder="<script>...</script>"
+          rows={4}
+          className="w-full border p-2 rounded font-mono"
         />
         {errors.code && <p className="text-red-500">{errors.code.message}</p>}
       </div>
@@ -78,7 +78,6 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
           <option value="header">Header</option>
           <option value="footer">Footer</option>
           <option value="popup">Popup</option>
-          <option value="homepage">Homepage</option>
         </select>
       </div>
 
