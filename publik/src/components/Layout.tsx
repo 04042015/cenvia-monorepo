@@ -1,5 +1,5 @@
 // publik/src/components/Layout.tsx
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { supabase } from "@/lib/supabaseClient";
@@ -9,41 +9,32 @@ interface LayoutProps {
   onNetworkClick?: () => void;
 }
 
-interface ScriptAd {
+interface Ad {
   id: string;
-  code: string;
+  position: string;
+  script: string;
+  status: boolean;
 }
 
 export default function Layout({ children, onNetworkClick }: LayoutProps) {
+  const [ads, setAds] = useState<Ad[]>([]);
+
   useEffect(() => {
-    fetchScripts();
+    const fetchAds = async () => {
+      const { data, error } = await supabase
+        .from("ads")
+        .select("*")
+        .eq("status", true);
+
+      if (error) {
+        console.error("Gagal mengambil iklan:", error);
+      } else {
+        setAds(data || []);
+      }
+    };
+
+    fetchAds();
   }, []);
-
-  async function fetchScripts() {
-    const { data, error } = await supabase.from("script_ads").select("*");
-    if (!error && data) {
-      data.forEach((ad: ScriptAd) => {
-        // buat wrapper untuk parsing
-        const wrapper = document.createElement("div");
-        wrapper.innerHTML = ad.code;
-
-        const scriptEl = wrapper.querySelector("script");
-        if (scriptEl) {
-          const script = document.createElement("script");
-          script.type = "text/javascript";
-          script.async = true;
-
-          if (scriptEl.src) {
-            script.src = scriptEl.src;
-          } else if (scriptEl.innerHTML) {
-            script.innerHTML = scriptEl.innerHTML;
-          }
-
-          document.body.appendChild(script);
-        }
-      });
-    }
-  }
 
   return (
     <div className="w-full min-h-screen flex flex-col bg-white">
@@ -57,6 +48,15 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
 
       {/* Footer */}
       <Footer />
+
+      {/* Inject Ads */}
+      {ads.map((ad) => (
+        <div
+          key={ad.id}
+          data-position={ad.position}
+          dangerouslySetInnerHTML={{ __html: ad.script }}
+        />
+      ))}
     </div>
   );
 }
