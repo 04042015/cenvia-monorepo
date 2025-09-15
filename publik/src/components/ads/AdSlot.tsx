@@ -34,17 +34,27 @@ export default function AdSlot({ position }: { position: string }) {
     ads.forEach((ad) => {
       const container = document.getElementById(`ad-slot-${ad.id}`);
       if (container) {
-        container.innerHTML = ad.script;
-        const scripts = container.getElementsByTagName("script");
+        container.innerHTML = ""; // kosongkan dulu
+
+        // buat wrapper
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = ad.script;
+        container.appendChild(wrapper);
+
+        // eksekusi ulang semua <script>
+        const scripts = wrapper.getElementsByTagName("script");
         for (let i = 0; i < scripts.length; i++) {
           const oldScript = scripts[i];
           const newScript = document.createElement("script");
+
           if (oldScript.src) {
             newScript.src = oldScript.src;
-          } else {
-            newScript.text = oldScript.innerHTML;
           }
-          oldScript.parentNode?.replaceChild(newScript, oldScript);
+          if (oldScript.innerHTML) {
+            newScript.innerHTML = oldScript.innerHTML;
+          }
+
+          container.appendChild(newScript);
         }
       }
     });
