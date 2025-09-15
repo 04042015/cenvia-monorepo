@@ -26,7 +26,7 @@ export default function PopupAd() {
       if (!error && data) {
         setAds(data);
 
-        // Suntikkan script popup ke body
+        // ✅ Inject popup scripts ke body
         data.forEach((ad) => {
           const wrapper = document.createElement("div");
           wrapper.innerHTML = ad.code;
@@ -41,6 +41,13 @@ export default function PopupAd() {
             }
             document.body.appendChild(newScript);
           });
+
+          // ✅ Sisipkan juga elemen HTML non-script (misal <div>, <style>, dsb.)
+          Array.from(wrapper.children).forEach((el) => {
+            if (el.tagName.toLowerCase() !== "script") {
+              document.body.appendChild(el);
+            }
+          });
         });
       }
     }
@@ -48,5 +55,5 @@ export default function PopupAd() {
     fetchPopupAds();
   }, []);
 
-  return null; // Tidak ada UI, hanya inject script ke halaman
+  return null; // Tidak ada UI langsung, hanya inject script/HTML
 }
