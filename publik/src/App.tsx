@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import PostDetail from "./pages/PostDetail"; // ✅
 import Layout from "./components/Layout"; // ✅
 import Category from "./pages/Category";
+import PopupAd from "./components/ads/PopupAd"; // ✅ ditambahkan
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,8 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        {/* ✅ Popup global biar muncul di semua halaman */}
+        <PopupAd />
         <Layout>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -31,5 +34,3 @@ const App = () => (
 );
 
 export default App;
-
-
