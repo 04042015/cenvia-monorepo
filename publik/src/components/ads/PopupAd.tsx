@@ -1,7 +1,7 @@
 // publik/src/components/ads/PopupAd.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
 interface ScriptAd {
@@ -14,6 +14,8 @@ interface ScriptAd {
 
 export default function PopupAd() {
   const [ads, setAds] = useState<ScriptAd[]>([]);
+  const [visible, setVisible] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchPopupAds() {
@@ -23,37 +25,40 @@ export default function PopupAd() {
         .eq("position", "popup")
         .eq("status", "active");
 
-      if (!error && data) {
+      if (!error && data && data.length > 0) {
         setAds(data);
-
-        // ✅ Inject popup scripts ke body
-        data.forEach((ad) => {
-          const wrapper = document.createElement("div");
-          wrapper.innerHTML = ad.code;
-
-          const scripts = wrapper.querySelectorAll("script");
-          scripts.forEach((oldScript) => {
-            const newScript = document.createElement("script");
-            if (oldScript.src) {
-              newScript.src = oldScript.src;
-            } else {
-              newScript.textContent = oldScript.innerHTML;
-            }
-            document.body.appendChild(newScript);
-          });
-
-          // ✅ Sisipkan juga elemen HTML non-script (misal <div>, <style>, dsb.)
-          Array.from(wrapper.children).forEach((el) => {
-            if (el.tagName.toLowerCase() !== "script") {
-              document.body.appendChild(el);
-            }
-          });
-        });
       }
     }
 
     fetchPopupAds();
   }, []);
 
-  return null; // Tidak ada UI langsung, hanya inject script/HTML
+  useEffect(() => {
+    if (!ads.length || !containerRef.current) return;
+
+    // inject script ke dalam container agar bisa dieksekusi
+    containerRef.current.innerHTML = ads[0].code;
+
+    const scripts = containerRef.current.querySelectorAll("script");
+    scripts.forEach((oldScript) => {
+      const newScript = document.createElement("script");
+
+      if (oldScript.src) newScript.src = oldScript.src;
+      if (oldScript.type) newScript.type = oldScript.type;
+      if (oldScript.textContent) newScript.textContent = oldScript.textContent;
+
+      oldScript.parentNode?.replaceChild(newScript, oldScript);
+    });
+  }, [ads]);
+
+  if (!ads.length || !visible) return null;
+
+  return (
+    <div className="popup-ad">
+      <button className="popup-close" onClick={() => setVisible(false)}>
+        ✕
+      </button>
+      <div ref={containerRef}></div>
+    </div>
+  );
 }
