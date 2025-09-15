@@ -27,6 +27,10 @@ export default function PopupAd() {
 
       if (!error && data && data.length > 0) {
         setAds(data);
+      } else {
+        // 🚫 kalau tidak ada data popup, jangan tampilkan apa pun
+        setAds([]);
+        setVisible(false);
       }
     }
 
@@ -36,7 +40,7 @@ export default function PopupAd() {
   useEffect(() => {
     if (!ads.length || !containerRef.current) return;
 
-    // inject script ke dalam container agar bisa dieksekusi
+    // inject hanya kalau ada kode popup
     containerRef.current.innerHTML = ads[0].code;
 
     const scripts = containerRef.current.querySelectorAll("script");
@@ -54,11 +58,16 @@ export default function PopupAd() {
   if (!ads.length || !visible) return null;
 
   return (
-    <div className="popup-ad">
-      <button className="popup-close" onClick={() => setVisible(false)}>
-        ✕
-      </button>
-      <div ref={containerRef}></div>
+    <div className="popup-ad fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+      <div className="relative bg-white p-4 rounded shadow-lg max-w-lg w-full">
+        <button
+          className="popup-close absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+          onClick={() => setVisible(false)}
+        >
+          ✕
+        </button>
+        <div ref={containerRef}></div>
+      </div>
     </div>
   );
 }
