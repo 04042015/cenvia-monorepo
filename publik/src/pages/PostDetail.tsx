@@ -101,7 +101,7 @@ const PostDetail = () => {
   const shareUrl = `${window.location.origin}/post/${post.slug}`;
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareUrl);
-    alert("Link artikel berhasil disalin");
+    alert("Berhasil disalin");
   };
 
   return (
@@ -134,12 +134,12 @@ const PostDetail = () => {
         {post.author?.avatar_url && (
           <img
             src={post.author.avatar_url}
-            alt={post.author.full_name || "Anonim"}
+            alt={post.author.full_name || "Admin"}
             className="w-7 h-7 rounded-full object-cover"
           />
         )}
         <span className="font-medium">
-          {post.author?.full_name || "Anonim"}
+          {post.author?.full_name || "Admin"}
         </span>
         <span>•</span>
         <span>{dayjs(post.published_at || post.created_at).format("DD MMMM YYYY")}</span>
