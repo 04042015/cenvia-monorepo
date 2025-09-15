@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import NewsCard from "./NewsCard";
+import { useNavigate } from "react-router-dom";
 
 type Post = {
   id: string;
@@ -15,6 +16,7 @@ type Post = {
 const NewsGrid = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -52,18 +54,36 @@ const NewsGrid = () => {
     return <div className="text-center text-gray-500">Belum ada artikel.</div>;
   }
 
+  const handleClick = (slug: string) => {
+    // buka jendela iklan popup kecil
+    const adWin = window.open(
+      "about:blank",
+      "adWindow",
+      "width=600,height=400"
+    );
+
+    // setelah popup ditutup, arahkan ke artikel
+    const checkClosed = setInterval(() => {
+      if (adWin && adWin.closed) {
+        clearInterval(checkClosed);
+        navigate(`/post/${slug}`);
+      }
+    }, 500);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {posts.map((post) => (
-        <NewsCard
-          key={post.id}
-          slug={post.slug}
-          title={post.title}
-          excerpt={post.excerpt}
-          image={post.thumbnail || "/placeholder.jpg"}
-          category={post.category?.name || "Uncategorized"}
-          timeAgo={new Date(post.published_at).toLocaleDateString("id-ID")}
-        />
+        <div key={post.id} onClick={() => handleClick(post.slug)}>
+          <NewsCard
+            slug={post.slug}
+            title={post.title}
+            excerpt={post.excerpt}
+            image={post.thumbnail || "/placeholder.jpg"}
+            category={post.category?.name || "Uncategorized"}
+            timeAgo={new Date(post.published_at).toLocaleDateString("id-ID")}
+          />
+        </div>
       ))}
     </div>
   );
