@@ -1,3 +1,4 @@
+// admin/src/components/admin/ads/AdsList.tsx
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
@@ -7,8 +8,8 @@ interface Ad {
   title: string;
   position: string;
   status: string;
-  start_date: string;
-  end_date: string;
+  created_at: string;
+  code: string;
 }
 
 interface Props {
@@ -21,7 +22,10 @@ export default function AdsList({ onEdit }: Props) {
 
   const fetchAds = async () => {
     setLoading(true);
-    const { data, error } = await supabase.from("ads").select("*").order("created_at", { ascending: false });
+    const { data, error } = await supabase
+      .from("script_ads")
+      .select("*")
+      .order("created_at", { ascending: false });
     if (!error) setAds(data || []);
     setLoading(false);
   };
@@ -31,7 +35,7 @@ export default function AdsList({ onEdit }: Props) {
   }, []);
 
   const handleDelete = async (id: string) => {
-    await supabase.from("ads").delete().eq("id", id);
+    await supabase.from("script_ads").delete().eq("id", id);
     fetchAds();
   };
 
@@ -45,7 +49,7 @@ export default function AdsList({ onEdit }: Props) {
             <th className="p-2 text-left">Judul</th>
             <th className="p-2">Posisi</th>
             <th className="p-2">Status</th>
-            <th className="p-2">Periode</th>
+            <th className="p-2">Tanggal Dibuat</th>
             <th className="p-2">Aksi</th>
           </tr>
         </thead>
@@ -55,10 +59,20 @@ export default function AdsList({ onEdit }: Props) {
               <td className="p-2">{ad.title}</td>
               <td className="p-2 text-center">{ad.position}</td>
               <td className="p-2 text-center">{ad.status}</td>
-              <td className="p-2 text-center">{ad.start_date} → {ad.end_date}</td>
+              <td className="p-2 text-center">
+                {new Date(ad.created_at).toLocaleDateString()}
+              </td>
               <td className="p-2 flex gap-2 justify-center">
-                <Button size="sm" onClick={() => onEdit(ad)}>Edit</Button>
-                <Button size="sm" variant="destructive" onClick={() => handleDelete(ad.id)}>Hapus</Button>
+                <Button size="sm" onClick={() => onEdit(ad)}>
+                  Edit
+                </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => handleDelete(ad.id)}
+                >
+                  Hapus
+                </Button>
               </td>
             </tr>
           ))}
