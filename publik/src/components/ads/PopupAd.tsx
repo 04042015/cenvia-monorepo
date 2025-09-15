@@ -1,28 +1,51 @@
 "use client";
-import { useState, useEffect } from "react";
-import AdSlot from "@/components/ads/AdSlot";
+
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+
+interface ScriptAd {
+  id: string;
+  name: string;
+  script_code: string;
+  position: string;
+  status: string;
+}
 
 export default function PopupAd() {
-  const [show, setShow] = useState(false);
+  const [ads, setAds] = useState<ScriptAd[]>([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShow(true), 3000);
-    return () => clearTimeout(timer);
+    async function fetchPopupAds() {
+      const { data, error } = await supabase
+        .from("script_ads")
+        .select("*")
+        .eq("position", "popup")
+        .eq("status", "active");
+
+      if (!error && data) {
+        setAds(data);
+
+        // Suntikkan script popup
+        data.forEach((ad) => {
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = ad.script_code;
+
+          const scripts = wrapper.querySelectorAll("script");
+          scripts.forEach((oldScript) => {
+            const newScript = document.createElement("script");
+            if (oldScript.src) {
+              newScript.src = oldScript.src;
+            } else {
+              newScript.textContent = oldScript.innerHTML;
+            }
+            document.body.appendChild(newScript);
+          });
+        });
+      }
+    }
+
+    fetchPopupAds();
   }, []);
 
-  if (!show) return null;
-
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-      <div className="bg-white p-4 rounded shadow-lg max-w-md w-full relative">
-        <button
-          onClick={() => setShow(false)}
-          className="absolute top-2 right-2 text-red-500"
-        >
-          ✕
-        </button>
-        <AdSlot position="popup" />
-      </div>
-    </div>
-  );
+  return null; // tidak ada UI khusus, hanya inject script
 }
