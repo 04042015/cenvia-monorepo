@@ -3,7 +3,8 @@ import { ReactNode, useEffect, useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { supabase } from "@/lib/supabaseClient";
-import PopupAd from "@/components/ads/PopupAd"; // ✅ tambahkan import ini
+import PopupAd from "@/components/ads/PopupAd";
+import AdSlot from "@/components/ads/AdSlot"; // ✅ import AdSlot
 
 interface LayoutProps {
   children: ReactNode;
@@ -58,16 +59,29 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
     <div className="w-full min-h-screen flex flex-col bg-white">
       {/* Header */}
       <Header onNetworkClick={onNetworkClick || (() => {})} />
+      <AdSlot position="header" /> {/* ✅ Iklan di header */}
 
       {/* Popup Ads ✅ muncul di semua halaman */}
       <PopupAd />
 
       {/* Main content */}
       <main className="flex-1 w-full container mx-auto px-4 py-6">
-        {children}
+        <div className="grid grid-cols-12 gap-6">
+          {/* Content */}
+          <div className="col-span-12 lg:col-span-8 space-y-4">
+            <AdSlot position="content" /> {/* ✅ Iklan dalam konten */}
+            {children}
+          </div>
+
+          {/* Sidebar */}
+          <aside className="col-span-12 lg:col-span-4 space-y-4">
+            <AdSlot position="sidebar" /> {/* ✅ Iklan sidebar */}
+          </aside>
+        </div>
       </main>
 
       {/* Footer */}
+      <AdSlot position="footer" /> {/* ✅ Iklan di footer */}
       <Footer />
     </div>
   );
