@@ -1,6 +1,7 @@
+// admin/src/components/admin/ads/index.tsx
 import { useState } from "react";
 import AdsList from "./AdsList";
-import AdsForm, { AdFormValues } from "./AdsForm";
+import AdsForm from "./AdsForm";
 import { Dialog } from "@/components/ui/dialog";
 
 export default function AdsManagement() {
@@ -21,7 +22,7 @@ export default function AdsManagement() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-xl font-bold">Ads Management</h1>
+        <h1 className="text-xl font-bold">Script Ads Management</h1>
         <button
           onClick={() => {
             setEditingAd(null);
@@ -29,7 +30,7 @@ export default function AdsManagement() {
           }}
           className="px-4 py-2 bg-blue-600 text-white rounded"
         >
-          + Tambah Iklan
+          + Tambah Script Ad
         </button>
       </div>
 
@@ -38,7 +39,7 @@ export default function AdsManagement() {
       <Dialog open={open} onOpenChange={setOpen}>
         <div className="bg-white p-6 rounded shadow-lg max-w-lg w-full">
           <h2 className="text-lg font-semibold mb-4">
-            {editingAd ? "Edit Iklan" : "Tambah Iklan"}
+            {editingAd ? "Edit Script Ad" : "Tambah Script Ad"}
           </h2>
           <AdsForm
             initialData={editingAd || undefined}
