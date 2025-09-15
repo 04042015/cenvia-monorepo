@@ -8,13 +8,9 @@ import { Button } from "@/components/ui/button";
 
 const schema = z.object({
   title: z.string().min(3, "Judul minimal 3 karakter"),
-  image_url: z.string().url("Masukkan URL gambar yang valid"),
-  link_url: z.string().url("Masukkan URL link yang valid"),
-  description: z.string().optional(),
-  position: z.enum(["sidebar", "header", "footer"]),
+  code: z.string().min(3, "Script code minimal 3 karakter"),
+  position: z.enum(["sidebar", "header", "footer", "popup", "homepage"]),
   status: z.enum(["active", "inactive"]),
-  start_date: z.string(),
-  end_date: z.string(),
 });
 
 export type AdFormValues = z.infer<typeof schema>;
@@ -35,13 +31,9 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
     resolver: zodResolver(schema),
     defaultValues: initialData || {
       title: "",
-      image_url: "",
-      link_url: "",
-      description: "",
+      code: "",
       position: "sidebar",
       status: "active",
-      start_date: "",
-      end_date: "",
     },
   });
 
@@ -51,9 +43,9 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
 
   const onSubmit = async (values: AdFormValues) => {
     if (initialData) {
-      await supabase.from("ads").update(values).eq("id", initialData.id);
+      await supabase.from("script_ads").update(values).eq("id", initialData.id);
     } else {
-      await supabase.from("ads").insert([values]);
+      await supabase.from("script_ads").insert([values]);
     }
     onSuccess();
   };
@@ -67,24 +59,15 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
         {errors.title && <p className="text-red-500">{errors.title.message}</p>}
       </div>
 
-      {/* Gambar */}
+      {/* Script Code */}
       <div>
-        <label className="block mb-1 font-medium">Gambar (URL)</label>
-        <input {...register("image_url")} className="w-full border p-2 rounded" />
-        {errors.image_url && <p className="text-red-500">{errors.image_url.message}</p>}
-      </div>
-
-      {/* Link */}
-      <div>
-        <label className="block mb-1 font-medium">Link (URL)</label>
-        <input {...register("link_url")} className="w-full border p-2 rounded" />
-        {errors.link_url && <p className="text-red-500">{errors.link_url.message}</p>}
-      </div>
-
-      {/* Deskripsi */}
-      <div>
-        <label className="block mb-1 font-medium">Deskripsi</label>
-        <textarea {...register("description")} className="w-full border p-2 rounded" />
+        <label className="block mb-1 font-medium">Script Code</label>
+        <textarea
+          {...register("code")}
+          className="w-full border p-2 rounded h-32"
+          placeholder="<script>...</script>"
+        />
+        {errors.code && <p className="text-red-500">{errors.code.message}</p>}
       </div>
 
       {/* Posisi */}
@@ -94,6 +77,8 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
           <option value="sidebar">Sidebar</option>
           <option value="header">Header</option>
           <option value="footer">Footer</option>
+          <option value="popup">Popup</option>
+          <option value="homepage">Homepage</option>
         </select>
       </div>
 
@@ -104,18 +89,6 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
         </select>
-      </div>
-
-      {/* Periode */}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block mb-1 font-medium">Tanggal Mulai</label>
-          <input type="date" {...register("start_date")} className="w-full border p-2 rounded" />
-        </div>
-        <div>
-          <label className="block mb-1 font-medium">Tanggal Akhir</label>
-          <input type="date" {...register("end_date")} className="w-full border p-2 rounded" />
-        </div>
       </div>
 
       {/* Action */}
