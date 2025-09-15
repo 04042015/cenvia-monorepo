@@ -10,7 +10,7 @@ const schema = z.object({
   title: z.string().min(3, "Judul minimal 3 karakter"),
   code: z.string().min(10, "Script code harus diisi"),
   position: z.string().min(3, "Posisi harus dipilih"),
-  // ❌ status dihapus dari schema
+  // ❌ status tidak ada di form, otomatis diisi "active"
 });
 
 export type AdFormValues = z.infer<typeof schema>;
@@ -41,7 +41,7 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
   }, [initialData, reset]);
 
   const onSubmit = async (values: AdFormValues) => {
-    // ✅ status selalu "active" tanpa dropdown
+    // ✅ paksa selalu ada status = "active"
     const payload = {
       ...values,
       status: "active",
@@ -83,6 +83,7 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
           <option value="header">Header</option>
           <option value="footer">Footer</option>
           <option value="popup">Popup</option>
+          <option value="homepage">Homepage</option>
         </select>
       </div>
 
