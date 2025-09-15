@@ -20,6 +20,7 @@ interface ScriptAd {
   id: string;
   title: string;
   code: string;
+  position: "global" | "header" | "sidebar" | "footer";
   created_at: string;
 }
 
@@ -28,7 +29,7 @@ export default function ScriptAds() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [editAd, setEditAd] = useState<ScriptAd | null>(null);
-  const [form, setForm] = useState({ title: "", code: "" });
+  const [form, setForm] = useState({ title: "", code: "", position: "global" });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -45,12 +46,14 @@ export default function ScriptAds() {
     setLoading(false);
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
   function resetForm() {
-    setForm({ title: "", code: "" });
+    setForm({ title: "", code: "", position: "global" });
     setEditAd(null);
   }
 
@@ -135,6 +138,21 @@ export default function ScriptAds() {
                   rows={6}
                 />
               </div>
+              <div>
+                <Label htmlFor="position">Position</Label>
+                <select
+                  id="position"
+                  name="position"
+                  value={form.position}
+                  onChange={handleChange}
+                  className="w-full border rounded p-2"
+                >
+                  <option value="global">Global (popup, auto-run)</option>
+                  <option value="header">Header</option>
+                  <option value="sidebar">Sidebar</option>
+                  <option value="footer">Footer</option>
+                </select>
+              </div>
               <Button className="w-full" onClick={handleSubmit}>
                 {editAd ? "Update Script Ad" : "Create Script Ad"}
               </Button>
@@ -176,6 +194,7 @@ export default function ScriptAds() {
                       setForm({
                         title: ad.title,
                         code: ad.code,
+                        position: ad.position || "global",
                       });
                       setOpen(true);
                     }}
