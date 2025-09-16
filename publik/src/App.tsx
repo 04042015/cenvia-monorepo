@@ -8,6 +8,8 @@ import NotFound from "./pages/NotFound";
 import PostDetail from "./pages/PostDetail";
 import Layout from "./components/Layout";
 import Category from "./pages/Category";
+import About from "./pages/About"; // ✅ import About
+
 // import PopupAd from "./components/ads/PopupAd"; // ✅ kalau mau aktifkan lagi
 
 const queryClient = new QueryClient();
@@ -25,6 +27,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/post/:slug" element={<PostDetail />} />
             <Route path="/category/:slug" element={<Category />} />
+            <Route path="/about" element={<About />} /> {/* ✅ route baru */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
