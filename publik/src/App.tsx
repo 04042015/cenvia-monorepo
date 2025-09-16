@@ -5,10 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import PostDetail from "./pages/PostDetail"; // ✅
-import Layout from "./components/Layout"; // ✅
+import PostDetail from "./pages/PostDetail";
+import Layout from "./components/Layout";
 import Category from "./pages/Category";
-//import PopupAd from "./components/ads/PopupAd"; // ✅ ditambahkan
+// import PopupAd from "./components/ads/PopupAd"; // ✅ kalau mau aktifkan lagi
 
 const queryClient = new QueryClient();
 
@@ -19,7 +19,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         {/* ✅ Popup global biar muncul di semua halaman */}
-  //      <PopupAd />
+        {/* <PopupAd /> */}
         <Layout>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -34,4 +34,3 @@ const App = () => (
 );
 
 export default App;
-
