@@ -35,7 +35,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* 2. Profil CEO, Editor & Penulis */}
+      {/* 2. Profil CEO */}
       <section className="py-16 px-6 bg-white dark:bg-gray-900">
         <div className="container mx-auto max-w-4xl text-center">
           <motion.img
@@ -47,15 +47,42 @@ export default function About() {
             className="mx-auto w-32 h-32 rounded-full object-cover mb-6 shadow-lg border-4 border-[#EF2626]"
           />
           <h2 className="text-2xl font-bold mb-2">M. Iggo Pramulia</h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-2">
-            Founder & CEO CENVIA
-          </p>
           <p className="text-gray-500 dark:text-gray-400 mb-4">
-            Editor & Penulis
+            Founder & CEO CENVIA
           </p>
           <blockquote className="italic text-lg text-gray-700 dark:text-gray-300">
             "Saya percaya informasi yang akurat adalah hak semua orang."
           </blockquote>
+        </div>
+      </section>
+
+      {/* 2b. Team Section */}
+      <section className="py-16 px-6 bg-gray-50 dark:bg-gray-800">
+        <div className="container mx-auto max-w-5xl text-center">
+          <h2 className="text-3xl font-bold mb-12">Tim Kami</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[
+              { role: "Penulis", name: "M. Iggo Pramulia" },
+              { role: "Editor", name: "M. Iggo Pramulia" },
+            ].map((member, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.2 }}
+                className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 flex flex-col items-center"
+              >
+                <img
+                  src="https://kuoawzlabmwhvfcahcfm.supabase.co/storage/v1/object/public/assets/pas%20photo%20M.%20Iggo%20Pramulia_page-0001%20(1).jpg"
+                  alt={member.name}
+                  className="w-24 h-24 rounded-full object-cover mb-4 border-2 border-[#EF2626] shadow"
+                />
+                <h3 className="font-semibold text-lg">{member.name}</h3>
+                <p className="text-gray-500 dark:text-gray-400">{member.role}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
