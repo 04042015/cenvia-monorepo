@@ -35,20 +35,23 @@ export default function About() {
         </div>
       </section>
 
-      {/* 2. Profil CEO */}
+      {/* 2. Profil CEO, Editor & Penulis */}
       <section className="py-16 px-6 bg-white dark:bg-gray-900">
         <div className="container mx-auto max-w-4xl text-center">
           <motion.img
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.7 }}
-            src="/icons/founder.jpg"
+            src="https://kuoawzlabmwhvfcahcfm.supabase.co/storage/v1/object/public/assets/pas%20photo%20M.%20Iggo%20Pramulia_page-0001%20(1).jpg"
             alt="M. Iggo Pramulia"
-            className="mx-auto w-32 h-32 rounded-full object-cover mb-6 shadow-lg"
+            className="mx-auto w-32 h-32 rounded-full object-cover mb-6 shadow-lg border-4 border-[#EF2626]"
           />
           <h2 className="text-2xl font-bold mb-2">M. Iggo Pramulia</h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-4">
+          <p className="text-gray-500 dark:text-gray-400 mb-2">
             Founder & CEO CENVIA
+          </p>
+          <p className="text-gray-500 dark:text-gray-400 mb-4">
+            Editor & Penulis
           </p>
           <blockquote className="italic text-lg text-gray-700 dark:text-gray-300">
             "Saya percaya informasi yang akurat adalah hak semua orang."
@@ -219,4 +222,4 @@ export default function About() {
       </section>
     </div>
   );
-              }
+      }
