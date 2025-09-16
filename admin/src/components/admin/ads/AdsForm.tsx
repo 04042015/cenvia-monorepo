@@ -41,18 +41,62 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
   }, [initialData, reset]);
 
   const onSubmit = async (values: AdFormValues) => {
-    // ✅ paksa selalu ada status = "active"
     const payload = {
       ...values,
       status: "active",
     };
 
-    if (initialData) {
-      await supabase.from("script_ads").update(payload).eq("id", initialData.id);
-    } else {
-      await supabase.from("script_ads").insert([payload]);
+    try {
+      if (initialData) {
+        // Update kalau sedang edit
+        const { error } = await supabase
+          .from("script_ads")
+          .update(payload)
+          .eq("id", initialData.id);
+
+        if (error) throw error;
+      } else {
+        if (values.position === "popup") {
+          // ✅ Cek apakah popup sudah ada
+          const { data: existing, error: checkError } = await supabase
+            .from("script_ads")
+            .select("*")
+            .eq("position", "popup")
+            .maybeSingle();
+
+          if (checkError) throw checkError;
+
+          if (existing) {
+            // Kalau sudah ada, update saja
+            const { error: updateError } = await supabase
+              .from("script_ads")
+              .update(payload)
+              .eq("id", existing.id);
+
+            if (updateError) throw updateError;
+          } else {
+            // Kalau belum ada, insert baru
+            const { error: insertError } = await supabase
+              .from("script_ads")
+              .insert([payload]);
+
+            if (insertError) throw insertError;
+          }
+        } else {
+          // Selain popup, langsung insert
+          const { error } = await supabase
+            .from("script_ads")
+            .insert([payload]);
+
+          if (error) throw error;
+        }
+      }
+
+      onSuccess();
+    } catch (err: any) {
+      console.error("❌ Gagal simpan script_ads:", err);
+      alert("Gagal simpan iklan: " + err.message);
     }
-    onSuccess();
   };
 
   return (
