@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 type Category = {
   id: string;
@@ -61,13 +62,13 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-6 text-primary">EXPLORE Our Site</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {categories.map((category) => (
-                <a
+                <Link
                   key={category.id}
-                  href={`/category/${category.slug}`}
+                  to={`/category/${category.slug}`}
                   className="flex items-center justify-between p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors duration-200"
                 >
                   <span className="font-medium">{category.name}</span>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -76,12 +77,12 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <h3 className="text-xl font-bold mb-6 text-primary">Quick Links</h3>
             <ul className="space-y-3">
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Contact Us</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Advertise with Us</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">RSS Feed</a></li>
+              <li><Link to="/about" className="text-gray-300 hover:text-white transition-colors">About Us</Link></li>
+              <li><Link to="/contact" className="text-gray-300 hover:text-white transition-colors">Contact Us</Link></li>
+              <li><Link to="/privacy" className="text-gray-300 hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms" className="text-gray-300 hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link to="/advertise" className="text-gray-300 hover:text-white transition-colors">Advertise with Us</Link></li>
+              <li><Link to="/rss" className="text-gray-300 hover:text-white transition-colors">RSS Feed</Link></li>
             </ul>
           </div>
         </div>
