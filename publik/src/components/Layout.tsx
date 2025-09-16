@@ -65,8 +65,8 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
       <PopupAd />
 
       {/* Main content */}
-      <main className="flex-1 w-full container mx-auto px-4 py-6">
-        <div className="grid grid-cols-12 gap-6">
+      <main className="flex-1 w-full px-4 py-6 flex justify-center">
+        <div className="grid grid-cols-12 gap-6 w-full max-w-6xl">
           {/* Left Ads */}
           <aside className="hidden lg:block col-span-2">
             <AdSlot position="left" /> {/* ✅ Iklan kiri */}
@@ -90,4 +90,4 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
       <Footer />
     </div>
   );
-    }
+               }
