@@ -67,15 +67,20 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
       {/* Main content */}
       <main className="flex-1 w-full container mx-auto px-4 py-6">
         <div className="grid grid-cols-12 gap-6">
+          {/* Left Ads */}
+          <aside className="hidden lg:block col-span-2">
+            <AdSlot position="left" /> {/* ✅ Iklan kiri */}
+          </aside>
+
           {/* Content */}
           <div className="col-span-12 lg:col-span-8 space-y-4">
             <AdSlot position="content" /> {/* ✅ Iklan dalam konten */}
             {children}
           </div>
 
-          {/* Sidebar */}
-          <aside className="col-span-12 lg:col-span-4 space-y-4">
-            <AdSlot position="sidebar" /> {/* ✅ Iklan sidebar */}
+          {/* Right Ads */}
+          <aside className="hidden lg:block col-span-2">
+            <AdSlot position="right" /> {/* ✅ Iklan kanan */}
           </aside>
         </div>
       </main>
@@ -85,4 +90,4 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
       <Footer />
     </div>
   );
-}
+    }
