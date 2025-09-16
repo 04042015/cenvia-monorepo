@@ -1,3 +1,4 @@
+// publik/src/App.tsx
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +10,7 @@ import PostDetail from "./pages/PostDetail";
 import Layout from "./components/Layout";
 import Category from "./pages/Category";
 import About from "./pages/About"; // ✅ import About
+import ScrollToTop from "./components/ScrollToTop"; // ✅ import ScrollToTop
 
 // import PopupAd from "./components/ads/PopupAd"; // ✅ kalau mau aktifkan lagi
 
@@ -20,6 +22,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop /> {/* ✅ otomatis scroll ke atas tiap route berubah */}
         {/* ✅ Popup global biar muncul di semua halaman */}
         {/* <PopupAd /> */}
         <Layout>
