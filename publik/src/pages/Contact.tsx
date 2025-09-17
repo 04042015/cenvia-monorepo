@@ -8,7 +8,7 @@ export default function Contact() {
       {/* Hero Section */}
 <div
   className="text-white py-20 text-center shadow-lg flex flex-col items-center justify-center"
-  style={{ backgroundColor: "#EF2626" }}
+  style={{ backgroundColor: "#F04242" }}
 >
   <h1 className="text-5xl md:text-6xl font-extrabold tracking-wide text-white">
     CENVIA
