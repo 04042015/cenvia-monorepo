@@ -6,14 +6,17 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Hero Section */}
-      <div className="bg-red-600 text-white py-20 text-center shadow-lg flex flex-col items-center justify-center">
-        <h1 className="text-5xl md:text-6xl font-extrabold tracking-wide">
-          CENVIA
-        </h1>
-        <p className="mt-4 text-lg md:text-xl text-gray-100 max-w-2xl mx-auto">
-          Hubungi kami untuk pertanyaan, masukan, ataupun kerjasama.
-        </p>
-      </div>
+<div
+  className="text-white py-20 text-center shadow-lg flex flex-col items-center justify-center"
+  style={{ backgroundColor: "#EF2626" }}
+>
+  <h1 className="text-5xl md:text-6xl font-extrabold tracking-wide text-white">
+    CENVIA
+  </h1>
+  <p className="mt-4 text-lg md:text-xl text-gray-100 max-w-2xl mx-auto">
+    Hubungi kami untuk pertanyaan, masukan, ataupun kerjasama.
+  </p>
+</div>
 
       {/* Contact Section */}
       <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12">
