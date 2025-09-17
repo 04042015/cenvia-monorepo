@@ -1,3 +1,4 @@
+// admin/src/components/admin/PostForm.tsx
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -10,6 +11,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 // (opsional, kalau kamu sudah punya hook auth sendiri, gunakan itu)
 import { useAuth } from "@/hooks/useAuth";
+// 🔥 Tambahan
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const schema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
@@ -36,6 +40,7 @@ export function PostForm({ onSuccess }: { onSuccess?: () => void }) {
   });
 
   const title = watch("title");
+  const content = watch("content");
 
   // Auto-generate slug (bersihkan tanda baca yang bikin 406)
   useEffect(() => {
@@ -167,7 +172,13 @@ export function PostForm({ onSuccess }: { onSuccess?: () => void }) {
 
       <div>
         <label className="block font-medium">Isi</label>
-        <Textarea {...register("content")} placeholder="Tulis postingan Anda..." rows={8} />
+        {/* 🔥 Ganti Textarea jadi ReactQuill */}
+        <ReactQuill
+          theme="snow"
+          value={content || ""}
+          onChange={(val) => setValue("content", val, { shouldValidate: true })}
+          className="h-64 mb-12"
+        />
         {errors.content && <p className="text-red-500 text-sm">{errors.content.message}</p>}
       </div>
 
