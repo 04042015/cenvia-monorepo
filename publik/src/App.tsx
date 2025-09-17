@@ -10,6 +10,7 @@ import PostDetail from "./pages/PostDetail";
 import Layout from "./components/Layout";
 import Category from "./pages/Category";
 import About from "./pages/About"; // ✅ import About
+import Contact from "./pages/Contact"; // ✅ import Contact
 import ScrollToTop from "./components/ScrollToTop"; // ✅ import ScrollToTop
 
 // import PopupAd from "./components/ads/PopupAd"; // ✅ kalau mau aktifkan lagi
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/post/:slug" element={<PostDetail />} />
             <Route path="/category/:slug" element={<Category />} />
             <Route path="/about" element={<About />} /> {/* ✅ route baru */}
+            <Route path="/contact" element={<Contact />} /> {/* ✅ route baru */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
