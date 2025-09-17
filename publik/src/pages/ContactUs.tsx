@@ -109,11 +109,6 @@ export default function ContactUs() {
           </form>
         </div>
       </div>
-
-      {/* Footer Note */}
-      <div className="text-center py-6 text-gray-600 text-sm">
-        © {new Date().getFullYear()} Cenvia Media. All rights reserved.
-      </div>
     </div>
   );
       }
