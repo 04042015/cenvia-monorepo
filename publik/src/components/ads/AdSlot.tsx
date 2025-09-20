@@ -15,12 +15,6 @@ export default function AdSlot({ position }: { position: string }) {
   const [ads, setAds] = useState<ScriptAd[]>([]);
 
   useEffect(() => {
-    // 🚫 langsung skip kalau posisi = popup
-    if (position === "popup") {
-      setAds([]);
-      return;
-    }
-
     const fetchAds = async () => {
       const { data, error } = await supabase
         .from("script_ads")
@@ -37,14 +31,24 @@ export default function AdSlot({ position }: { position: string }) {
 
   useEffect(() => {
     ads.forEach((ad) => {
+      // skip popup/global jika script kosong
+      if (
+        (ad.position === "popup" || ad.position === "global") &&
+        (!ad.code || ad.code.trim() === "")
+      ) {
+        return; // jangan jalankan script kosong
+      }
+
       const container = document.getElementById(`ad-slot-${ad.id}`);
       if (container) {
-        container.innerHTML = "";
+        container.innerHTML = ""; // kosongkan dulu
 
+        // buat wrapper
         const wrapper = document.createElement("div");
         wrapper.innerHTML = ad.code;
         container.appendChild(wrapper);
 
+        // eksekusi ulang semua <script>
         const scripts = wrapper.getElementsByTagName("script");
         for (let i = 0; i < scripts.length; i++) {
           const oldScript = scripts[i];
@@ -71,7 +75,11 @@ export default function AdSlot({ position }: { position: string }) {
         <div
           key={ad.id}
           id={`ad-slot-${ad.id}`}
-          className="my-4 flex justify-center"
+          className={`my-4 flex justify-center ${
+            ad.position === "popup" || ad.position === "global"
+              ? "hidden" // sembunyikan container popup
+              : ""
+          }`}
         />
       ))}
     </>
