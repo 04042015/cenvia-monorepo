@@ -22,8 +22,11 @@ export default function AdSlot({ position }: { position: string }) {
         .eq("position", position)
         .eq("status", "active");
 
-      if (!error && data) {
-        setAds(data);
+      if (error) {
+        console.error("❌ Gagal ambil ads:", error);
+      } else {
+        console.log(`✅ Ads ditemukan untuk posisi "${position}":`, data);
+        setAds(data || []);
       }
     };
     fetchAds();
@@ -36,17 +39,19 @@ export default function AdSlot({ position }: { position: string }) {
         (ad.position === "popup" || ad.position === "global") &&
         (!ad.code || ad.code.trim() === "")
       ) {
-        return; // jangan jalankan script kosong
+        console.warn(`⚠️ Script kosong di posisi ${ad.position}, dilewati.`);
+        return;
       }
 
       const container = document.getElementById(`ad-slot-${ad.id}`);
       if (container) {
         container.innerHTML = ""; // kosongkan dulu
 
-        // buat wrapper
         const wrapper = document.createElement("div");
         wrapper.innerHTML = ad.code;
         container.appendChild(wrapper);
+
+        console.log(`🚀 Menyuntikkan ad "${ad.title}" di posisi ${ad.position}`);
 
         // eksekusi ulang semua <script>
         const scripts = wrapper.getElementsByTagName("script");
@@ -56,9 +61,11 @@ export default function AdSlot({ position }: { position: string }) {
 
           if (oldScript.src) {
             newScript.src = oldScript.src;
+            console.log(`🔗 Memuat external script: ${oldScript.src}`);
           }
           if (oldScript.innerHTML) {
             newScript.innerHTML = oldScript.innerHTML;
+            console.log("📜 Menyuntikkan inline script");
           }
 
           container.appendChild(newScript);
