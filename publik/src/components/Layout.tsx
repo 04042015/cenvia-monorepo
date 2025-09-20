@@ -1,52 +1,24 @@
 // publik/src/components/Layout.tsx
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import { supabase } from "@/lib/supabaseClient";
-import AdSlot from "@/components/ads/AdSlot"; // ✅ import AdSlot
+import AdSlot from "@/components/ads/AdSlot";
+import PopupAd from "@/components/ads/PopupAd"; // ✅ import PopupAd
 
 interface LayoutProps {
   children: ReactNode;
   onNetworkClick?: () => void;
 }
 
-interface Ad {
-  id: string;
-  position: string;
-  script: string;
-  status: boolean;
-}
-
 export default function Layout({ children, onNetworkClick }: LayoutProps) {
-  const [ads, setAds] = useState<Ad[]>([]);
-
-  useEffect(() => {
-    const fetchAds = async () => {
-      const { data, error } = await supabase
-        .from("ads")
-        .select("*")
-        .eq("status", true);
-
-      if (error) {
-        console.error("Gagal mengambil iklan:", error);
-      } else {
-        // 🚫 filter iklan popup supaya tidak ikut aktif
-        const filtered = (data || []).filter((ad: Ad) => ad.position !== "popup");
-        setAds(filtered);
-      }
-    };
-
-    fetchAds();
-  }, []);
-
   return (
     <div className="w-full min-h-screen flex flex-col bg-white">
       {/* Header */}
       <Header onNetworkClick={onNetworkClick || (() => {})} />
       <AdSlot position="header" />
 
-      {/* 🚫 Popup Ads sudah tidak dipakai */}
-      {/* <PopupAd /> */}
+      {/* ✅ Popup Ads hanya ambil dari tabel script_ads */}
+      <PopupAd />
 
       {/* Main content */}
       <main className="flex-1 w-full px-4 py-6 flex justify-center">
