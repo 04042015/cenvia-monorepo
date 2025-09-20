@@ -9,7 +9,7 @@ export default function PopupAd() {
     const fetchPopupAd = async () => {
       const { data, error } = await supabase
         .from("script_ads")
-        .select("*")
+        .select("code")
         .eq("status", "active")
         .eq("position", "popup")
         .maybeSingle();
@@ -26,30 +26,30 @@ export default function PopupAd() {
 
       console.log("✅ Popup ad ditemukan, menyuntikkan script...");
 
-      // Hapus popup lama kalau ada
+      // Bersihkan popup lama
       const oldPopup = document.getElementById("popup-ad-container");
       if (oldPopup) oldPopup.remove();
 
-      // Buat container baru
+      // Buat container
       const container = document.createElement("div");
       container.id = "popup-ad-container";
       document.body.appendChild(container);
 
-      // Cari URL src dari data.code
+      // Ambil URL dari script Supabase
       const match = data.code.match(/src=["']([^"']+)["']/);
       if (match) {
         const script = document.createElement("script");
         script.type = "text/javascript";
         script.async = true;
-        script.src = match[1]; // ✅ ambil src dari Supabase
+        script.src = match[1]; // ✅ langsung load dari src
         container.appendChild(script);
       } else {
-        console.warn("⚠️ Script popup tidak valid:", data.code);
+        console.warn("⚠️ Tidak ada atribut src di script popup:", data.code);
       }
     };
 
     fetchPopupAd();
   }, []);
 
-  return null; // tidak render apapun
+  return null;
 }
