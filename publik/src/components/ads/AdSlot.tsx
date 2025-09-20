@@ -15,6 +15,12 @@ export default function AdSlot({ position }: { position: string }) {
   const [ads, setAds] = useState<ScriptAd[]>([]);
 
   useEffect(() => {
+    // 🚫 langsung skip kalau posisi = popup
+    if (position === "popup") {
+      setAds([]);
+      return;
+    }
+
     const fetchAds = async () => {
       const { data, error } = await supabase
         .from("script_ads")
@@ -30,18 +36,15 @@ export default function AdSlot({ position }: { position: string }) {
   }, [position]);
 
   useEffect(() => {
-    // Inject setiap script agar benar-benar dieksekusi
     ads.forEach((ad) => {
       const container = document.getElementById(`ad-slot-${ad.id}`);
       if (container) {
-        container.innerHTML = ""; // kosongkan dulu
+        container.innerHTML = "";
 
-        // buat wrapper
         const wrapper = document.createElement("div");
         wrapper.innerHTML = ad.code;
         container.appendChild(wrapper);
 
-        // eksekusi ulang semua <script>
         const scripts = wrapper.getElementsByTagName("script");
         for (let i = 0; i < scripts.length; i++) {
           const oldScript = scripts[i];
