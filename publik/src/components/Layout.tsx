@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { supabase } from "@/lib/supabaseClient";
-import PopupAd from "@/components/ads/PopupAd";
+// import PopupAd from "@/components/ads/PopupAd";
 import AdSlot from "@/components/ads/AdSlot"; // ✅ import AdSlot
 
 interface LayoutProps {
@@ -61,8 +61,9 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
       <Header onNetworkClick={onNetworkClick || (() => {})} />
       <AdSlot position="header" /> {/* ✅ Iklan di header */}
 
-      {/* Popup Ads ✅ muncul di semua halaman */}
-      <PopupAd />
+     {/* Popup Ads dinonaktifkan */}
+{/* <PopupAd /> */}
+
 
       {/* Main content */}
       <main className="flex-1 w-full px-4 py-6 flex justify-center">
