@@ -1,50 +1,63 @@
 // publik/src/components/ads/PopupAd.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
-interface ScriptAd {
-  id: string;
-  position: string;
-  script: string;
-  status: boolean;
-}
-
 export default function PopupAd() {
-  const [popupAd, setPopupAd] = useState<ScriptAd | null>(null);
-
   useEffect(() => {
-    const fetchPopup = async () => {
+    const fetchPopupAd = async () => {
       const { data, error } = await supabase
         .from("script_ads")
         .select("*")
-        .eq("status", true)
+        .eq("status", "active")
         .eq("position", "popup")
-        .single();
+        .maybeSingle(); // ✅ supaya tidak error 406
 
       if (error) {
-        console.error("Gagal mengambil popup ad:", error);
-      } else {
-        setPopupAd(data);
+        console.warn("Gagal mengambil popup ad:", error);
+        return;
+      }
+
+      // Jika tidak ada popup aktif, jangan lakukan apa-apa
+      if (!data || !data.code) {
+        console.log("🚫 Tidak ada popup aktif");
+        return;
+      }
+
+      console.log("✅ Popup ad ditemukan, menyuntikkan script...");
+
+      // Hapus dulu popup lama
+      const oldPopup = document.getElementById("popup-ad-container");
+      if (oldPopup) oldPopup.remove();
+
+      // Buat container popup
+      const container = document.createElement("div");
+      container.id = "popup-ad-container";
+      document.body.appendChild(container);
+
+      // Masukkan script iklan
+      container.innerHTML = data.code;
+
+      // Eksekusi ulang semua <script>
+      const scripts = container.getElementsByTagName("script");
+      for (let i = 0; i < scripts.length; i++) {
+        const oldScript = scripts[i];
+        const newScript = document.createElement("script");
+
+        if (oldScript.src) {
+          newScript.src = oldScript.src;
+        }
+        if (oldScript.innerHTML) {
+          newScript.innerHTML = oldScript.innerHTML;
+        }
+
+        container.appendChild(newScript);
       }
     };
 
-    fetchPopup();
+    fetchPopupAd();
   }, []);
 
-  useEffect(() => {
-    if (popupAd?.script) {
-      const script = document.createElement("script");
-      script.innerHTML = popupAd.script;
-      script.async = true;
-      document.body.appendChild(script);
-
-      return () => {
-        document.body.removeChild(script);
-      };
-    }
-  }, [popupAd]);
-
-  return null; // tidak perlu render elemen
+  return null; // 🚫 Tidak render apapun di React, hanya inject ke <body>
 }
