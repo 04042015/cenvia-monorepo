@@ -24,7 +24,7 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
       <AdSlot position="homepage" />
 
       {/* Main content */}
-      <main className="flex-1 w-full px-4 pt-2 pb-6 flex justify-center">
+      <main className="flex-1 w-full px-4 pt-4 pb-6 flex justify-center">
         <div className="grid grid-cols-12 gap-6 w-full max-w-6xl">
           {/* Left Ads */}
           <aside className="hidden lg:block col-span-2">
