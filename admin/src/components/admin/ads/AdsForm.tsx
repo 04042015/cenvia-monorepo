@@ -78,15 +78,16 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
             // Kalau belum ada, insert baru
             const { error: insertError } = await supabase
               .from("script_ads")
-              .insert([payload]);
-
+              .insert([payload])
+              .select(); // ✅ cukup .select() biar tidak error
             if (insertError) throw insertError;
           }
         } else {
           // Selain popup, langsung insert
           const { error } = await supabase
             .from("script_ads")
-            .insert([payload]);
+            .insert([payload])
+            .select(); // ✅ cukup .select() biar tidak error
 
           if (error) throw error;
         }
