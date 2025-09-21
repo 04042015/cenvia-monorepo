@@ -144,10 +144,6 @@ const PostDetail = () => {
         <span>•</span>
         <span>{dayjs(post.published_at || post.created_at).format("DD MMMM YYYY")}</span>
         <span>•</span>
-        <span className="font-semibold" style={{ color: post.category.color }}>
-          {post.category.name}
-        </span>
-        <span>•</span>
         <span>{post.views} views</span>
       </div>
 
