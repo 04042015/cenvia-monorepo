@@ -209,3 +209,19 @@ All colors MUST be HSL.
   background: hsl(var(--destructive-foreground));
   color: hsl(var(--destructive));
 }
+
+/* ================================
+   ✅ Ads General Styling
+   ================================ */
+.ad-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ad-container iframe,
+.ad-container ins {
+  max-width: 100%;
+  margin: auto;
+  display: block;
+}
