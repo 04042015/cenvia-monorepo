@@ -17,8 +17,11 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
       <Header onNetworkClick={onNetworkClick || (() => {})} />
       <AdSlot position="header" />
 
-      {/* ✅ Popup Ads hanya ambil dari tabel script_ads */}
+      {/* ✅ Popup Ads */}
       <PopupAd />
+
+      {/* ✅ Homepage Ad */}
+      <AdSlot position="homepage" />
 
       {/* Main content */}
       <main className="flex-1 w-full px-4 py-6 flex justify-center">
