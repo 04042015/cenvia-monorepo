@@ -20,7 +20,14 @@ interface ScriptAd {
   id: string;
   title: string;
   code: string;
-  position: "global" | "header" | "sidebar" | "footer";
+  position:
+    | "sidebar"
+    | "header"
+    | "footer"
+    | "left"
+    | "right"
+    | "popup"
+    | "homepage";
   created_at: string;
 }
 
@@ -29,7 +36,11 @@ export default function ScriptAds() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [editAd, setEditAd] = useState<ScriptAd | null>(null);
-  const [form, setForm] = useState({ title: "", code: "", position: "global" });
+  const [form, setForm] = useState({
+    title: "",
+    code: "",
+    position: "sidebar",
+  });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -47,13 +58,15 @@ export default function ScriptAds() {
   }
 
   function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
   function resetForm() {
-    setForm({ title: "", code: "", position: "global" });
+    setForm({ title: "", code: "", position: "sidebar" });
     setEditAd(null);
   }
 
@@ -114,7 +127,9 @@ export default function ScriptAds() {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editAd ? "Edit Script Ad" : "New Script Ad"}</DialogTitle>
+              <DialogTitle>
+                {editAd ? "Edit Script Ad" : "New Script Ad"}
+              </DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
@@ -147,10 +162,13 @@ export default function ScriptAds() {
                   onChange={handleChange}
                   className="w-full border rounded p-2"
                 >
-                  <option value="global">Global (popup, auto-run)</option>
-                  <option value="header">Header</option>
                   <option value="sidebar">Sidebar</option>
+                  <option value="header">Header</option>
                   <option value="footer">Footer</option>
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                  <option value="popup">Popup</option>
+                  <option value="homepage">Homepage</option>
                 </select>
               </div>
               <Button className="w-full" onClick={handleSubmit}>
@@ -194,7 +212,7 @@ export default function ScriptAds() {
                       setForm({
                         title: ad.title,
                         code: ad.code,
-                        position: ad.position || "global",
+                        position: ad.position || "sidebar",
                       });
                       setOpen(true);
                     }}
