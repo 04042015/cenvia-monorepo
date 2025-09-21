@@ -15,7 +15,9 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
     <div className="w-full min-h-screen flex flex-col bg-white">
       {/* Header */}
       <Header onNetworkClick={onNetworkClick || (() => {})} />
-      <AdSlot position="header" />
+
+      {/* ✅ Header AdSlot dengan tinggi stabil */}
+      <AdSlot position="header" className="min-h-[90px]" />
 
       {/* ✅ Popup Ads */}
       <PopupAd />
@@ -49,4 +51,4 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
       <Footer />
     </div>
   );
-}
+          }
