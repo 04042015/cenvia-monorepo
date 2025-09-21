@@ -34,7 +34,6 @@ export default function AdSlot({ position }: { position: string }) {
 
   useEffect(() => {
     ads.forEach((ad) => {
-      // skip popup/global jika script kosong
       if (
         (ad.position === "popup" || ad.position === "global") &&
         (!ad.code || ad.code.trim() === "")
@@ -48,12 +47,12 @@ export default function AdSlot({ position }: { position: string }) {
         container.innerHTML = ""; // kosongkan dulu
 
         const wrapper = document.createElement("div");
+        wrapper.className = "ad-container"; // ✅ wrapper dengan style default
         wrapper.innerHTML = ad.code;
         container.appendChild(wrapper);
 
         console.log(`🚀 Menyuntikkan ad "${ad.title}" di posisi ${ad.position}`);
 
-        // eksekusi ulang semua <script>
         const scripts = wrapper.getElementsByTagName("script");
         for (let i = 0; i < scripts.length; i++) {
           const oldScript = scripts[i];
@@ -84,7 +83,7 @@ export default function AdSlot({ position }: { position: string }) {
           id={`ad-slot-${ad.id}`}
           className={`my-4 flex justify-center ${
             ad.position === "popup" || ad.position === "global"
-              ? "hidden" // sembunyikan container popup
+              ? "hidden"
               : ""
           }`}
         />
