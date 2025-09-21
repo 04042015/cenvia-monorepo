@@ -126,6 +126,8 @@ export default function AdsForm({ initialData, onSuccess, onCancel }: Props) {
           <option value="sidebar">Sidebar</option>
           <option value="header">Header</option>
           <option value="footer">Footer</option>
+          <option value="left">Left</option>
+          <option value="right">Right</option>
           <option value="popup">Popup</option>
           <option value="homepage">Homepage</option>
         </select>
