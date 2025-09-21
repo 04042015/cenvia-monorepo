@@ -105,22 +105,21 @@ const PostDetail = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      {/* Breadcrumb */}
-      <nav className="text-sm text-gray-500 mb-4 text-center">
-        <Link to="/" className="hover:underline">Home</Link>
-        <span className="mx-1">›</span>
-        <Link
-          to={`/category/${post.category.slug}`}
-          style={{ color: post.category.color }}
-          className="font-medium"
-        >
-          {post.category.name}
-        </Link>
-        <span className="mx-1">›</span>
-        <span>{post.title}</span>
-      </nav>
-
+  <div className="container mx-auto px-4 pt-2 pb-6">
+    {/* Breadcrumb */}
+    <nav className="text-sm text-gray-500 mb-2 text-center">
+      <Link to="/" className="hover:underline">Home</Link>
+      <span className="mx-1">›</span>
+      <Link
+        to={`/category/${post.category.slug}`}
+        style={{ color: post.category.color }}
+        className="font-medium"
+      >
+        {post.category.name}
+      </Link>
+      <span className="mx-1">›</span>
+      <span>{post.title}</span>
+    </nav>
       {/* Title */}
       <h1
         className="text-3xl sm:text-4xl font-extrabold mb-3 leading-snug text-center"
