@@ -54,15 +54,34 @@ const NewsGrid = () => {
     return <div className="text-center text-gray-500">Belum ada artikel.</div>;
   }
 
-  const handleClick = (slug: string) => {
-    // buka jendela iklan popup kecil
+  const handleClick = async (slug: string) => {
+    // ✅ Ambil script popup dari Supabase
+    const { data: ad, error } = await supabase
+      .from("script_ads")
+      .select("code")
+      .eq("position", "popup")
+      .eq("status", "active")
+      .maybeSingle();
+
     const adWin = window.open(
-      "about:blank",
+      "",
       "adWindow",
       "width=600,height=400"
     );
 
-    // setelah popup ditutup, arahkan ke artikel
+    if (adWin) {
+      adWin.document.write(`
+        <html>
+          <head><title>Advertisement</title></head>
+          <body style="margin:0;padding:0;overflow:hidden;">
+            ${ad?.code || "<p>Tidak ada iklan popup</p>"}
+          </body>
+        </html>
+      `);
+      adWin.document.close();
+    }
+
+    // setelah popup ditutup, redirect ke artikel
     const checkClosed = setInterval(() => {
       if (adWin && adWin.closed) {
         clearInterval(checkClosed);
