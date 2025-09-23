@@ -16,8 +16,8 @@ export default function Advertise() {
   return (
     <div className="w-full flex flex-col">
       {/* 1. Hero Section */}
-      <section className="relative bg-[#EF2626] text-white py-20 px-6">
-        <div className="container mx-auto text-center max-w-3xl">
+      <section className="relative bg-[#EF2626] text-white py-20 px-6 overflow-hidden">
+        <div className="container mx-auto text-center max-w-3xl relative z-10">
           <motion.h1
             initial={{ opacity: 0, y: -40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -36,6 +36,18 @@ export default function Advertise() {
             terpercaya untuk memperkuat brand Anda.
           </motion.p>
         </div>
+        {/* Wave bawah */}
+        <svg
+          className="absolute bottom-0 left-0 w-full h-20 text-white"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill="currentColor"
+            d="M0,64L48,90.7C96,117,192,171,288,170.7C384,171,480,117,576,106.7C672,96,768,128,864,144C960,160,1056,160,1152,149.3C1248,139,1344,117,1392,106.7L1440,96V320H0Z"
+          ></path>
+        </svg>
       </section>
 
       {/* 2. Mengapa Beriklan */}
@@ -305,8 +317,8 @@ export default function Advertise() {
       </section>
 
       {/* 10. CTA */}
-      <section className="py-16 px-6 bg-[#EF2626] text-white">
-        <div className="container mx-auto text-center">
+      <section className="relative bg-[#EF2626] text-white py-20 px-6 overflow-hidden">
+        <div className="container mx-auto text-center relative z-10">
           <h2 className="text-3xl font-bold mb-6">Siap Beriklan di CENVIA?</h2>
           <p className="mb-6 text-lg">
             Hubungi kami sekarang dan perluas jangkauan brand Anda.
@@ -319,7 +331,19 @@ export default function Advertise() {
             <ArrowRight className="ml-2 w-5 h-5" />
           </a>
         </div>
+        {/* Wave atas */}
+        <svg
+          className="absolute top-0 left-0 w-full h-20 text-white rotate-180"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill="currentColor"
+            d="M0,64L48,90.7C96,117,192,171,288,170.7C384,171,480,117,576,106.7C672,96,768,128,864,144C960,160,1056,160,1152,149.3C1248,139,1344,117,1392,106.7L1440,96V320H0Z"
+          ></path>
+        </svg>
       </section>
     </div>
   );
-            }
+}
