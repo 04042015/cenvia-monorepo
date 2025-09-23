@@ -16,6 +16,7 @@ import Terms from "./pages/Terms"; // ✅ import Terms
 import Advertise from "./pages/Advertise"; // ✅ import Advertise
 import RSS from "./pages/RSS"; // ✅ import RSS
 import ScrollToTop from "./components/ScrollToTop"; // ✅ import ScrollToTop
+import Interstitial from "./pages/Interstitial"; // ✅ import Interstitial
 
 // import PopupAd from "./components/ads/PopupAd"; // ✅ kalau mau aktifkan lagi
 
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/terms" element={<Terms />} /> {/* ✅ route baru */}
             <Route path="/advertise" element={<Advertise />} /> {/* ✅ route baru */}
             <Route path="/rss" element={<RSS />} /> {/* ✅ route baru */}
+            <Route path="/interstitial/:slug" element={<Interstitial />} /> {/* ✅ route interstitial */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
