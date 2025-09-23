@@ -67,24 +67,30 @@ const NewsGrid = () => {
   }
 
   const handleClick = (slug: string) => {
-    // buka popup dengan konten iklan
-    const adWin = window.open(
-      "",
-      "adWindow",
-      "width=600,height=400"
-    );
+    const adWin = window.open("", "adWindow", "width=600,height=400");
 
     if (adWin) {
+      // tulis kerangka awal
       adWin.document.open();
       adWin.document.write(`
         <html>
           <head><title>Advertisement</title></head>
           <body style="margin:0;padding:0;overflow:hidden;">
-            ${popupCode || "<p>Tidak ada iklan popup</p>"}
+            <div id="ad-container">
+              ${popupCode ? "" : "<p>Tidak ada iklan popup</p>"}
+            </div>
           </body>
         </html>
       `);
       adWin.document.close();
+
+      // inject script iklan jika ada
+      if (popupCode) {
+        const script = adWin.document.createElement("script");
+        script.type = "text/javascript";
+        script.innerHTML = popupCode;
+        adWin.document.body.appendChild(script);
+      }
 
       // cek kapan popup ditutup
       const checkClosed = setInterval(() => {
