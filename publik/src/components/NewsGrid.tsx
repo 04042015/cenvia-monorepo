@@ -1,4 +1,3 @@
-export default NewsGrid;
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import NewsCard from "./NewsCard";
@@ -68,7 +67,7 @@ const NewsGrid = () => {
   }
 
   const handleClick = (slug: string) => {
-    // buka popup langsung isi konten
+    // buka popup dengan konten iklan
     const adWin = window.open(
       "",
       "adWindow",
@@ -86,15 +85,18 @@ const NewsGrid = () => {
         </html>
       `);
       adWin.document.close();
-    }
 
-    // setelah popup ditutup, redirect ke artikel
-    const checkClosed = setInterval(() => {
-      if (adWin && adWin.closed) {
-        clearInterval(checkClosed);
-        navigate(`/post/${slug}`);
-      }
-    }, 500);
+      // cek kapan popup ditutup
+      const checkClosed = setInterval(() => {
+        if (adWin.closed) {
+          clearInterval(checkClosed);
+          navigate(`/post/${slug}`);
+        }
+      }, 500);
+    } else {
+      // fallback kalau popup diblokir browser
+      navigate(`/post/${slug}`);
+    }
   };
 
   return (
