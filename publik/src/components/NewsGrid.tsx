@@ -1,3 +1,4 @@
+export default NewsGrid;
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import NewsCard from "./NewsCard";
@@ -16,9 +17,11 @@ type Post = {
 const NewsGrid = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [popupCode, setPopupCode] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // fetch artikel
     const fetchPosts = async () => {
       const { data, error } = await supabase
         .from("posts")
@@ -35,15 +38,25 @@ const NewsGrid = () => {
         .order("published_at", { ascending: false })
         .limit(12);
 
-      if (error) {
-        console.error("Error fetching posts:", error);
-      } else {
-        setPosts(data || []);
-      }
+      if (!error) setPosts(data || []);
       setLoading(false);
     };
 
     fetchPosts();
+
+    // fetch popup ad sekali aja
+    const fetchPopup = async () => {
+      const { data } = await supabase
+        .from("script_ads")
+        .select("code")
+        .eq("position", "popup")
+        .eq("status", "active")
+        .maybeSingle();
+
+      if (data?.code) setPopupCode(data.code);
+    };
+
+    fetchPopup();
   }, []);
 
   if (loading) {
@@ -54,15 +67,8 @@ const NewsGrid = () => {
     return <div className="text-center text-gray-500">Belum ada artikel.</div>;
   }
 
-  const handleClick = async (slug: string) => {
-    // ✅ Ambil script popup dari Supabase
-    const { data: ad, error } = await supabase
-      .from("script_ads")
-      .select("code")
-      .eq("position", "popup")
-      .eq("status", "active")
-      .maybeSingle();
-
+  const handleClick = (slug: string) => {
+    // buka popup langsung isi konten
     const adWin = window.open(
       "",
       "adWindow",
@@ -70,11 +76,12 @@ const NewsGrid = () => {
     );
 
     if (adWin) {
+      adWin.document.open();
       adWin.document.write(`
         <html>
           <head><title>Advertisement</title></head>
           <body style="margin:0;padding:0;overflow:hidden;">
-            ${ad?.code || "<p>Tidak ada iklan popup</p>"}
+            ${popupCode || "<p>Tidak ada iklan popup</p>"}
           </body>
         </html>
       `);
