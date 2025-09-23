@@ -9,6 +9,7 @@ import {
   FileText,
   Lightbulb,
   ArrowRight,
+  Quote,
 } from "lucide-react";
 
 export default function Advertise() {
@@ -135,8 +136,115 @@ export default function Advertise() {
         </div>
       </section>
 
-      {/* 5. Proses Kerjasama */}
+      {/* 5. Paket Harga */}
       <section className="py-16 px-6 bg-gray-50 dark:bg-gray-800">
+        <div className="container mx-auto max-w-6xl text-center">
+          <h2 className="text-3xl font-bold mb-12">Paket Harga</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Basic",
+                price: "Rp2.000.000",
+                features: ["Banner Sidebar 7 Hari", "Laporan Mingguan", "Support Email"],
+              },
+              {
+                title: "Standard",
+                price: "Rp5.000.000",
+                features: ["Banner Header 14 Hari", "Sponsored Content", "Priority Support"],
+              },
+              {
+                title: "Premium",
+                price: "Rp10.000.000",
+                features: ["Banner Header 30 Hari", "2 Sponsored Content", "Full Report", "Custom Campaign"],
+              },
+            ].map((plan, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.2 }}
+                className="bg-white dark:bg-gray-900 rounded-xl shadow p-6 flex flex-col"
+              >
+                <h3 className="text-xl font-bold mb-2">{plan.title}</h3>
+                <p className="text-2xl font-bold text-[#EF2626] mb-4">{plan.price}</p>
+                <ul className="text-left space-y-2 flex-grow">
+                  {plan.features.map((f, i) => (
+                    <li key={i} className="text-gray-600 dark:text-gray-400">• {f}</li>
+                  ))}
+                </ul>
+                <a
+                  href="/contact"
+                  className="mt-6 inline-block bg-[#EF2626] text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition"
+                >
+                  Pilih Paket
+                </a>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Partner */}
+      <section className="py-16 px-6 bg-white dark:bg-gray-900">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-12">Partner Kami</h2>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center">
+            {["brand1.png", "brand2.png", "brand3.png", "brand4.png", "brand5.png"].map(
+              (logo, idx) => (
+                <motion.img
+                  key={idx}
+                  src={`/logos/${logo}`}
+                  alt={`partner-${idx}`}
+                  className="mx-auto h-12 grayscale hover:grayscale-0 transition"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: idx * 0.2 }}
+                />
+              )
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Testimoni */}
+      <section className="py-16 px-6 bg-gray-50 dark:bg-gray-800">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl font-bold mb-12">Apa Kata Klien Kami</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[
+              {
+                quote: "Beriklan di CENVIA sangat membantu meningkatkan brand awareness bisnis kami!",
+                name: "Budi Santoso",
+                role: "Marketing Manager",
+              },
+              {
+                quote: "Trafik dari iklan di CENVIA benar-benar sesuai target. ROI sangat bagus.",
+                name: "Siti Rahma",
+                role: "CEO Startup",
+              },
+            ].map((t, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.2 }}
+                className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow relative"
+              >
+                <Quote className="absolute top-4 left-4 w-6 h-6 text-[#EF2626] opacity-30" />
+                <p className="text-gray-700 dark:text-gray-300 mb-4 italic">"{t.quote}"</p>
+                <h4 className="font-bold">{t.name}</h4>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{t.role}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Proses Kerjasama */}
+      <section className="py-16 px-6 bg-white dark:bg-gray-900">
         <div className="container mx-auto max-w-3xl">
           <h2 className="text-3xl font-bold text-center mb-8">Proses Kerjasama</h2>
           <ol className="space-y-6">
@@ -151,7 +259,7 @@ export default function Advertise() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.2 }}
-                className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow"
+                className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow"
               >
                 <span className="font-bold text-[#EF2626] mr-2">{idx + 1}.</span>
                 {step}
@@ -161,7 +269,42 @@ export default function Advertise() {
         </div>
       </section>
 
-      {/* 6. CTA */}
+      {/* 9. FAQ */}
+      <section className="py-16 px-6 bg-gray-50 dark:bg-gray-800">
+        <div className="container mx-auto max-w-3xl">
+          <h2 className="text-3xl font-bold text-center mb-8">FAQ</h2>
+          <div className="space-y-4">
+            {[
+              {
+                q: "Berapa lama proses iklan dipublikasikan?",
+                a: "Biasanya dalam 1–3 hari kerja setelah kesepakatan dan pembayaran.",
+              },
+              {
+                q: "Apakah saya bisa memilih posisi banner?",
+                a: "Ya, posisi dapat dipilih sesuai paket yang tersedia.",
+              },
+              {
+                q: "Apakah tersedia laporan performa iklan?",
+                a: "Kami menyediakan laporan mingguan dan bulanan sesuai paket.",
+              },
+            ].map((faq, idx) => (
+              <motion.details
+                key={idx}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.2 }}
+                className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow cursor-pointer"
+              >
+                <summary className="font-semibold">{faq.q}</summary>
+                <p className="text-gray-600 dark:text-gray-400 mt-2">{faq.a}</p>
+              </motion.details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 10. CTA */}
       <section className="py-16 px-6 bg-[#EF2626] text-white">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6">Siap Beriklan di CENVIA?</h2>
@@ -179,4 +322,4 @@ export default function Advertise() {
       </section>
     </div>
   );
-                   }
+            }
