@@ -63,33 +63,39 @@ const PostDetail = () => {
         return;
       }
 
-      // increment views
-      await supabase.rpc("increment_post_views", { post_id: data.id });
+      // increment views (RPC di DB)
+      try {
+        await supabase.rpc("increment_post_views", { post_id: data.id });
+      } catch (e) {
+        // jangan gagal fatal hanya log
+        console.warn("increment views failed", e);
+      }
+
       setPost(data);
 
-      // Related
+      // Related (sama kategori, exclude current)
       const { data: relatedPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail, category:categories(id, name, color)")
         .eq("category_id", data.category_id)
         .neq("id", data.id)
-        .limit(4);
+        .limit(8);
       if (relatedPosts) setRelated(relatedPosts);
 
-      // Recommended
+      // Recommended (general recommended, exclude current)
       const { data: recommendedPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail")
         .neq("id", data.id)
-        .limit(4);
+        .limit(8);
       if (recommendedPosts) setRecommended(recommendedPosts);
 
-      // Others
+      // Others (different category)
       const { data: otherPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail")
         .neq("category_id", data.category_id)
-        .limit(4);
+        .limit(8);
       if (otherPosts) setOthers(otherPosts);
     };
 
@@ -101,40 +107,41 @@ const PostDetail = () => {
   const shareUrl = `${window.location.origin}/post/${post.slug}`;
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareUrl);
-    alert("Berhasil disalin");
+    alert("Link berhasil disalin");
   };
 
   return (
-  <div className="container mx-auto px-4 pt-2 pb-6">
-    {/* Breadcrumb */}
-    <nav className="text-sm text-gray-500 mb-2 text-center">
-      <Link to="/" className="hover:underline">Home</Link>
-      <span className="mx-1">›</span>
-      <Link
-        to={`/category/${post.category.slug}`}
-        style={{ color: post.category.color }}
-        className="font-medium"
-      >
-        {post.category.name}
-      </Link>
-      <span className="mx-1">›</span>
-      <span>{post.title}</span>
-    </nav>
+    <div className="container mx-auto px-3 pt-3 pb-6 max-w-3xl">
+      {/* Breadcrumb */}
+      <nav className="text-xs text-gray-500 mb-2 text-center">
+        <Link to="/" className="hover:underline">Home</Link>
+        <span className="mx-1">›</span>
+        <Link
+          to={`/category/${post.category.slug}`}
+          style={{ color: post.category.color }}
+          className="font-medium hover:underline"
+        >
+          {post.category.name}
+        </Link>
+        <span className="mx-1">›</span>
+        <span className="text-gray-700">{post.title}</span>
+      </nav>
+
       {/* Title */}
       <h1
-        className="text-3xl sm:text-4xl font-extrabold mb-3 leading-snug text-center"
+        className="text-2xl sm:text-3xl font-extrabold mb-2 leading-tight text-center"
         style={{ color: post.category.color }}
       >
         {post.title}
       </h1>
 
-      {/* Meta info */}
-      <div className="flex flex-wrap justify-center items-center text-sm text-gray-600 mb-5 gap-2">
+      {/* Meta info / Byline */}
+      <div className="flex flex-wrap justify-center items-center text-xs text-gray-600 mb-3 gap-2">
         {post.author?.avatar_url && (
           <img
             src={post.author.avatar_url}
             alt={post.author.full_name || "Admin"}
-            className="w-7 h-7 rounded-full object-cover"
+            className="w-6 h-6 rounded-full object-cover"
           />
         )}
         <span className="font-medium">
@@ -143,43 +150,79 @@ const PostDetail = () => {
         <span>•</span>
         <span>{dayjs(post.published_at || post.created_at).format("DD MMMM YYYY")}</span>
         <span>•</span>
-        <span>{post.views} views</span>
+        <span>{post.views ?? 0} views</span>
       </div>
 
-      {/* Share */}
-      <div className="text-center mb-6">
-        <h3 className="font-semibold mb-2 flex items-center justify-center gap-2">
+      {/* Share (compact) */}
+      <div className="text-center mb-4">
+        <h3 className="font-semibold mb-2 inline-flex items-center gap-2">
           <Share2 className="w-4 h-4" /> Bagikan
         </h3>
-        <div className="flex justify-center flex-wrap gap-3">
-          <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700">
-            <Facebook className="w-5 h-5" />
+        <div className="flex justify-center flex-wrap gap-2 mt-2">
+          <a
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 text-xs"
+            aria-label="Share ke Facebook"
+          >
+            <Facebook className="w-4 h-4" />
           </a>
-          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-sky-500 text-white hover:bg-sky-600">
-            <Twitter className="w-5 h-5" />
+          <a
+            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-full bg-sky-500 text-white hover:bg-sky-600 text-xs"
+            aria-label="Share ke X"
+          >
+            <Twitter className="w-4 h-4" />
           </a>
-          <a href={`https://wa.me/?text=${encodeURIComponent(post.title + " " + shareUrl)}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-green-500 text-white hover:bg-green-600">
-            <MessageCircle className="w-5 h-5" />
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(post.title + " " + shareUrl)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 text-xs"
+            aria-label="Share ke WhatsApp"
+          >
+            <MessageCircle className="w-4 h-4" />
           </a>
-          <a href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-blue-400 text-white hover:bg-blue-500">
-            <Send className="w-5 h-5" />
+          <a
+            href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-full bg-blue-400 text-white hover:bg-blue-500 text-xs"
+            aria-label="Share ke Telegram"
+          >
+            <Send className="w-4 h-4" />
           </a>
-          <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-blue-700 text-white hover:bg-blue-800">
-            <Linkedin className="w-5 h-5" />
+          <a
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-full bg-blue-700 text-white hover:bg-blue-800 text-xs"
+            aria-label="Share ke LinkedIn"
+          >
+            <Linkedin className="w-4 h-4" />
           </a>
-          <a href={`https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(post.title)}`} target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-orange-600 text-white hover:bg-orange-700">
-            <FaReddit className="w-5 h-5" />
+          <a
+            href={`https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(post.title)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-full bg-orange-600 text-white hover:bg-orange-700 text-xs"
+            aria-label="Share ke Reddit"
+          >
+            <FaReddit className="w-4 h-4" />
           </a>
-          <button onClick={handleCopyLink} className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700">
-            <LinkIcon className="w-5 h-5" />
+          <button onClick={handleCopyLink} className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700 text-xs" aria-label="Copy link">
+            <LinkIcon className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Thumbnail */}
+      {/* Thumbnail / Hero */}
       {post.thumbnail && (
-        <figure className="mb-6">
-          <img src={post.thumbnail} alt={post.title} className="w-full max-w-3xl mx-auto rounded-lg shadow-md" />
+        <figure className="mb-4">
+          <img src={post.thumbnail} alt={post.title} className="w-full max-w-3xl mx-auto rounded-lg shadow-sm" />
           {post.excerpt && (
             <figcaption className="text-xs text-gray-500 mt-1 italic text-center">
               {post.excerpt}
@@ -188,16 +231,23 @@ const PostDetail = () => {
         </figure>
       )}
 
-      {/* Content */}
+      {/* Article content */}
       <article
-        className="prose prose-lg max-w-none text-justify mb-10"
+        className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
-      {/* Baca Juga */}
+      {/* Pull quote (pakai excerpt jika tersedia) */}
+      {post.excerpt && (
+        <blockquote className="pull-quote bg-gray-50 p-3 border-l-4 border-gray-300 italic mb-6">
+          {post.excerpt}
+        </blockquote>
+      )}
+
+      {/* Baca Juga (singkat list) */}
       {related.length > 0 && (
-        <div className="border-l-4 border-red-500 pl-3 mb-10">
-          <h2 className="font-bold text-lg mb-2">Baca Juga</h2>
+        <div className="border-l-4 border-gray-300 pl-3 mb-6">
+          <h2 className="font-bold text-base mb-2">Baca Juga</h2>
           <ul className="space-y-1 text-blue-600">
             {related.slice(0, 2).map((p) => (
               <li key={p.id}>
@@ -212,54 +262,84 @@ const PostDetail = () => {
 
       {/* Tags */}
       {post.tags && post.tags.length > 0 && (
-        <div className="mb-10">
-          <h3 className="font-semibold mb-2">Tags:</h3>
+        <div className="mb-6">
+          <h3 className="font-semibold mb-2 text-sm">Tags:</h3>
           <div className="flex flex-wrap gap-2">
             {post.tags.map((tag, i) => (
-              <span key={i} className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer">
+              <Link key={i} to={`/tag/${tag}`} className="px-3 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded-full">
                 #{tag}
-              </span>
+              </Link>
             ))}
           </div>
         </div>
       )}
 
-      {/* Related / Recommended / Others */}
-      <section className="mb-10">
-        <h2 className="text-xl font-bold mb-4">Berita Terkait</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Berita Terkait (grid) */}
+      <section className="mb-6">
+        <h2 className="text-lg font-bold mb-3">Berita Terkait</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {related.map((p) => (
             <Link key={p.id} to={`/post/${p.slug}`} className="block border rounded-lg overflow-hidden hover:shadow-md transition">
-              {p.thumbnail && <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />}
-              <div className="p-3 text-sm font-medium">{p.title}</div>
+              {p.thumbnail && <img src={p.thumbnail} alt={p.title} className="h-36 w-full object-cover" />}
+              <div className="p-2 text-sm font-medium">{p.title}</div>
             </Link>
           ))}
         </div>
       </section>
 
-      <section className="mb-10">
-        <h2 className="text-xl font-bold mb-4">Rekomendasi Untukmu</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Rekomendasi Untukmu */}
+      <section className="mb-6">
+        <h2 className="text-lg font-bold mb-3">Rekomendasi Untukmu</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {recommended.map((p) => (
             <Link key={p.id} to={`/post/${p.slug}`} className="block border rounded-lg overflow-hidden hover:shadow-md transition">
-              {p.thumbnail && <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />}
-              <div className="p-3 text-sm font-medium">{p.title}</div>
+              {p.thumbnail && <img src={p.thumbnail} alt={p.title} className="h-36 w-full object-cover" />}
+              <div className="p-2 text-sm font-medium">{p.title}</div>
             </Link>
           ))}
         </div>
       </section>
 
-      <section className="mb-10">
-        <h2 className="text-xl font-bold mb-4">Berita Cenvia Lainnya</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Berita Cenvia Lainnya */}
+      <section className="mb-6">
+        <h2 className="text-lg font-bold mb-3">Berita Cenvia Lainnya</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {others.map((p) => (
             <Link key={p.id} to={`/post/${p.slug}`} className="block border rounded-lg overflow-hidden hover:shadow-md transition">
-              {p.thumbnail && <img src={p.thumbnail} alt={p.title} className="h-40 w-full object-cover" />}
-              <div className="p-3 text-sm font-medium">{p.title}</div>
+              {p.thumbnail && <img src={p.thumbnail} alt={p.title} className="h-36 w-full object-cover" />}
+              <div className="p-2 text-sm font-medium">{p.title}</div>
             </Link>
           ))}
         </div>
       </section>
+
+      {/* Newsletter CTA */}
+      <div className="mt-6 p-3 border rounded-lg bg-gray-50 text-center">
+        <p className="text-sm font-medium mb-2">Subscribe untuk update berita terbaru</p>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const form = e.target as HTMLFormElement;
+            const input = form.elements.namedItem("email") as HTMLInputElement;
+            const email = input.value;
+            if (!email) {
+              alert("Masukkan email dulu");
+              return;
+            }
+            // simpan ke supabase subscribers (opsional)
+            supabase.from("subscribers").insert([{ email }]).then(() => {
+              alert("Terima kasih, email tersimpan");
+              input.value = "";
+            }).catch(() => {
+              alert("Gagal menyimpan, coba lagi");
+            });
+          }}
+          className="flex justify-center gap-0"
+        >
+          <input name="email" type="email" placeholder="Email anda" className="border px-2 py-1 rounded-l-md text-sm w-2/3" />
+          <button type="submit" className="bg-blue-600 text-white px-3 py-1 text-sm rounded-r-md">Subscribe</button>
+        </form>
+      </div>
     </div>
   );
 };
