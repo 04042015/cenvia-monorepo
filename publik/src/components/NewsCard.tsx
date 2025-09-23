@@ -27,18 +27,16 @@ const NewsCard = ({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    // tujuan artikel
+    // tujuan artikel asli
     const targetPath = `/post/${slug}`;
 
-    // kasih jeda biar iklan sempat muncul
-    setTimeout(() => {
-      navigate(targetPath);
-    }, 500);
+    // arahkan ke interstitial dulu
+    navigate(`/interstitial?redirect=${targetPath}`);
   };
 
   return (
     <a
-      href={`/post/${slug}`}
+      href={`/interstitial?redirect=/post/${slug}`}
       onClick={handleClick}
       className={cn(
         "group cursor-pointer bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 block",
