@@ -10,7 +10,7 @@ interface LayoutProps {
   onNetworkClick?: () => void;
 }
 
-export default function Layout({ children, onNetworkClick }: LayoutProps) {
+export default function LayoutCompact({ children, onNetworkClick }: LayoutProps) {
   return (
     <div className="w-full min-h-screen flex flex-col bg-white">
       {/* Header */}
@@ -25,8 +25,8 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
       {/* ✅ Homepage Ad */}
       <AdSlot position="homepage" />
 
-      {/* Main content */}
-      <main className="flex-1 w-full px-4 pt-4 pb-6 flex justify-center">
+      {/* Main content (rapat dengan sedikit jarak tipis) */}
+      <main className="flex-1 w-full px-4 pt-2 pb-6 flex justify-center">
         <div className="grid grid-cols-12 gap-6 w-full max-w-6xl">
           {/* Left Ads */}
           <aside className="hidden lg:block col-span-2">
@@ -51,4 +51,4 @@ export default function Layout({ children, onNetworkClick }: LayoutProps) {
       <Footer />
     </div>
   );
-          }
+            }
