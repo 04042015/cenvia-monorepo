@@ -10,12 +10,13 @@ import {
   Lightbulb,
   ArrowRight,
   Quote,
+  Star,
 } from "lucide-react";
 
 export default function Advertise() {
   return (
     <div className="w-full flex flex-col">
-      {/* 1. Hero Section */}
+      {/* 1. Hero Section dengan background melengkung */}
       <section className="relative bg-[#EF2626] text-white py-20 px-6 overflow-hidden">
         <div className="container mx-auto text-center max-w-3xl relative z-10">
           <motion.h1
@@ -30,24 +31,25 @@ export default function Advertise() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="text-lg md:text-xl leading-relaxed"
+            className="text-lg md:text-xl leading-relaxed text-white"
           >
             Jangkau audiens yang tepat dengan beriklan di CENVIA. Media digital
             terpercaya untuk memperkuat brand Anda.
           </motion.p>
         </div>
-        {/* Wave bawah */}
-        <svg
-          className="absolute bottom-0 left-0 w-full h-20 text-white"
-          viewBox="0 0 1440 320"
-          preserveAspectRatio="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill="currentColor"
-            d="M0,64L48,90.7C96,117,192,171,288,170.7C384,171,480,117,576,106.7C672,96,768,128,864,144C960,160,1056,160,1152,149.3C1248,139,1344,117,1392,106.7L1440,96V320H0Z"
-          ></path>
-        </svg>
+        {/* Lengkungan bawah */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
+          <svg
+            viewBox="0 0 1440 120"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full h-[80px] md:h-[120px]"
+          >
+            <path
+              d="M0,64L48,80C96,96,192,128,288,122.7C384,117,480,75,576,74.7C672,75,768,117,864,133.3C960,149,1056,139,1152,122.7C1248,107,1344,85,1392,74.7L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
+              fill="#ffffff"
+            />
+          </svg>
+        </div>
       </section>
 
       {/* 2. Mengapa Beriklan */}
@@ -117,15 +119,10 @@ export default function Advertise() {
         </div>
       </section>
 
-      {/* 4. Statistik & Target */}
+      {/* 4. Statistik */}
       <section className="py-16 px-6 bg-white dark:bg-gray-900">
-        <div className="container mx-auto text-center max-w-3xl">
+        <div className="container mx-auto text-center max-w-4xl">
           <h2 className="text-3xl font-bold mb-6">Statistik & Target Audiens</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">
-            CENVIA memiliki basis pembaca yang terus bertumbuh dengan mayoritas
-            berusia 18–45 tahun. Audiens kami aktif di platform digital, sehingga
-            iklan Anda menjangkau target yang lebih relevan.
-          </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
               ["10.000+", "Pembaca Harian"],
@@ -150,44 +147,44 @@ export default function Advertise() {
 
       {/* 5. Paket Harga */}
       <section className="py-16 px-6 bg-gray-50 dark:bg-gray-800">
-        <div className="container mx-auto max-w-6xl text-center">
-          <h2 className="text-3xl font-bold mb-12">Paket Harga</h2>
+        <div className="container mx-auto text-center max-w-6xl">
+          <h2 className="text-3xl font-bold mb-12">Paket Iklan</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                title: "Basic",
-                price: "Rp2.000.000",
-                features: ["Banner Sidebar 7 Hari", "Laporan Mingguan", "Support Email"],
+                title: "Starter",
+                price: "Rp2 Juta",
+                features: ["Banner Sidebar", "Durasi 1 Minggu", "Laporan Dasar"],
               },
               {
-                title: "Standard",
-                price: "Rp5.000.000",
-                features: ["Banner Header 14 Hari", "Sponsored Content", "Priority Support"],
+                title: "Professional",
+                price: "Rp5 Juta",
+                features: ["Header Banner", "Sponsored Content", "Durasi 1 Bulan", "Laporan Lengkap"],
               },
               {
                 title: "Premium",
-                price: "Rp10.000.000",
-                features: ["Banner Header 30 Hari", "2 Sponsored Content", "Full Report", "Custom Campaign"],
+                price: "Rp10 Juta",
+                features: ["Header + Sidebar", "Video Ads", "Custom Campaign", "Durasi 2 Bulan", "Full Support"],
               },
-            ].map((plan, idx) => (
+            ].map((pkg, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.2 }}
-                className="bg-white dark:bg-gray-900 rounded-xl shadow p-6 flex flex-col"
+                className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 flex flex-col items-center"
               >
-                <h3 className="text-xl font-bold mb-2">{plan.title}</h3>
-                <p className="text-2xl font-bold text-[#EF2626] mb-4">{plan.price}</p>
-                <ul className="text-left space-y-2 flex-grow">
-                  {plan.features.map((f, i) => (
-                    <li key={i} className="text-gray-600 dark:text-gray-400">• {f}</li>
+                <h3 className="text-xl font-bold mb-2">{pkg.title}</h3>
+                <p className="text-3xl font-bold text-[#EF2626] mb-4">{pkg.price}</p>
+                <ul className="space-y-2 mb-6">
+                  {pkg.features.map((f, i) => (
+                    <li key={i} className="text-gray-600 dark:text-gray-400">✔ {f}</li>
                   ))}
                 </ul>
                 <a
                   href="/contact"
-                  className="mt-6 inline-block bg-[#EF2626] text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition"
+                  className="bg-[#EF2626] text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
                 >
                   Pilih Paket
                 </a>
@@ -197,66 +194,49 @@ export default function Advertise() {
         </div>
       </section>
 
-      {/* 6. Partner */}
+      {/* 6. Testimoni */}
       <section className="py-16 px-6 bg-white dark:bg-gray-900">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-12">Partner Kami</h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center">
-            {["brand1.png", "brand2.png", "brand3.png", "brand4.png", "brand5.png"].map(
-              (logo, idx) => (
-                <motion.img
-                  key={idx}
-                  src={`/logos/${logo}`}
-                  alt={`partner-${idx}`}
-                  className="mx-auto h-12 grayscale hover:grayscale-0 transition"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: idx * 0.2 }}
-                />
-              )
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Testimoni */}
-      <section className="py-16 px-6 bg-gray-50 dark:bg-gray-800">
-        <div className="container mx-auto max-w-4xl text-center">
+        <div className="container mx-auto max-w-5xl text-center">
           <h2 className="text-3xl font-bold mb-12">Apa Kata Klien Kami</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               {
-                quote: "Beriklan di CENVIA sangat membantu meningkatkan brand awareness bisnis kami!",
-                name: "Budi Santoso",
-                role: "Marketing Manager",
+                name: "PT Maju Jaya",
+                quote:
+                  "Beriklan di CENVIA sangat efektif. Brand kami dikenal luas hanya dalam hitungan minggu!",
               },
               {
-                quote: "Trafik dari iklan di CENVIA benar-benar sesuai target. ROI sangat bagus.",
-                name: "Siti Rahma",
-                role: "CEO Startup",
+                name: "Startup XYZ",
+                quote:
+                  "Layanan profesional, hasil nyata. Kami puas dengan kolaborasi bersama CENVIA.",
               },
-            ].map((t, idx) => (
+            ].map((testi, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.2 }}
-                className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow relative"
+                className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow flex flex-col items-center"
               >
-                <Quote className="absolute top-4 left-4 w-6 h-6 text-[#EF2626] opacity-30" />
-                <p className="text-gray-700 dark:text-gray-300 mb-4 italic">"{t.quote}"</p>
-                <h4 className="font-bold">{t.name}</h4>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{t.role}</p>
+                <Quote className="w-8 h-8 text-[#EF2626] mb-4" />
+                <p className="italic mb-4 text-gray-700 dark:text-gray-300">
+                  "{testi.quote}"
+                </p>
+                <p className="font-semibold text-[#EF2626]">{testi.name}</p>
+                <div className="flex mt-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-yellow-400" />
+                  ))}
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 8. Proses Kerjasama */}
-      <section className="py-16 px-6 bg-white dark:bg-gray-900">
+      {/* 7. Proses Kerjasama */}
+      <section className="py-16 px-6 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto max-w-3xl">
           <h2 className="text-3xl font-bold text-center mb-8">Proses Kerjasama</h2>
           <ol className="space-y-6">
@@ -271,7 +251,7 @@ export default function Advertise() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.2 }}
-                className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow"
+                className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow"
               >
                 <span className="font-bold text-[#EF2626] mr-2">{idx + 1}.</span>
                 {step}
@@ -281,47 +261,37 @@ export default function Advertise() {
         </div>
       </section>
 
-      {/* 9. FAQ */}
-      <section className="py-16 px-6 bg-gray-50 dark:bg-gray-800">
-        <div className="container mx-auto max-w-3xl">
+      {/* 8. FAQ */}
+      <section className="py-16 px-6 bg-white dark:bg-gray-900">
+        <div className="container mx-auto max-w-4xl">
           <h2 className="text-3xl font-bold text-center mb-8">FAQ</h2>
           <div className="space-y-4">
-            {[
-              {
-                q: "Berapa lama proses iklan dipublikasikan?",
-                a: "Biasanya dalam 1–3 hari kerja setelah kesepakatan dan pembayaran.",
-              },
-              {
-                q: "Apakah saya bisa memilih posisi banner?",
-                a: "Ya, posisi dapat dipilih sesuai paket yang tersedia.",
-              },
-              {
-                q: "Apakah tersedia laporan performa iklan?",
-                a: "Kami menyediakan laporan mingguan dan bulanan sesuai paket.",
-              },
-            ].map((faq, idx) => (
-              <motion.details
-                key={idx}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.2 }}
-                className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow cursor-pointer"
-              >
-                <summary className="font-semibold">{faq.q}</summary>
-                <p className="text-gray-600 dark:text-gray-400 mt-2">{faq.a}</p>
-              </motion.details>
-            ))}
+            <details className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow">
+              <summary className="font-medium cursor-pointer">
+                Bagaimana cara memulai beriklan?
+              </summary>
+              <p className="mt-2 text-gray-600 dark:text-gray-400">
+                Anda cukup menghubungi tim kami melalui halaman Contact dan pilih paket iklan yang sesuai.
+              </p>
+            </details>
+            <details className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow">
+              <summary className="font-medium cursor-pointer">
+                Apakah bisa custom campaign?
+              </summary>
+              <p className="mt-2 text-gray-600 dark:text-gray-400">
+                Ya, kami menawarkan campaign sesuai kebutuhan spesifik brand Anda.
+              </p>
+            </details>
           </div>
         </div>
       </section>
 
-      {/* 10. CTA */}
+      {/* 9. CTA Akhir dengan background melengkung */}
       <section className="relative bg-[#EF2626] text-white py-20 px-6 overflow-hidden">
         <div className="container mx-auto text-center relative z-10">
-          <h2 className="text-3xl font-bold mb-6">Siap Beriklan di CENVIA?</h2>
-          <p className="mb-6 text-lg">
-            Hubungi kami sekarang dan perluas jangkauan brand Anda.
+          <h2 className="text-3xl font-bold mb-6">Siap Promosikan Brand Anda?</h2>
+          <p className="mb-6 text-lg text-white">
+            Hubungi kami sekarang untuk strategi iklan yang maksimal dan efektif.
           </p>
           <a
             href="/contact"
@@ -331,19 +301,20 @@ export default function Advertise() {
             <ArrowRight className="ml-2 w-5 h-5" />
           </a>
         </div>
-        {/* Wave atas */}
-        <svg
-          className="absolute top-0 left-0 w-full h-20 text-white rotate-180"
-          viewBox="0 0 1440 320"
-          preserveAspectRatio="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill="currentColor"
-            d="M0,64L48,90.7C96,117,192,171,288,170.7C384,171,480,117,576,106.7C672,96,768,128,864,144C960,160,1056,160,1152,149.3C1248,139,1344,117,1392,106.7L1440,96V320H0Z"
-          ></path>
-        </svg>
+        {/* Lengkungan atas */}
+        <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
+          <svg
+            viewBox="0 0 1440 120"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full h-[80px] md:h-[120px] rotate-180"
+          >
+            <path
+              d="M0,64L48,80C96,96,192,128,288,122.7C384,117,480,75,576,74.7C672,75,768,117,864,133.3C960,149,1056,139,1152,122.7C1248,107,1344,85,1392,74.7L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
+              fill="#ffffff"
+            />
+          </svg>
+        </div>
       </section>
     </div>
   );
-}
+            }
