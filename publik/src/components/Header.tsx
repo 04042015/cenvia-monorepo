@@ -1,7 +1,13 @@
-// publik/src/components/Header.tsx
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { Search, Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
+import {
+  Search,
+  Facebook,
+  Twitter,
+  Instagram,
+  Youtube,
+  Linkedin,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -12,12 +18,12 @@ interface HeaderProps {
 const Header = ({ onNetworkClick }: HeaderProps) => {
   const [navigationItems, setNavigationItems] = useState<string[]>([]);
   const [breakingNews, setBreakingNews] = useState<string[]>([]);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  // 🔹 Scroll listener
+  // 🔹 Scroll listener untuk shrink header
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 10);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -31,17 +37,14 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
         .select("name")
         .order("name", { ascending: true });
 
-      if (error) {
-        console.error("Error fetching categories:", error);
-      } else {
+      if (!error && data) {
         setNavigationItems(data.map((cat) => cat.name));
       }
     };
-
     fetchCategories();
   }, []);
 
-  // 🔹 Fetch Breaking News (3 artikel terbaru)
+  // 🔹 Fetch Breaking News
   useEffect(() => {
     const fetchBreakingNews = async () => {
       const { data, error } = await supabase
@@ -51,32 +54,25 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
         .order("published_at", { ascending: false })
         .limit(3);
 
-      if (error) {
-        console.error("Error fetching breaking news:", error);
-      } else if (data) {
+      if (!error && data) {
         setBreakingNews(data.map((post) => post.title));
       }
     };
-
     fetchBreakingNews();
   }, []);
 
   return (
-    <header
-      className={`fixed top-0 left-0 w-full z-50 bg-primary text-primary-foreground transition-all duration-300 ${
-        isScrolled ? "py-2 shadow-md" : "py-4"
-      }`}
-    >
+    <header className="fixed top-0 left-0 w-full z-50 bg-primary text-primary-foreground transition-all duration-300">
       {/* ✅ Breaking News Bar */}
       <div className="w-full bg-[#1a1a1a] text-white border-b border-primary-foreground/20">
-        <div className="container mx-auto px-4 py-2 flex items-center justify-between text-sm">
+        <div className="container mx-auto px-4 py-1 flex items-center justify-between text-sm">
           {/* Breaking News Marquee */}
           <div className="flex items-center gap-2 flex-1 overflow-hidden">
-            <span className="flex items-center gap-1 font-bold text-sm whitespace-nowrap">
+            <span className="flex items-center gap-1 font-bold text-xs whitespace-nowrap">
               <span className="material-symbols-outlined text-red-500">
                 trending_up
               </span>
-              BRAKING NEWS  |
+              BRAKING NEWS |
             </span>
             <div className="overflow-hidden whitespace-nowrap w-full">
               <span className="animate-marquee inline-block">
@@ -87,7 +83,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
             </div>
           </div>
 
-          {/* Follow Us (hanya desktop) */}
+          {/* Follow Us */}
           <div className="hidden md:flex items-center gap-2 md:gap-4 shrink-0">
             <span className="text-xs">FOLLOW US:</span>
             <div className="flex items-center gap-2">
@@ -101,29 +97,33 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
         </div>
       </div>
 
-      {/* ✅ Main header with logo & search */}
-      <div className={`container mx-auto px-4 transition-all duration-300 ${isScrolled ? "py-2" : "py-4"}`}>
+      {/* ✅ Main Header */}
+      <div
+        className={`container mx-auto px-4 transition-all duration-300 ${
+          scrolled ? "py-1" : "py-2"
+        }`}
+      >
         <div className="flex items-center justify-between">
           {/* Logo + Nama */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <img
               src="/icons/logo-cenvia.svg"
               alt="CENVIA"
               className={`object-contain transition-all duration-300 ${
-                isScrolled ? "w-8 h-8" : "w-12 h-12"
+                scrolled ? "w-6 h-6" : "w-8 h-8"
               }`}
             />
             <div>
               <h1
                 className={`font-bold text-white transition-all duration-300 ${
-                  isScrolled ? "text-xl" : "text-2xl"
+                  scrolled ? "text-lg" : "text-xl"
                 }`}
               >
                 CENVIA
               </h1>
               <h2
                 className={`tracking-wide text-gray-300 transition-all duration-300 ${
-                  isScrolled ? "text-xs" : "text-sm"
+                  scrolled ? "text-[10px]" : "text-xs"
                 }`}
               >
                 Portal Berita
@@ -131,7 +131,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
             </div>
           </div>
 
-          {/* Search + Network Button */}
+          {/* Search + Network */}
           <div className="flex items-center gap-2 flex-1 md:flex-none">
             <div className="relative w-full md:w-auto">
               <Input
@@ -152,8 +152,8 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
         </div>
       </div>
 
-      {/* ✅ Navigation dari Supabase */}
-      <nav className="mt-4 border-t border-primary-foreground/20 pt-4">
+      {/* ✅ Navigation */}
+      <nav className="mt-2 border-t border-primary-foreground/20 pt-2 transition-all duration-300">
         {/* Desktop */}
         <ul className="hidden md:flex items-center gap-6 text-sm">
           {navigationItems.map((item, index) => (
