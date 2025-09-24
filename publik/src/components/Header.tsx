@@ -160,9 +160,9 @@ const Header = () => {
               <li key={index}>
                 <a
                   href={`/category/${item.toLowerCase()}`}
-                  className="hover:text-white/80 transition-colors font-medium"
-                >
-                  {item}
+                   className="hover:text-white/80 transition-colors font-semibold"
+                  >
+                 {item}
                 </a>
               </li>
             ))}
