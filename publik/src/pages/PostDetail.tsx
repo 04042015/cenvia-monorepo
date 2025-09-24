@@ -258,24 +258,25 @@ const PostDetail = () => {
       )}
 
      {/* Baca Juga */}
-      {relatedPosts.length > 0 && (
-        <div className="mt-10">
-          <h3 className="text-lg font-semibold mb-4">Baca Juga</h3>
-          <div className="grid gap-4 md:grid-cols-2">
-            {relatedPosts.map((rp) => (
-              <Link
-                key={rp.id}
-                to={`/post/${rp.slug}`}
-                className="block p-4 rounded-lg border hover:shadow transition"
-              >
-                <h4 className="font-medium mb-2">{rp.title}</h4>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {rp.excerpt}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </div>
+{related.length > 0 && (
+  <div className="mt-10">
+    <h3 className="text-lg font-semibold mb-4">Baca Juga</h3>
+    <div className="grid gap-4 md:grid-cols-2">
+      {related.map((rp) => (
+        <Link
+          key={rp.id}
+          to={`/post/${rp.slug}`}
+          className="block p-4 rounded-lg border hover:shadow transition"
+        >
+          <h4 className="font-medium mb-2">{rp.title}</h4>
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {rp.excerpt || ""}
+          </p>
+        </Link>
+      ))}
+    </div>
+  </div>
+)}
       
       {/* Related news */}
       <section className="mb-6">
