@@ -155,69 +155,45 @@ const PostDetail = () => {
 
       {/* Share (compact) */}
       <div className="text-center mb-4">
-        <h3 className="font-semibold mb-2 inline-flex items-center gap-2">
-          <Share2 className="w-4 h-4" /> Bagikan
-        </h3>
-        <div className="flex justify-center flex-wrap gap-2 mt-2">
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 text-xs"
-            aria-label="Share ke Facebook"
-          >
-            <Facebook className="w-4 h-4" />
-          </a>
-          <a
-            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full bg-sky-500 text-white hover:bg-sky-600 text-xs"
-            aria-label="Share ke X"
-          >
-            <Twitter className="w-4 h-4" />
-          </a>
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(post.title + " " + shareUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 text-xs"
-            aria-label="Share ke WhatsApp"
-          >
-            <MessageCircle className="w-4 h-4" />
-          </a>
-          <a
-            href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full bg-blue-400 text-white hover:bg-blue-500 text-xs"
-            aria-label="Share ke Telegram"
-          >
-            <Send className="w-4 h-4" />
-          </a>
-          <a
-            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full bg-blue-700 text-white hover:bg-blue-800 text-xs"
-            aria-label="Share ke LinkedIn"
-          >
-            <Linkedin className="w-4 h-4" />
-          </a>
-          <a
-            href={`https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(post.title)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full bg-orange-600 text-white hover:bg-orange-700 text-xs"
-            aria-label="Share ke Reddit"
-          >
-            <FaReddit className="w-4 h-4" />
-          </a>
-          <button onClick={handleCopyLink} className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700 text-xs" aria-label="Copy link">
-            <LinkIcon className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
+  <div className="flex justify-center flex-wrap gap-2 mt-2">
+    <a
+      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 text-xs"
+      aria-label="Share ke Facebook"
+    >
+      <Facebook className="w-4 h-4" />
+    </a>
+    <a
+      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="p-2 rounded-full bg-sky-500 text-white hover:bg-sky-600 text-xs"
+      aria-label="Share ke Twitter"
+    >
+      <Twitter className="w-4 h-4" />
+    </a>
+    <a
+      href={`https://api.whatsapp.com/send?text=${encodeURIComponent(shareUrl)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 text-xs"
+      aria-label="Share ke WhatsApp"
+    >
+      <MessageCircle className="w-4 h-4" />
+    </a>
+    <a
+      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="p-2 rounded-full bg-blue-700 text-white hover:bg-blue-800 text-xs"
+      aria-label="Share ke LinkedIn"
+    >
+      <Linkedin className="w-4 h-4" />
+    </a>
+  </div>
+</div>
 
       {/* Thumbnail / Hero */}
       {post.thumbnail && (
