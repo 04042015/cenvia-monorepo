@@ -1,3 +1,4 @@
+// publik/src/components/Header.tsx
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Search, Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
@@ -51,7 +52,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
   }, []);
 
   return (
-    <header className="bg-primary text-primary-foreground">
+    <header className="fixed top-0 left-0 w-full z-50 bg-primary text-primary-foreground">
       {/* ✅ Breaking News Bar */}
       <div className="w-full bg-[#1a1a1a] text-white border-b border-primary-foreground/20">
         <div className="container mx-auto px-4 py-2 flex items-center justify-between text-sm">
