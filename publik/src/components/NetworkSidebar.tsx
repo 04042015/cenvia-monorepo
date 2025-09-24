@@ -1,3 +1,4 @@
+// publik/src/components/NetworkSidebar.tsx
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,7 @@ interface Category {
 const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
   const [categories, setCategories] = useState<Category[]>([]);
 
-  // Fetch categories dari Supabase
+  // 🔹 Fetch categories dari Supabase
   useEffect(() => {
     const fetchCategories = async () => {
       const { data, error } = await supabase
@@ -44,7 +45,7 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
       {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-40"
           onClick={onClose}
         />
       )}
@@ -52,50 +53,50 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
       {/* Sidebar */}
       <div
         className={`
-        fixed top-0 right-0 h-full w-80 bg-white shadow-lg z-50 transform transition-transform duration-300
+        fixed top-0 right-0 h-full w-full md:w-[480px] bg-white shadow-lg z-50 transform transition-transform duration-300
         ${isOpen ? "translate-x-0" : "translate-x-full"}
       `}
       >
-        <div className="p-6">
+        <div className="p-6 overflow-y-auto h-full">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-gray-800">🌐 Network</h2>
+            <h2 className="text-xl font-bold text-black">🌐 Network</h2>
             <Button
               variant="ghost"
               size="sm"
               onClick={onClose}
               className="hover:bg-gray-100"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </Button>
           </div>
 
           {/* Categories */}
-<div>
-  <h3 className="text-lg font-semibold text-black mb-4 border-b border-gray-200 pb-2">
-    connection
-  </h3>
-  <div className="flex flex-col gap-3">
-    {categories.map((cat) => (
-      <a
-        key={cat.id}
-        href={`/category/${cat.slug}`}
-        className="flex items-center gap-2 text-base font-semibold text-black"
-      >
-        {cat.icon ? (
-          <img
-            src={cat.icon}
-            alt={cat.name}
-            className="w-5 h-5 object-contain"
-          />
-        ) : (
-          <span>📁</span>
-        )}
-        {cat.name}
-      </a>
-    ))}
-  </div>
-</div>
+          <div>
+            <h3 className="text-lg font-semibold text-black mb-4 border-b border-gray-200 pb-2">
+              Connection
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {categories.map((cat) => (
+                <a
+                  key={cat.id}
+                  href={`/category/${cat.slug}`}
+                  className="flex items-center gap-2 text-sm font-semibold text-black"
+                >
+                  {cat.icon ? (
+                    <img
+                      src={cat.icon}
+                      alt={cat.name}
+                      className="w-5 h-5 object-contain"
+                    />
+                  ) : (
+                    <span>📁</span>
+                  )}
+                  {cat.name}
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </>
