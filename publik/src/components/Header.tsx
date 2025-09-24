@@ -8,16 +8,12 @@ import {
   Instagram,
   Youtube,
   Linkedin,
-  X,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import NetworkSidebar from "@/components/NetworkSidebar"; // ✅ Import sidebar
 
-interface HeaderProps {
-  onNetworkClick?: () => void;
-}
-
-const Header = ({ onNetworkClick }: HeaderProps) => {
+const Header = () => {
   const [navigationItems, setNavigationItems] = useState<string[]>([]);
   const [breakingNews, setBreakingNews] = useState<string[]>([]);
   const [scrolled, setScrolled] = useState(false);
@@ -148,7 +144,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
                 variant="secondary"
                 size="sm"
                 className="shrink-0 bg-white text-primary hover:bg-white/90"
-                onClick={() => setSidebarOpen(true)}
+                onClick={() => setSidebarOpen(true)} // ✅ buka sidebar
               >
                 🌐 Network
               </Button>
@@ -190,53 +186,8 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
         </nav>
       </header>
 
-      {/* ✅ Sidebar Network */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-50 flex">
-          {/* Overlay */}
-          <div
-            className="fixed inset-0 bg-black/50"
-            onClick={() => setSidebarOpen(false)}
-          ></div>
-
-          {/* Sidebar Content */}
-          <div className="relative w-72 bg-white h-full shadow-lg p-4 z-50 flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <img
-                  src="/icons/logo-cenvia.svg"
-                  alt="CENVIA"
-                  className="w-8 h-8"
-                />
-                <h2 className="font-bold text-lg text-gray-800">CENVIA</h2>
-              </div>
-              <button
-                className="p-1 rounded hover:bg-gray-200"
-                onClick={() => setSidebarOpen(false)}
-              >
-                <X className="w-5 h-5 text-gray-600" />
-              </button>
-            </div>
-
-            {/* Kategori */}
-            <nav className="flex-1 overflow-y-auto">
-              <ul className="space-y-3">
-                {navigationItems.map((item, index) => (
-                  <li key={index}>
-                    <a
-                      href={`/category/${item.toLowerCase()}`}
-                      className="block px-2 py-2 rounded hover:bg-gray-100 text-gray-800 font-medium"
-                    >
-                      {item}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-        </div>
-      )}
+      {/* ✅ Panggil Sidebar */}
+      <NetworkSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
     </>
   );
 };
