@@ -275,6 +275,7 @@ const PostDetail = () => {
               </Link>
             ))}
           </div>
+        </div>
       
       {/* Related news */}
       <section className="mb-6">
