@@ -1,3 +1,4 @@
+// publik/src/components/Header.tsx
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import {
@@ -7,20 +8,22 @@ import {
   Instagram,
   Youtube,
   Linkedin,
+  X,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
-  onNetworkClick: () => void;
+  onNetworkClick?: () => void;
 }
 
 const Header = ({ onNetworkClick }: HeaderProps) => {
   const [navigationItems, setNavigationItems] = useState<string[]>([]);
   const [breakingNews, setBreakingNews] = useState<string[]>([]);
   const [scrolled, setScrolled] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // 🔹 Scroll listener untuk shrink header
+  // 🔹 Scroll listener
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
@@ -62,129 +65,179 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-primary text-primary-foreground transition-all duration-300">
-      {/* ✅ Breaking News Bar */}
-      <div className="w-full bg-[#1a1a1a] text-white border-b border-primary-foreground/20">
-        <div className="container mx-auto px-4 py-1 flex items-center justify-between text-sm">
-          {/* Breaking News Marquee */}
-          <div className="flex items-center gap-2 flex-1 overflow-hidden">
-            <span className="flex items-center gap-1 font-bold text-xs whitespace-nowrap">
-              <span className="material-symbols-outlined text-red-500">
-                trending_up
+    <>
+      <header className="fixed top-0 left-0 w-full z-50 bg-primary text-primary-foreground transition-all duration-300">
+        {/* ✅ Breaking News Bar */}
+        <div className="w-full bg-[#1a1a1a] text-white border-b border-primary-foreground/20">
+          <div className="container mx-auto px-4 py-1 flex items-center justify-between text-sm">
+            {/* Breaking News Marquee */}
+            <div className="flex items-center gap-2 flex-1 overflow-hidden">
+              <span className="flex items-center gap-1 font-bold text-xs whitespace-nowrap">
+                <span className="material-symbols-outlined text-red-500">
+                  trending_up
+                </span>
+                BRAKING NEWS |
               </span>
-              BRAKING NEWS |
-            </span>
-            <div className="overflow-hidden whitespace-nowrap w-full">
-              <span className="animate-marquee inline-block">
-                {breakingNews.length > 0
-                  ? breakingNews.join(" • ")
-                  : "Belum ada berita terbaru"}
-              </span>
+              <div className="overflow-hidden whitespace-nowrap w-full">
+                <span className="animate-marquee inline-block">
+                  {breakingNews.length > 0
+                    ? breakingNews.join(" • ")
+                    : "Belum ada berita terbaru"}
+                </span>
+              </div>
+            </div>
+
+            {/* Follow Us */}
+            <div className="hidden md:flex items-center gap-2 md:gap-4 shrink-0">
+              <span className="text-xs">FOLLOW US:</span>
+              <div className="flex items-center gap-2">
+                <Facebook className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
+                <Twitter className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
+                <Instagram className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
+                <Youtube className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
+                <Linkedin className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* Follow Us */}
-          <div className="hidden md:flex items-center gap-2 md:gap-4 shrink-0">
-            <span className="text-xs">FOLLOW US:</span>
+        {/* ✅ Main Header */}
+        <div
+          className={`container mx-auto px-4 transition-all duration-300 ${
+            scrolled ? "py-1" : "py-2"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            {/* Logo + Nama */}
             <div className="flex items-center gap-2">
-              <Facebook className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
-              <Twitter className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
-              <Instagram className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
-              <Youtube className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
-              <Linkedin className="w-4 h-4 hover:text-gray-300 cursor-pointer" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ✅ Main Header */}
-      <div
-        className={`container mx-auto px-4 transition-all duration-300 ${
-          scrolled ? "py-1" : "py-2"
-        }`}
-      >
-        <div className="flex items-center justify-between">
-          {/* Logo + Nama */}
-          <div className="flex items-center gap-2">
-            <img
-              src="/icons/logo-cenvia.svg"
-              alt="CENVIA"
-              className={`object-contain transition-all duration-300 ${
-                scrolled ? "w-6 h-6" : "w-8 h-8"
-              }`}
-            />
-            <div>
-              <h1
-                className={`font-bold text-white transition-all duration-300 ${
-                  scrolled ? "text-lg" : "text-xl"
+              <img
+                src="/icons/logo-cenvia.svg"
+                alt="CENVIA"
+                className={`object-contain transition-all duration-300 ${
+                  scrolled ? "w-6 h-6" : "w-8 h-8"
                 }`}
-              >
-                CENVIA
-              </h1>
-              <h2
-                className={`tracking-wide text-gray-300 transition-all duration-300 ${
-                  scrolled ? "text-[10px]" : "text-xs"
-                }`}
-              >
-                Portal Berita
-              </h2>
-            </div>
-          </div>
-
-          {/* Search + Network */}
-          <div className="flex items-center gap-2 flex-1 md:flex-none">
-            <div className="relative w-full md:w-auto">
-              <Input
-                placeholder="Search..."
-                className="w-full md:w-64 bg-white/10 border-white/20 text-white placeholder:text-white/70 pr-10"
               />
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/70" />
+              <div>
+                <h1
+                  className={`font-bold text-white transition-all duration-300 ${
+                    scrolled ? "text-lg" : "text-xl"
+                  }`}
+                >
+                  CENVIA
+                </h1>
+                <h2
+                  className={`tracking-wide text-gray-300 transition-all duration-300 ${
+                    scrolled ? "text-[10px]" : "text-xs"
+                  }`}
+                >
+                  Portal Berita
+                </h2>
+              </div>
             </div>
-            <Button
-              variant="secondary"
-              size="sm"
-              className="shrink-0 bg-white text-primary hover:bg-white/90"
-              onClick={onNetworkClick}
-            >
-              🌐 Network
-            </Button>
+
+            {/* Search + Network */}
+            <div className="flex items-center gap-2 flex-1 md:flex-none">
+              <div className="relative w-full md:w-auto">
+                <Input
+                  placeholder="Search..."
+                  className="w-full md:w-64 bg-white/10 border-white/20 text-white placeholder:text-white/70 pr-10"
+                />
+                <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/70" />
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="shrink-0 bg-white text-primary hover:bg-white/90"
+                onClick={() => setSidebarOpen(true)}
+              >
+                🌐 Network
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* ✅ Navigation */}
-      <nav className="mt-2 border-t border-primary-foreground/20 pt-2 transition-all duration-300">
-        {/* Desktop */}
-        <ul className="hidden md:flex items-center gap-6 text-sm">
-          {navigationItems.map((item, index) => (
-            <li key={index}>
-              <a
-                href={`/category/${item.toLowerCase()}`}
-                className="hover:text-white/80 transition-colors font-medium"
-              >
-                {item}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        {/* Mobile */}
-        <div className="md:hidden overflow-x-auto scrollbar-hide">
-          <ul className="flex items-center gap-4 text-sm min-w-max pb-2">
+        {/* ✅ Navigation */}
+        <nav className="mt-2 border-t border-primary-foreground/20 pt-2 transition-all duration-300">
+          {/* Desktop */}
+          <ul className="hidden md:flex items-center gap-6 text-sm">
             {navigationItems.map((item, index) => (
               <li key={index}>
                 <a
                   href={`/category/${item.toLowerCase()}`}
-                  className="hover:text-white/80 transition-colors font-medium whitespace-nowrap"
+                  className="hover:text-white/80 transition-colors font-medium"
                 >
                   {item}
                 </a>
               </li>
             ))}
           </ul>
+
+          {/* Mobile */}
+          <div className="md:hidden overflow-x-auto scrollbar-hide">
+            <ul className="flex items-center gap-4 text-sm min-w-max pb-2">
+              {navigationItems.map((item, index) => (
+                <li key={index}>
+                  <a
+                    href={`/category/${item.toLowerCase()}`}
+                    className="hover:text-white/80 transition-colors font-medium whitespace-nowrap"
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </nav>
+      </header>
+
+      {/* ✅ Sidebar Network */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black/50"
+            onClick={() => setSidebarOpen(false)}
+          ></div>
+
+          {/* Sidebar Content */}
+          <div className="relative w-72 bg-white h-full shadow-lg p-4 z-50 flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <img
+                  src="/icons/logo-cenvia.svg"
+                  alt="CENVIA"
+                  className="w-8 h-8"
+                />
+                <h2 className="font-bold text-lg text-gray-800">CENVIA</h2>
+              </div>
+              <button
+                className="p-1 rounded hover:bg-gray-200"
+                onClick={() => setSidebarOpen(false)}
+              >
+                <X className="w-5 h-5 text-gray-600" />
+              </button>
+            </div>
+
+            {/* Kategori */}
+            <nav className="flex-1 overflow-y-auto">
+              <ul className="space-y-3">
+                {navigationItems.map((item, index) => (
+                  <li key={index}>
+                    <a
+                      href={`/category/${item.toLowerCase()}`}
+                      className="block px-2 py-2 rounded hover:bg-gray-100 text-gray-800 font-medium"
+                    >
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
         </div>
-      </nav>
-    </header>
+      )}
+    </>
   );
 };
 
