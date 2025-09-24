@@ -16,27 +16,19 @@ import {
 export default function Advertise() {
   return (
     <div className="w-full flex flex-col">
-      {/* 1. Hero Section dengan background melengkung */}
-      <section className="relative bg-[#EF2626] text-white py-20 px-6 overflow-hidden">
-        <div className="container mx-auto text-center max-w-3xl relative z-10">
-          <motion.h1
-            initial={{ opacity: 0, y: -40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-4xl md:text-5xl font-bold mb-6"
-          >
-            Advertise with CENVIA
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="text-lg md:text-xl leading-relaxed text-white"
-          >
-            Jangkau audiens yang tepat dengan beriklan di CENVIA. Media digital
-            terpercaya untuk memperkuat brand Anda.
-          </motion.p>
-        </div>
+      {/* Hero Section */}
+<div
+  className="text-white py-20 text-center shadow-lg flex flex-col items-center justify-center rounded-3xl mx-6 mt-6"
+  style={{ backgroundColor: "#EF2626" }}
+>
+  <h1 className="text-5xl md:text-6xl font-extrabold tracking-wide text-white">
+    Advertise with CENVIA
+  </h1>
+  <p className="mt-4 text-lg md:text-xl text-gray-100 max-w-3xl mx-auto">
+    Jangkau audiens yang tepat dengan beriklan di CENVIA. Media digital
+    terpercaya untuk memperkuat brand Anda.
+  </p>
+</div>
         {/* Lengkungan bawah */}
         <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
           <svg
