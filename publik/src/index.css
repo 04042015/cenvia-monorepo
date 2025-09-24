@@ -108,14 +108,13 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
-    font-family: 'Abel', sans-serif;
-  }
+  @apply bg-background text-foreground font-medium; /* default agak tebal */
+  font-family: 'Abel', sans-serif;
+}
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-bold text-foreground;
-    font-family: 'Abel', sans-serif;
-  }
+h1, h2, h3, h4, h5, h6 {
+  @apply font-semibold text-foreground; /* judul lebih tebal, tapi tidak ekstrim */
+  font-family: 'Abel', sans-serif;
 }
 
 /* Breaking news scrolling animation (existing) */
