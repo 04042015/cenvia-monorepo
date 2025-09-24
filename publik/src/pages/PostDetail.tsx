@@ -354,7 +354,7 @@ const PostDetail = () => {
         </form>
       </div>
     </div>
-  );
+  )
 };
 
 export default PostDetail;
