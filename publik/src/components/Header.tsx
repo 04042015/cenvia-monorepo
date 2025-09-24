@@ -65,7 +65,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-primary text-primary-foreground transition-all duration-300">
       {/* ✅ Breaking News Bar */}
-      <div className="w-full bg-[#1a1a1a] text-white border-b border-primary-foreground/20">
+      <div className="w-full bg-[#1a1a1a] text-white border-b border-primary-foreground/20 relative z-40">
         <div className="max-w-4xl mx-auto px-4 py-1 flex items-center justify-between text-sm">
           {/* Breaking News Marquee */}
           <div className="flex items-center gap-2 flex-1 overflow-hidden">
@@ -100,7 +100,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
 
       {/* ✅ Main Header */}
       <div
-        className={`bg-primary transition-all duration-300 ${
+        className={`bg-primary transition-all duration-300 relative z-50 ${
           scrolled ? "py-1" : "py-2"
         }`}
       >
@@ -144,7 +144,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
             <Button
               variant="secondary"
               size="sm"
-              className="shrink-0 bg-white text-primary hover:bg-white/90"
+              className="shrink-0 bg-white text-primary hover:bg-white/90 relative z-50"
               onClick={onNetworkClick}
             >
               🌐 Network
@@ -154,7 +154,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
       </div>
 
       {/* ✅ Navigation */}
-      <div className="bg-primary border-t border-primary-foreground/20">
+      <div className="bg-primary border-t border-primary-foreground/20 relative z-40">
         <nav className="max-w-4xl mx-auto px-4 pt-2 transition-all duration-300">
           {/* Desktop */}
           <ul className="hidden md:flex items-center gap-6 text-sm">
