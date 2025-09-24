@@ -11,15 +11,13 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import NetworkSidebar from "./NetworkSidebar"; // ✅ tambahkan import
 
-interface HeaderProps {
-  onNetworkClick: () => void;
-}
-
-const Header = ({ onNetworkClick }: HeaderProps) => {
+const Header = () => {
   const [navigationItems, setNavigationItems] = useState<string[]>([]);
   const [breakingNews, setBreakingNews] = useState<string[]>([]);
   const [scrolled, setScrolled] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(false); // ✅ state untuk sidebar
 
   // 🔹 Scroll listener untuk shrink header
   useEffect(() => {
@@ -145,7 +143,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
               variant="secondary"
               size="sm"
               className="shrink-0 bg-white text-primary hover:bg-white/90 relative z-50"
-              onClick={onNetworkClick}
+              onClick={() => setSidebarOpen(true)} // ✅ buka sidebar
             >
               🌐 Network
             </Button>
@@ -187,6 +185,12 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
           </div>
         </nav>
       </div>
+
+      {/* ✅ Sidebar untuk Network */}
+      <NetworkSidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
     </header>
   );
 };
