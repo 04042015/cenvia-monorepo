@@ -78,21 +78,21 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
             <div className="grid grid-cols-2 gap-3">
               {categories.map((cat) => (
                 <a
-                   key={cat.id}
-                    href={`/category/${cat.slug}`}
-                     className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-primary hover:text-white transition-all duration-200 text-sm font-medium"
-               >
-                  {cat.icon ? (
-                    <img
-                      src={cat.icon}
-                      alt={cat.name}
-                      className="w-5 h-5 object-contain"
-                    />
-                  ) : (
-                    <span>📁</span>
-                  )}
-                  {cat.name}
-                </a>
+  key={cat.id}
+  href={`/category/${cat.slug}`}
+  className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-primary hover:text-white transition-all duration-200 text-sm font-semibold"
+>
+  {cat.icon ? (
+    <img
+      src={cat.icon}
+      alt={cat.name}
+      className="w-5 h-5 object-contain"
+    />
+  ) : (
+    <span>📁</span>
+  )}
+  {cat.name}
+</a>
               ))}
             </div>
           </div>
