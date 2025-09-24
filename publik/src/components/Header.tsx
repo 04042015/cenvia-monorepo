@@ -66,7 +66,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
     <header className="fixed top-0 left-0 w-full z-50 bg-primary text-primary-foreground transition-all duration-300">
       {/* ✅ Breaking News Bar */}
       <div className="w-full bg-[#1a1a1a] text-white border-b border-primary-foreground/20">
-        <div className="container mx-auto px-4 py-1 flex items-center justify-between text-sm">
+        <div className="max-w-4xl mx-auto px-4 py-1 flex items-center justify-between text-sm">
           {/* Breaking News Marquee */}
           <div className="flex items-center gap-2 flex-1 overflow-hidden">
             <span className="flex items-center gap-1 font-bold text-xs whitespace-nowrap">
@@ -104,7 +104,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
           scrolled ? "py-1" : "py-2"
         }`}
       >
-        <div className="container mx-auto px-4 flex items-center justify-between">
+        <div className="max-w-4xl mx-auto px-4 flex items-center justify-between">
           {/* Logo + Nama */}
           <div className="flex items-center gap-2">
             <img
@@ -155,7 +155,7 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
 
       {/* ✅ Navigation */}
       <div className="bg-primary border-t border-primary-foreground/20">
-        <nav className="container mx-auto px-4 pt-2 transition-all duration-300">
+        <nav className="max-w-4xl mx-auto px-4 pt-2 transition-all duration-300">
           {/* Desktop */}
           <ul className="hidden md:flex items-center gap-6 text-sm">
             {navigationItems.map((item, index) => (
