@@ -1,7 +1,6 @@
 // publik/src/pages/PostDetail.tsx
 import { useEffect, useState } from "react";
-import { useEffect, useState } from "react";
-import { useParams, Link as RouterLink } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import dayjs from "dayjs";
 import {
@@ -11,7 +10,6 @@ import {
   Send,
   Linkedin,
   Link as LinkIcon,
-  Share2,
 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 
@@ -64,17 +62,14 @@ const PostDetail = () => {
         return;
       }
 
-      // increment views (RPC di DB)
       try {
         await supabase.rpc("increment_post_views", { post_id: data.id });
       } catch (e) {
-        // jangan gagal fatal hanya log
         console.warn("increment views failed", e);
       }
 
       setPost(data);
 
-      // Related (sama kategori, exclude current)
       const { data: relatedPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail, category:categories(id, name, color)")
@@ -83,7 +78,6 @@ const PostDetail = () => {
         .limit(8);
       if (relatedPosts) setRelated(relatedPosts);
 
-      // Recommended (general recommended, exclude current)
       const { data: recommendedPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail")
@@ -91,7 +85,6 @@ const PostDetail = () => {
         .limit(8);
       if (recommendedPosts) setRecommended(recommendedPosts);
 
-      // Others (different category)
       const { data: otherPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail")
@@ -106,10 +99,6 @@ const PostDetail = () => {
   if (!post) return <p className="text-center py-10">Loading...</p>;
 
   const shareUrl = `${window.location.origin}/post/${post.slug}`;
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(shareUrl);
-    alert("Link berhasil disalin");
-  };
 
   return (
     <div className="container mx-auto px-3 pt-3 pb-6 max-w-3xl">
@@ -136,7 +125,7 @@ const PostDetail = () => {
         {post.title}
       </h1>
 
-      {/* Meta info / Byline */}
+      {/* Meta info */}
       <div className="flex flex-wrap justify-center items-center text-xs text-gray-600 mb-3 gap-2">
         {post.author?.avatar_url && (
           <img
@@ -145,14 +134,18 @@ const PostDetail = () => {
             className="w-6 h-6 rounded-full object-cover"
           />
         )}
-   {/* Share Section */}
+        <span className="font-medium">{post.author?.full_name || "Admin"}</span>
+        <span>•</span>
+        <span>{dayjs(post.published_at || post.created_at).format("DD MMMM YYYY")}</span>
+        <span>•</span>
+        <span>{post.views ?? 0} views</span>
+      </div>
+
+      {/* Share Section */}
       <div className="text-center mb-4">
         <div className="flex justify-center flex-wrap gap-2 mt-2">
-          {/* Facebook */}
           <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-              shareUrl
-            )}`}
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 text-xs"
@@ -160,12 +153,8 @@ const PostDetail = () => {
           >
             <Facebook className="w-4 h-4" />
           </a>
-
-          {/* Twitter */}
           <a
-            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
-              shareUrl
-            )}`}
+            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-full bg-sky-500 text-white hover:bg-sky-600 text-xs"
@@ -173,8 +162,6 @@ const PostDetail = () => {
           >
             <Twitter className="w-4 h-4" />
           </a>
-
-          {/* WhatsApp */}
           <a
             href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
             target="_blank"
@@ -184,12 +171,8 @@ const PostDetail = () => {
           >
             <MessageCircle className="w-4 h-4" />
           </a>
-
-          {/* Telegram */}
           <a
-            href={`https://t.me/share/url?url=${encodeURIComponent(
-              shareUrl
-            )}&text=${encodeURIComponent(post.title)}`}
+            href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-full bg-sky-700 text-white hover:bg-sky-800 text-xs"
@@ -197,12 +180,8 @@ const PostDetail = () => {
           >
             <Send className="w-4 h-4" />
           </a>
-
-          {/* LinkedIn */}
           <a
-            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-              shareUrl
-            )}`}
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-full bg-blue-800 text-white hover:bg-blue-900 text-xs"
@@ -210,14 +189,10 @@ const PostDetail = () => {
           >
             <Linkedin className="w-4 h-4" />
           </a>
-
-          {/* Copy Link */}
           <button
             onClick={() => {
               navigator.clipboard.writeText(shareUrl);
-              toast({
-                description: "Link berhasil disalin!",
-              });
+              toast({ description: "Link berhasil disalin!" });
             }}
             className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700 text-xs"
             aria-label="Salin Link"
@@ -226,20 +201,8 @@ const PostDetail = () => {
           </button>
         </div>
       </div>
-    </div>
-  );
-          }     <span className="font-medium">
-          {post.author?.full_name || "Admin"}
-        </span>
-        <span>•</span>
-        <span>{dayjs(post.published_at || post.created_at).format("DD MMMM YYYY")}</span>
-        <span>•</span>
-        <span>{post.views ?? 0} views</span>
-      </div>
 
-      
-
-      {/* Thumbnail / Hero */}
+      {/* Thumbnail */}
       {post.thumbnail && (
         <figure className="mb-4">
           <img src={post.thumbnail} alt={post.title} className="w-full max-w-3xl mx-auto rounded-lg shadow-sm" />
@@ -251,20 +214,20 @@ const PostDetail = () => {
         </figure>
       )}
 
-      {/* Article content */}
+      {/* Article */}
       <article
         className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
-      {/* Pull quote (pakai excerpt jika tersedia) */}
+      {/* Pull quote */}
       {post.excerpt && (
         <blockquote className="pull-quote bg-gray-50 p-3 border-l-4 border-gray-300 italic mb-6">
           {post.excerpt}
         </blockquote>
       )}
 
-      {/* Baca Juga (singkat list) */}
+      {/* Related */}
       {related.length > 0 && (
         <div className="border-l-4 border-gray-300 pl-3 mb-6">
           <h2 className="font-bold text-base mb-2">Baca Juga</h2>
@@ -294,7 +257,26 @@ const PostDetail = () => {
         </div>
       )}
 
-      {/* Berita Terkait (grid) */}
+     {/* Baca Juga */}
+      {relatedPosts.length > 0 && (
+        <div className="mt-10">
+          <h3 className="text-lg font-semibold mb-4">Baca Juga</h3>
+          <div className="grid gap-4 md:grid-cols-2">
+            {relatedPosts.map((rp) => (
+              <Link
+                key={rp.id}
+                to={`/post/${rp.slug}`}
+                className="block p-4 rounded-lg border hover:shadow transition"
+              >
+                <h4 className="font-medium mb-2">{rp.title}</h4>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {rp.excerpt}
+                </p>
+              </Link>
+            ))}
+          </div>
+      
+      {/* Related news */}
       <section className="mb-6">
         <h2 className="text-lg font-bold mb-3">Berita Terkait</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -307,7 +289,7 @@ const PostDetail = () => {
         </div>
       </section>
 
-      {/* Rekomendasi Untukmu */}
+      {/* Recommended */}
       <section className="mb-6">
         <h2 className="text-lg font-bold mb-3">Rekomendasi Untukmu</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -320,7 +302,7 @@ const PostDetail = () => {
         </div>
       </section>
 
-      {/* Berita Cenvia Lainnya */}
+      {/* Other news */}
       <section className="mb-6">
         <h2 className="text-lg font-bold mb-3">Berita Cenvia Lainnya</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -333,7 +315,7 @@ const PostDetail = () => {
         </div>
       </section>
 
-      {/* Newsletter CTA */}
+      {/* Newsletter */}
       <div className="mt-6 p-3 border rounded-lg bg-gray-50 text-center">
         <p className="text-sm font-medium mb-2">Subscribe untuk update berita terbaru</p>
         <form
@@ -346,18 +328,29 @@ const PostDetail = () => {
               alert("Masukkan email dulu");
               return;
             }
-            // simpan ke supabase subscribers (opsional)
-            supabase.from("subscribers").insert([{ email }]).then(() => {
-              alert("Terima kasih, email tersimpan");
-              input.value = "";
-            }).catch(() => {
-              alert("Gagal menyimpan, coba lagi");
-            });
+            supabase.from("subscribers").insert([{ email }])
+              .then(() => {
+                alert("Terima kasih, email tersimpan");
+                input.value = "";
+              })
+              .catch(() => {
+                alert("Gagal menyimpan, coba lagi");
+              });
           }}
           className="flex justify-center gap-0"
         >
-          <input name="email" type="email" placeholder="Email anda" className="border px-2 py-1 rounded-l-md text-sm w-2/3" />
-          <button type="submit" className="bg-blue-600 text-white px-3 py-1 text-sm rounded-r-md">Subscribe</button>
+          <input
+            name="email"
+            type="email"
+            placeholder="Email anda"
+            className="border px-2 py-1 rounded-l-md text-sm w-2/3"
+          />
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-3 py-1 text-sm rounded-r-md"
+          >
+            Subscribe
+          </button>
         </form>
       </div>
     </div>
