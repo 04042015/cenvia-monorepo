@@ -10,20 +10,17 @@ import {
   Linkedin,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import NetworkSidebar from "./NetworkSidebar"; // ✅ tambahkan import
+import NetworkSidebar from "./NetworkSidebar"; // ✅ sidebar kategori
 
 const Header = () => {
   const [navigationItems, setNavigationItems] = useState<string[]>([]);
   const [breakingNews, setBreakingNews] = useState<string[]>([]);
   const [scrolled, setScrolled] = useState(false);
-  const [isSidebarOpen, setSidebarOpen] = useState(false); // ✅ state untuk sidebar
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-  // 🔹 Scroll listener untuk shrink header
+  // 🔹 Scroll shrink header
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -65,13 +62,13 @@ const Header = () => {
       {/* ✅ Breaking News Bar */}
       <div className="w-full bg-[#1a1a1a] text-white border-b border-primary-foreground/20 relative z-40">
         <div className="max-w-4xl mx-auto px-4 py-1 flex items-center justify-between text-sm">
-          {/* Breaking News Marquee */}
+          {/* Marquee */}
           <div className="flex items-center gap-2 flex-1 overflow-hidden">
             <span className="flex items-center gap-1 font-bold text-xs whitespace-nowrap">
               <span className="material-symbols-outlined text-red-500">
                 trending_up
               </span>
-              BRAKING NEWS |
+              BREAKING NEWS |
             </span>
             <div className="overflow-hidden whitespace-nowrap w-full">
               <span className="animate-marquee inline-block">
@@ -131,27 +128,28 @@ const Header = () => {
           </div>
 
           {/* Search + Network */}
-<div className="flex items-center gap-2 flex-1 md:flex-none">
-  <div className="relative w-full md:w-auto">
-    <Input
-      placeholder="Search..."
-      className="w-full md:w-64 bg-white/10 border-white/20 text-white placeholder:text-white/70 pr-10"
-    />
-    <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/70" />
-  </div>
+          <div className="flex items-center gap-2 flex-1 md:flex-none">
+            <div className="relative w-full md:w-auto">
+              <Input
+                placeholder="Search..."
+                className="w-full md:w-64 bg-white/10 border-white/20 text-white placeholder:text-white/70 pr-10"
+              />
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/70" />
+            </div>
 
-  {/* Tombol Network */}
-  <button
-    onClick={() => setSidebarOpen(true)}
-    className="flex items-center gap-1 text-white hover:text-white/80 font-medium"
-  >
-    {/* Ikon dari Google Fonts */}
-    <span className="material-symbols-outlined text-white text-[22px]">
-      network_intel_node
-    </span>
-    Network
-  </button>
-</div>
+            {/* Tombol Network */}
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="flex items-center gap-1 text-white hover:text-white/80 font-medium"
+            >
+              <span className="material-symbols-outlined text-white text-[22px]">
+                network_intel_node
+              </span>
+              Network
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* ✅ Navigation */}
       <div className="bg-primary border-t border-primary-foreground/20 relative z-40">
@@ -188,7 +186,7 @@ const Header = () => {
         </nav>
       </div>
 
-      {/* ✅ Sidebar untuk Network */}
+      {/* ✅ Sidebar Network */}
       <NetworkSidebar
         isOpen={isSidebarOpen}
         onClose={() => setSidebarOpen(false)}
