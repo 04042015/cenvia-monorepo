@@ -12,6 +12,16 @@ interface HeaderProps {
 const Header = ({ onNetworkClick }: HeaderProps) => {
   const [navigationItems, setNavigationItems] = useState<string[]>([]);
   const [breakingNews, setBreakingNews] = useState<string[]>([]);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // 🔹 Scroll listener
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // 🔹 Fetch kategori
   useEffect(() => {
@@ -52,7 +62,11 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-primary text-primary-foreground">
+    <header
+      className={`fixed top-0 left-0 w-full z-50 bg-primary text-primary-foreground transition-all duration-300 ${
+        isScrolled ? "py-2 shadow-md" : "py-4"
+      }`}
+    >
       {/* ✅ Breaking News Bar */}
       <div className="w-full bg-[#1a1a1a] text-white border-b border-primary-foreground/20">
         <div className="container mx-auto px-4 py-2 flex items-center justify-between text-sm">
@@ -88,18 +102,32 @@ const Header = ({ onNetworkClick }: HeaderProps) => {
       </div>
 
       {/* ✅ Main header with logo & search */}
-      <div className="container mx-auto px-4 py-4">
+      <div className={`container mx-auto px-4 transition-all duration-300 ${isScrolled ? "py-2" : "py-4"}`}>
         <div className="flex items-center justify-between">
           {/* Logo + Nama */}
           <div className="flex items-center gap-3">
             <img
               src="/icons/logo-cenvia.svg"
               alt="CENVIA"
-              className="w-12 h-12 object-contain"
+              className={`object-contain transition-all duration-300 ${
+                isScrolled ? "w-8 h-8" : "w-12 h-12"
+              }`}
             />
             <div>
-              <h1 className="text-2xl font-bold text-white">CENVIA</h1>
-              <h2 className="text-sm text-gray-300 tracking-wide">Portal Berita</h2>
+              <h1
+                className={`font-bold text-white transition-all duration-300 ${
+                  isScrolled ? "text-xl" : "text-2xl"
+                }`}
+              >
+                CENVIA
+              </h1>
+              <h2
+                className={`tracking-wide text-gray-300 transition-all duration-300 ${
+                  isScrolled ? "text-xs" : "text-sm"
+                }`}
+              >
+                Portal Berita
+              </h2>
             </div>
           </div>
 
