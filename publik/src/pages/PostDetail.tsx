@@ -119,12 +119,12 @@ const PostDetail = () => {
       </nav>
 
       {/* Title */}
-<h1
-  className="text-3xl sm:text-4xl font-black mb-4 leading-tight text-center"
-  style={{ color: post.category.color }}
->
-  {post.title}
-</h1>
+      <h1
+        className="text-3xl sm:text-4xl font-black mb-4 leading-tight text-center"
+        style={{ color: post.category.color }}
+      >
+        {post.title}
+      </h1>
 
       {/* Meta info */}
       <div className="flex flex-wrap justify-center items-center text-xs text-gray-600 mb-3 gap-2">
@@ -215,14 +215,39 @@ const PostDetail = () => {
         </figure>
       )}
 
-      
-
       {/* Pull quote */}
       {post.excerpt && (
         <blockquote className="pull-quote bg-gray-50 p-3 border-l-4 border-gray-300 italic mb-6">
           {post.excerpt}
         </blockquote>
       )}
+
+      {/* Article */}
+      <article
+        className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body
+                   prose-p:font-bold prose-p:text-lg 
+                   prose-h1:font-extrabold prose-h1:text-4xl 
+                   prose-h2:font-extrabold prose-h2:text-3xl 
+                   prose-h3:font-extrabold prose-h3:text-2xl"
+      >
+        {post.content
+          .split(/<\/p>/i)
+          .map((part, i) => {
+            if (!part.trim()) return null;
+
+            return (
+              <div key={i}>
+                <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
+                {/* ✅ sisipkan iklan setelah paragraf ke-2 */}
+                {i === 1 && (
+                  <div className="my-4">
+                    <AdSlot position="content" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+      </article>
 
       {/* Related */}
       {related.length > 0 && (
@@ -236,32 +261,6 @@ const PostDetail = () => {
                 </Link>
               </li>
             ))}
-          {/* Article */}
-<article
-  className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body
-             prose-p:font-bold prose-p:text-lg 
-             prose-h1:font-extrabold prose-h1:text-4xl 
-             prose-h2:font-extrabold prose-h2:text-3xl 
-             prose-h3:font-extrabold prose-h3:text-2xl"
->
-  {post.content
-    .split(/<\/p>/i) // pecah berdasarkan <p>
-    .map((part, i) => {
-      if (!part.trim()) return null;
-
-      return (
-        <div key={i}>
-          <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
-          {/* ✅ sisipkan iklan setelah paragraf ke-2 */}
-          {i === 1 && (
-            <div className="my-4">
-              <AdSlot position="content" />
-            </div>
-          )}
-        </div>
-      );
-    })}
-</article>
           </ul>
         </div>
       )}
