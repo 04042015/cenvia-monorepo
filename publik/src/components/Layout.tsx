@@ -35,8 +35,9 @@ export default function LayoutTight({ children, onNetworkClick }: LayoutProps) {
 
           {/* Content */}
           <div className="col-span-12 lg:col-span-8 space-y-4">
-            <AdSlot position="content" />
             {children}
+            {/* ✅ Iklan pindah ke bawah konten */}
+            <AdSlot position="content" />
           </div>
 
           {/* Right Ads */}
