@@ -11,8 +11,8 @@ import {
   DollarSign,
   Settings,
   LogOut,
-  Code2,        // ✅ ikon untuk Script Ads
-  MonitorPlay,  // ✅ ikon untuk Popup Ads
+  Code2,
+  MonitorPlay,
 } from "lucide-react";
 import {
   Sidebar,
@@ -36,7 +36,7 @@ const menuItems = [
   { title: "Banners", url: "/admin/banners", icon: Image, adminOnly: true },
   { title: "Ads", url: "/admin/ads", icon: Megaphone, adminOnly: true },
   { title: "Script Ads", url: "/admin/script-ads", icon: Code2, adminOnly: true },
-  { title: "Popup Ads", url: "/admin/popup-ads", icon: MonitorPlay, adminOnly: true }, // ✅ baru
+  { title: "Popup Ads", url: "/admin/popup-ads", icon: MonitorPlay, adminOnly: true },
   { title: "Events", url: "/admin/events", icon: Calendar, adminOnly: true },
   { title: "Payroll", url: "/admin/payroll", icon: DollarSign },
   { title: "Settings", url: "/admin/settings", icon: Settings },
@@ -48,8 +48,12 @@ export function AdminSidebar() {
   
   const currentPath = location.pathname;
   const isActive = (path: string) => currentPath === path;
+
+  // ✅ warna putih untuk teks & ikon
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted/50";
+    `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+      isActive ? "text-white font-semibold" : "text-white/80 hover:text-white"
+    }`;
 
   // ✅ tampilkan menu adminOnly untuk role "admin" & "superadmin"
   const filteredMenuItems = menuItems.filter(item => {
@@ -64,9 +68,9 @@ export function AdminSidebar() {
 
   return (
     <Sidebar className="w-64">
-      <SidebarContent className="bg-gradient-primary text-primary-foreground">
+      <SidebarContent className="bg-gradient-primary text-white">
         {/* Header */}
-        <div className="p-4 border-b border-primary-foreground/20">
+        <div className="p-4 border-b border-white/20">
           <div className="flex items-center gap-2">
             {/* Logo */}
             <img
@@ -76,30 +80,30 @@ export function AdminSidebar() {
             />
             <div>
               <h1 className="font-bold text-lg">Cenvia.id</h1>
-              <p className="text-primary-foreground/80 text-xs">Admin Dashboard</p>
+              <p className="text-white/70 text-xs">Admin Dashboard</p>
             </div>
           </div>
         </div>
 
         {/* User Profile */}
-        <div className="p-4 border-b border-primary-foreground/20">
+        <div className="p-4 border-b border-white/20">
           <div className="flex items-center gap-3">
             <Avatar className="w-8 h-8">
               <AvatarImage src={profile?.avatar_url} />
-              <AvatarFallback className="bg-primary-foreground text-primary">
+              <AvatarFallback className="bg-white text-red-600">
                 {profile?.full_name?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
               <p className="font-medium text-sm truncate">{profile?.full_name}</p>
-              <p className="text-primary-foreground/80 text-xs capitalize">{profile?.role}</p>
+              <p className="text-white/70 text-xs capitalize">{profile?.role}</p>
             </div>
           </div>
         </div>
 
         {/* Navigation */}
         <SidebarGroup className="flex-1">
-          <SidebarGroupLabel className="text-primary-foreground/80">
+          <SidebarGroupLabel className="text-white/70">
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -123,12 +127,12 @@ export function AdminSidebar() {
         </SidebarGroup>
 
         {/* Sign Out Button */}
-        <div className="p-4 border-t border-primary-foreground/20">
+        <div className="p-4 border-t border-white/20">
           <Button
             variant="ghost"
             size="sm"
             onClick={handleSignOut}
-            className="w-full justify-start text-primary-foreground hover:bg-primary-foreground/10"
+            className="w-full justify-start text-white hover:bg-white/10"
           >
             <LogOut className="w-4 h-4" />
             <span className="ml-2">Sign Out</span>
@@ -137,4 +141,4 @@ export function AdminSidebar() {
       </SidebarContent>
     </Sidebar>
   );
-      }
+   }
