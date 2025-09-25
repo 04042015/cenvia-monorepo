@@ -215,26 +215,7 @@ const PostDetail = () => {
         </figure>
       )}
 
-      {/* Article */}
-<article className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body">
-  {post.content
-    .split(/<\/p>/i) // pecah berdasarkan <p>
-    .map((part, i) => {
-      if (!part.trim()) return null;
-
-      return (
-        <div key={i}>
-          <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
-          {/* ✅ sisipkan iklan setelah paragraf ke-2 */}
-          {i === 1 && (
-            <div className="my-4">
-              <AdSlot position="content" />
-            </div>
-          )}
-        </div>
-      );
-    })}
-</article>
+      
 
       {/* Pull quote */}
       {post.excerpt && (
@@ -255,6 +236,32 @@ const PostDetail = () => {
                 </Link>
               </li>
             ))}
+          {/* Article */}
+<article
+  className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body
+             prose-p:font-bold prose-p:text-lg 
+             prose-h1:font-extrabold prose-h1:text-4xl 
+             prose-h2:font-extrabold prose-h2:text-3xl 
+             prose-h3:font-extrabold prose-h3:text-2xl"
+>
+  {post.content
+    .split(/<\/p>/i) // pecah berdasarkan <p>
+    .map((part, i) => {
+      if (!part.trim()) return null;
+
+      return (
+        <div key={i}>
+          <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
+          {/* ✅ sisipkan iklan setelah paragraf ke-2 */}
+          {i === 1 && (
+            <div className="my-4">
+              <AdSlot position="content" />
+            </div>
+          )}
+        </div>
+      );
+    })}
+</article>
           </ul>
         </div>
       )}
