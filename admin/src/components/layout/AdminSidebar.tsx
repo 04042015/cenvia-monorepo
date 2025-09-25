@@ -11,7 +11,8 @@ import {
   DollarSign,
   Settings,
   LogOut,
-  Code2, // ✅ ikon untuk Script Ads
+  Code2,        // ✅ ikon untuk Script Ads
+  MonitorPlay,  // ✅ ikon untuk Popup Ads
 } from "lucide-react";
 import {
   Sidebar,
@@ -34,7 +35,8 @@ const menuItems = [
   { title: "Categories", url: "/admin/categories", icon: Tags, adminOnly: true },
   { title: "Banners", url: "/admin/banners", icon: Image, adminOnly: true },
   { title: "Ads", url: "/admin/ads", icon: Megaphone, adminOnly: true },
-  { title: "Script Ads", url: "/admin/script-ads", icon: Code2, adminOnly: true }, // ✅ baru
+  { title: "Script Ads", url: "/admin/script-ads", icon: Code2, adminOnly: true },
+  { title: "Popup Ads", url: "/admin/popup-ads", icon: MonitorPlay, adminOnly: true }, // ✅ baru
   { title: "Events", url: "/admin/events", icon: Calendar, adminOnly: true },
   { title: "Payroll", url: "/admin/payroll", icon: DollarSign },
   { title: "Settings", url: "/admin/settings", icon: Settings },
@@ -135,4 +137,4 @@ export function AdminSidebar() {
       </SidebarContent>
     </Sidebar>
   );
-}
+      }
