@@ -127,28 +127,25 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Search + Network */}
-          <div className="flex items-center gap-2 flex-1 md:flex-none">
-            {/* ✅ Hidden on mobile */}
-            <div className="relative w-full md:w-auto hidden md:block">
-              <Input
-                placeholder="Search..."
-                className="w-full md:w-64 bg-white/10 border-white/20 text-white placeholder:text-white/70 pr-10"
-              />
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/70" />
-            </div>
-
-            {/* Tombol Network */}
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="flex items-center gap-1 text-white hover:text-white/80 font-semibold text-sm"
-            >
-              <span className="material-symbols-outlined text-white text-[26px]">
-                network_intel_node
-              </span>
-              Network
-            </button>
+          {/* Search (hidden mobile) */}
+          <div className="relative w-full md:w-auto hidden md:block mx-4 flex-1">
+            <Input
+              placeholder="Search..."
+              className="w-full md:w-64 bg-white/10 border-white/20 text-white placeholder:text-white/70 pr-10"
+            />
+            <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/70" />
           </div>
+
+          {/* Tombol Network (kanan) */}
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="ml-auto flex items-center gap-1 text-white hover:text-white/80 font-semibold text-sm"
+          >
+            <span className="material-symbols-outlined text-white text-[26px]">
+              network_intel_node
+            </span>
+            Network
+          </button>
         </div>
       </div>
 
