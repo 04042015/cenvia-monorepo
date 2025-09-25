@@ -119,12 +119,12 @@ const PostDetail = () => {
       </nav>
 
       {/* Title */}
-      <h1
-        className="text-2xl sm:text-3xl font-extrabold mb-2 leading-tight text-center"
-        style={{ color: post.category.color }}
-      >
-        {post.title}
-      </h1>
+<h1
+  className="text-3xl sm:text-4xl font-black mb-4 leading-tight text-center"
+  style={{ color: post.category.color }}
+>
+  {post.title}
+</h1>
 
       {/* Meta info */}
       <div className="flex flex-wrap justify-center items-center text-xs text-gray-600 mb-3 gap-2">
