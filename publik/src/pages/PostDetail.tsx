@@ -1,6 +1,7 @@
 // publik/src/pages/PostDetail.tsx
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import AdSlot from "@/components/ads/AdSlot";
 import { supabase } from "@/lib/supabaseClient";
 import dayjs from "dayjs";
 import {
@@ -215,10 +216,25 @@ const PostDetail = () => {
       )}
 
       {/* Article */}
-      <article
-        className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body"
-        dangerouslySetInnerHTML={{ __html: post.content }}
-      />
+<article className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body">
+  {post.content
+    .split(/<\/p>/i) // pecah berdasarkan <p>
+    .map((part, i) => {
+      if (!part.trim()) return null;
+
+      return (
+        <div key={i}>
+          <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
+          {/* ✅ sisipkan iklan setelah paragraf ke-2 */}
+          {i === 1 && (
+            <div className="my-4">
+              <AdSlot position="content" />
+            </div>
+          )}
+        </div>
+      );
+    })}
+</article>
 
       {/* Pull quote */}
       {post.excerpt && (
