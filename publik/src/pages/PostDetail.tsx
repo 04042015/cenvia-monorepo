@@ -35,6 +35,7 @@ interface Post {
     color: string;
   };
   tags?: string[];
+  quote?: string | null; // ✅ tambahkan agar bisa dipakai
 }
 
 const PostDetail = () => {
@@ -49,7 +50,7 @@ const PostDetail = () => {
       const { data, error } = await supabase
         .from("posts")
         .select(
-          `id, title, slug, content, excerpt, thumbnail, views, created_at, published_at,
+          `id, title, slug, content, excerpt, thumbnail, views, created_at, published_at, quote,
            category_id,
            author:profiles!posts_author_id_fkey(full_name, avatar_url),
            category:categories(id, name, slug, color)`
@@ -198,71 +199,70 @@ const PostDetail = () => {
       </div>
 
       {/* Thumbnail */}
-{post.thumbnail && (
-  <figure className="mb-4">
-    <img
-      src={post.thumbnail}
-      alt={post.title}
-      className="w-full max-w-3xl mx-auto rounded-lg shadow-sm"
-    />
-    {post.excerpt && (
-      <figcaption className="text-xs text-gray-500 mt-1 italic text-center">
-        {post.excerpt}
-      </figcaption>
-    )}
-  </figure>
-)}
-
-{/* Artikel utama */}
-<article
-  className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body
-             prose-p:font-medium prose-p:text-lg 
-             prose-h1:font-extrabold prose-h1:text-4xl 
-             prose-h2:font-extrabold prose-h2:text-3xl 
-             prose-h3:font-extrabold prose-h3:text-2xl"
->
-  {post.content
-    .split(/<\/p>/i)
-    .map((part, i) => {
-      if (!part.trim()) return null;
-
-      return (
-        <div key={i}>
-          <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
-          {i === 1 && (
-            <div className="my-4">
-              <AdSlot position="content" />
-            </div>
+      {post.thumbnail && (
+        <figure className="mb-4">
+          <img
+            src={post.thumbnail}
+            alt={post.title}
+            className="w-full max-w-3xl mx-auto rounded-lg shadow-sm"
+          />
+          {post.excerpt && (
+            <figcaption className="text-xs text-gray-500 mt-1 italic text-center">
+              {post.excerpt}
+            </figcaption>
           )}
-        </div>
-      );
-    })}
-</article>
-
-{/* Quote (opsional, pakai field khusus) */}
-{post.quote && (
-  <blockquote className="bg-gray-50 p-3 border-l-4 border-gray-300 italic mb-6">
-    {post.quote}
-  </blockquote>
-)}
-
-{/* Baca Juga */}
-<aside className="related mt-6">
-  <h3 className="font-semibold text-lg mb-2">Baca Juga</h3>
-  <ul className="space-y-1">
-    {relatedPosts.map((item) => (
-      <li key={item.id}>
-        <Link
-          to={`/post/${item.slug}`}
-          className="text-blue-600 hover:underline"
-        >
-          {item.title}
-        </Link>
-      </li>
-    ))}
-  </ul>
-</aside>
+        </figure>
       )}
+
+      {/* Artikel utama */}
+      <article
+        className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body
+                   prose-p:font-medium prose-p:text-lg 
+                   prose-h1:font-extrabold prose-h1:text-4xl 
+                   prose-h2:font-extrabold prose-h2:text-3xl 
+                   prose-h3:font-extrabold prose-h3:text-2xl"
+      >
+        {post.content
+          .split(/<\/p>/i)
+          .map((part, i) => {
+            if (!part.trim()) return null;
+
+            return (
+              <div key={i}>
+                <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
+                {i === 1 && (
+                  <div className="my-4">
+                    <AdSlot position="content" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+      </article>
+
+      {/* Quote */}
+      {post.quote && (
+        <blockquote className="bg-gray-50 p-3 border-l-4 border-gray-300 italic mb-6">
+          {post.quote}
+        </blockquote>
+      )}
+
+      {/* Baca Juga */}
+      <aside className="related mt-6">
+        <h3 className="font-semibold text-lg mb-2">Baca Juga</h3>
+        <ul className="space-y-1">
+          {related.map((item) => (
+            <li key={item.id}>
+              <Link
+                to={`/post/${item.slug}`}
+                className="text-blue-600 hover:underline"
+              >
+                {item.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </aside>
 
       {/* Tags */}
       {post.tags && post.tags.length > 0 && (
