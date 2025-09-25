@@ -15,6 +15,7 @@ import { AdminLayout } from "./components/layout/AdminLayout";
 import PostCreate from "./pages/admin/PostCreate";
 import Ads from "./pages/admin/Ads";
 import ScriptAds from "./pages/admin/ScriptAds";
+import PopupAds from "./pages/admin/PopupAds"; // ✅ tambahkan import
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="posts/create" element={<PostCreate />} />
             <Route path="ads" element={<Ads />} />
             <Route path="script-ads" element={<ScriptAds />} />
+            <Route path="popup-ads" element={<PopupAds />} /> {/* ✅ baru */}
           </Route>
 
           {/* (Opsional) legacy admin routes masih tetap bisa diakses */}
@@ -46,8 +48,9 @@ const App = () => (
             <Route path="posts" element={<Posts />} />
             <Route path="payroll" element={<Payroll />} />
             <Route path="posts/create" element={<PostCreate />} />
-            <Route path="ads" element={<Ads />} /> {/* ✅ tambahkan ini */}
+            <Route path="ads" element={<Ads />} />
             <Route path="script-ads" element={<ScriptAds />} />
+            <Route path="popup-ads" element={<PopupAds />} /> {/* ✅ baru */}
           </Route>
 
           {/* Catch-all 404 */}
