@@ -198,64 +198,70 @@ const PostDetail = () => {
       </div>
 
       {/* Thumbnail */}
-      {post.thumbnail && (
-        <figure className="mb-4">
-          <img src={post.thumbnail} alt={post.title} className="w-full max-w-3xl mx-auto rounded-lg shadow-sm" />
-          {post.excerpt && (
-            <figcaption className="text-xs text-gray-500 mt-1 italic text-center">
-              {post.excerpt}
-            </figcaption>
+{post.thumbnail && (
+  <figure className="mb-4">
+    <img
+      src={post.thumbnail}
+      alt={post.title}
+      className="w-full max-w-3xl mx-auto rounded-lg shadow-sm"
+    />
+    {post.excerpt && (
+      <figcaption className="text-xs text-gray-500 mt-1 italic text-center">
+        {post.excerpt}
+      </figcaption>
+    )}
+  </figure>
+)}
+
+{/* Artikel utama */}
+<article
+  className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body
+             prose-p:font-medium prose-p:text-lg 
+             prose-h1:font-extrabold prose-h1:text-4xl 
+             prose-h2:font-extrabold prose-h2:text-3xl 
+             prose-h3:font-extrabold prose-h3:text-2xl"
+>
+  {post.content
+    .split(/<\/p>/i)
+    .map((part, i) => {
+      if (!part.trim()) return null;
+
+      return (
+        <div key={i}>
+          <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
+          {i === 1 && (
+            <div className="my-4">
+              <AdSlot position="content" />
+            </div>
           )}
-        </figure>
-      )}
-
-      {/* Pull quote */}
-      {post.excerpt && (
-        <blockquote className="pull-quote bg-gray-50 p-3 border-l-4 border-gray-300 italic mb-6">
-          {post.excerpt}
-        </blockquote>
-      )}
-
-      {/* Artikel utama */}
-      <article
-        className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body
-                   prose-p:font-bold prose-p:text-lg 
-                   prose-h1:font-extrabold prose-h1:text-4xl 
-                   prose-h2:font-extrabold prose-h2:text-3xl 
-                   prose-h3:font-extrabold prose-h3:text-2xl"
-      >
-        {post.content
-          .split(/<\/p>/i)
-          .map((part, i) => {
-            if (!part.trim()) return null;
-
-            return (
-              <div key={i}>
-                <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
-                {i === 1 && (
-                  <div className="my-4">
-                    <AdSlot position="content" />
-                  </div>
-                )}
-              </div>
-            );
-          })}
-      </article>
-
-      {/* Baca Juga */}
-      {related.length > 0 && (
-        <div className="border-l-4 border-gray-300 pl-3 mb-6">
-          <h2 className="font-bold text-base mb-2">Baca Juga</h2>
-          <ul className="space-y-1 text-blue-600">
-            {related.slice(0, 2).map((p) => (
-              <li key={p.id}>
-                <Link to={`/post/${p.slug}`} className="hover:underline">
-                  {p.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
         </div>
+      );
+    })}
+</article>
+
+{/* Quote (opsional, pakai field khusus) */}
+{post.quote && (
+  <blockquote className="bg-gray-50 p-3 border-l-4 border-gray-300 italic mb-6">
+    {post.quote}
+  </blockquote>
+)}
+
+{/* Baca Juga */}
+<aside className="related mt-6">
+  <h3 className="font-semibold text-lg mb-2">Baca Juga</h3>
+  <ul className="space-y-1">
+    {relatedPosts.map((item) => (
+      <li key={item.id}>
+        <Link
+          to={`/post/${item.slug}`}
+          className="text-blue-600 hover:underline"
+        >
+          {item.title}
+        </Link>
+      </li>
+    ))}
+  </ul>
+</aside>
       )}
 
       {/* Tags */}
