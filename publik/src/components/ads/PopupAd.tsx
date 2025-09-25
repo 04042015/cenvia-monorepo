@@ -1,3 +1,4 @@
+// publik/src/components/ads/PopupAd.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -33,21 +34,33 @@ export default function PopupAd() {
 
   useEffect(() => {
     if (popupCode) {
-      // Buat container sementara untuk parsing HTML
+      const slot = document.getElementById("popup-ad-slot");
+      if (!slot) return;
+
+      // Kosongkan slot dulu (biar ga dobel inject)
+      slot.innerHTML = "";
+
+      // Parsing HTML string
       const container = document.createElement("div");
       container.innerHTML = popupCode;
 
-      // Jalankan semua <script> manual
-      const scripts = container.querySelectorAll("script");
-      scripts.forEach((oldScript) => {
-        const newScript = document.createElement("script");
-        if (oldScript.src) {
-          newScript.src = oldScript.src;
-          newScript.async = true;
+      // Copy semua child ke slot
+      Array.from(container.childNodes).forEach((node) => {
+        if (node.nodeName === "SCRIPT") {
+          const oldScript = node as HTMLScriptElement;
+          const newScript = document.createElement("script");
+
+          if (oldScript.src) {
+            newScript.src = oldScript.src;
+            newScript.async = true;
+          } else {
+            newScript.textContent = oldScript.textContent;
+          }
+
+          slot.appendChild(newScript);
         } else {
-          newScript.textContent = oldScript.textContent;
+          slot.appendChild(node);
         }
-        document.getElementById("popup-ad-slot")?.appendChild(newScript);
       });
     }
   }, [popupCode]);
@@ -69,10 +82,8 @@ export default function PopupAd() {
         </button>
 
         {/* Slot iklan */}
-        <div id="popup-ad-slot" className="w-full h-full text-center">
-          {/* Script iklan akan disuntikkan di sini */}
-        </div>
+        <div id="popup-ad-slot" className="w-full h-full text-center" />
       </div>
     </div>
   );
-}
+          }
