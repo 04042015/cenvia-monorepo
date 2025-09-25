@@ -160,7 +160,7 @@ export default function Advertise() {
       </div>
 
       {/* CTA */}
-      <section className="mx-6 mb-6 rounded-3xl shadow-lg text-center bg-gradient-to-r from-pink-500 to-red-700 py-16 px-6">
+      <section className="mx-6 mb-6 rounded-3xl shadow-lg text-center bg-gradient-to-r from-red-600 to-red-900 py-16 px-6">
         <motion.h2
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
