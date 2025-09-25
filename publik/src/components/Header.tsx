@@ -129,7 +129,8 @@ const Header = () => {
 
           {/* Search + Network */}
           <div className="flex items-center gap-2 flex-1 md:flex-none">
-            <div className="relative w-full md:w-auto">
+            {/* ✅ Hidden on mobile */}
+            <div className="relative w-full md:w-auto hidden md:block">
               <Input
                 placeholder="Search..."
                 className="w-full md:w-64 bg-white/10 border-white/20 text-white placeholder:text-white/70 pr-10"
@@ -140,9 +141,9 @@ const Header = () => {
             {/* Tombol Network */}
             <button
               onClick={() => setSidebarOpen(true)}
-              className="flex items-center gap-1 text-white hover:text-white/80 font-medium"
+              className="flex items-center gap-1 text-white hover:text-white/80 font-semibold text-sm"
             >
-              <span className="material-symbols-outlined text-white text-[22px]">
+              <span className="material-symbols-outlined text-white text-[26px]">
                 network_intel_node
               </span>
               Network
