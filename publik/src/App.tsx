@@ -9,16 +9,18 @@ import NotFound from "./pages/NotFound";
 import PostDetail from "./pages/PostDetail";
 import Layout from "./components/Layout";
 import Category from "./pages/Category";
-import About from "./pages/About"; // ✅ import About
-import Contact from "./pages/Contact"; // ✅ import Contact
-import Privacy from "./pages/Privacy"; // ✅ import Privacy
-import Terms from "./pages/Terms"; // ✅ import Terms
-import Advertise from "./pages/Advertise"; // ✅ import Advertise
-import RSS from "./pages/RSS"; // ✅ import RSS
-import ScrollToTop from "./components/ScrollToTop"; // ✅ import ScrollToTop
-import Interstitial from "./pages/Interstitial"; // ✅ import Interstitial
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import Advertise from "./pages/Advertise";
+import RSS from "./pages/RSS";
+import ScrollToTop from "./components/ScrollToTop";
+import Interstitial from "./pages/Interstitial";
 
-// import PopupAd from "./components/ads/PopupAd"; // ✅ kalau mau aktifkan lagi
+// ✅ Import ads
+import PopupAd from "./components/ads/PopupAd";
+import ScriptPopup from "./components/ads/ScriptPopup";
 
 const queryClient = new QueryClient();
 
@@ -28,21 +30,24 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <ScrollToTop /> {/* ✅ otomatis scroll ke atas tiap route berubah */}
+        <ScrollToTop />
+
         {/* ✅ Popup global biar muncul di semua halaman */}
-        {/* <PopupAd /> */}
+        <PopupAd />
+        <ScriptPopup />
+
         <Layout>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/post/:slug" element={<PostDetail />} />
             <Route path="/category/:slug" element={<Category />} />
-            <Route path="/about" element={<About />} /> {/* ✅ route baru */}
-            <Route path="/contact" element={<Contact />} /> {/* ✅ route baru */}
-            <Route path="/privacy" element={<Privacy />} /> {/* ✅ route baru */}
-            <Route path="/terms" element={<Terms />} /> {/* ✅ route baru */}
-            <Route path="/advertise" element={<Advertise />} /> {/* ✅ route baru */}
-            <Route path="/rss" element={<RSS />} /> {/* ✅ route baru */}
-            <Route path="/interstitial/:slug" element={<Interstitial />} /> {/* ✅ route interstitial */}
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/advertise" element={<Advertise />} />
+            <Route path="/rss" element={<RSS />} />
+            <Route path="/interstitial/:slug" element={<Interstitial />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
