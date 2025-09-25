@@ -8,7 +8,7 @@ export default function Advertise() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
       {/* Hero Section */}
-      <section className="mx-6 mt-6 rounded-3xl shadow-lg text-center bg-gradient-to-r from-pink-500 to-red-700 py-20 px-6">
+      <section className="mx-6 mt-6 rounded-3xl shadow-lg text-center bg-gradient-to-r from-red-400 to-red-900 py-20 px-6">
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -160,7 +160,7 @@ export default function Advertise() {
       </div>
 
       {/* CTA */}
-      <section className="mx-6 mb-6 rounded-3xl shadow-lg text-center bg-gradient-to-r from-red-600 to-red-900 py-16 px-6">
+      <section className="mx-6 mb-6 rounded-3xl shadow-lg text-center bg-gradient-to-r from-red-400 to-red-900 py-16 px-6">
         <motion.h2
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
