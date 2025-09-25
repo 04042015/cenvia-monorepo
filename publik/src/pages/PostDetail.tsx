@@ -209,17 +209,10 @@ const PostDetail = () => {
         </figure>
       )}
 
-      {/* Pull quote */}
-      {post.excerpt && (
-        <blockquote className="pull-quote bg-gray-50 p-3 border-l-4 border-gray-300 italic mb-6">
-          {post.excerpt}
-        </blockquote>
-      )}
-
       {/* Artikel utama */}
       <article
         className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body
-                   prose-p:font-bold prose-p:text-lg 
+                   prose-p:font-medium prose-p:text-lg 
                    prose-h1:font-extrabold prose-h1:text-4xl 
                    prose-h2:font-extrabold prose-h2:text-3xl 
                    prose-h3:font-extrabold prose-h3:text-2xl"
