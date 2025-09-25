@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
 import AdBanner from "@/components/ads/AdBanner";
+import AdsInline from "@/components/ads/AdsInline"; // ✅ import AdsInline
 
 interface Post {
   id: string;
@@ -81,26 +82,30 @@ export default function HomePage() {
           {posts.length === 0 ? (
             <p className="text-center py-6 text-gray-500">Belum ada artikel.</p>
           ) : (
-            posts.map((post) => (
-              <Link
-                key={post.id}
-                to={`/post/${post.slug}`}
-                className="block border rounded-lg overflow-hidden hover:shadow-md transition"
-              >
-                {post.thumbnail && (
-                  <img
-                    src={post.thumbnail}
-                    alt={post.title}
-                    className="h-48 w-full object-cover"
-                  />
-                )}
-                <div className="p-4">
-                  <h2 className="text-lg font-bold mb-2">{post.title}</h2>
-                  {post.excerpt && (
-                    <p className="text-sm text-gray-600">{post.excerpt}</p>
+            posts.map((post, index) => (
+              <div key={post.id}>
+                <Link
+                  to={`/post/${post.slug}`}
+                  className="block border rounded-lg overflow-hidden hover:shadow-md transition"
+                >
+                  {post.thumbnail && (
+                    <img
+                      src={post.thumbnail}
+                      alt={post.title}
+                      className="h-48 w-full object-cover"
+                    />
                   )}
-                </div>
-              </Link>
+                  <div className="p-4">
+                    <h2 className="text-lg font-bold mb-2">{post.title}</h2>
+                    {post.excerpt && (
+                      <p className="text-sm text-gray-600">{post.excerpt}</p>
+                    )}
+                  </div>
+                </Link>
+
+                {/* ✅ AdsInline setelah artikel ke-2 */}
+                {index === 1 && <AdsInline />}
+              </div>
             ))
           )}
         </div>
