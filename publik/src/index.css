@@ -4,10 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
+/* ================================
+   🎨 Design System Variables
+   ================================ */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -102,6 +101,9 @@ All colors MUST be HSL.
   }
 }
 
+/* ================================
+   🌐 Global Typography
+   ================================ */
 @layer base {
   * {
     @apply border-border;
@@ -116,16 +118,25 @@ All colors MUST be HSL.
     @apply font-bold text-foreground;
     font-family: 'Abel', sans-serif;
   }
+
+  /* ✅ Paragraf default lebih tebal (isi artikel, About, Contact, Advertise, dll) */
+  p {
+    @apply font-medium text-gray-800;
+    font-family: 'Abel', sans-serif;
+  }
+
+  /* ✅ Kalau ada artikel dengan tag <article> */
+  article p {
+    @apply font-medium;
+  }
 }
 
-/* Breaking news scrolling animation (existing) */
+/* ================================
+   📰 Breaking News Animation
+   ================================ */
 @keyframes scroll-text {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
 }
 
 .breaking-news-scroll {
@@ -152,7 +163,9 @@ All colors MUST be HSL.
   }
 }
 
-/* Hide scrollbar for mobile navigation */
+/* ================================
+   📱 Utilities
+   ================================ */
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -224,4 +237,4 @@ All colors MUST be HSL.
   max-width: 100%;
   margin: auto;
   display: block;
-    }
+      }
