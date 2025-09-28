@@ -13,6 +13,7 @@ import {
   Link as LinkIcon,
 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import OneSignalButton from "@/components/OneSignalButton"; // ⬅️ tambahkan ini
 
 interface Post {
   id: string;
@@ -341,6 +342,11 @@ const PostDetail = () => {
             Subscribe
           </button>
         </form>
+      </div>
+    
+      {/* OneSignal Notification Button */}
+      <div className="mt-6 text-center">
+        <OneSignalButton />
       </div>
     </div>
   );
