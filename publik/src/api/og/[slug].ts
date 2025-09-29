@@ -3,8 +3,8 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY! // pakai service role biar bisa read tanpa RLS masalah
+  process.env.VITE_SUPABASE_URL!,
+  process.env.VITE_SUPABASE_PUBLISHABLE_KEY! // pakai service role biar bisa read tanpa RLS masalah
 );
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
