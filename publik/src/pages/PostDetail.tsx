@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import OneSignalButton from "@/components/OneSignalButton";
-import { Helmet } from "react-helmet"; // ✅ Tambah Helmet
+import { Helmet } from "react-helmet-async"; // ✅ Tambah Helmet
 
 interface Post {
   id: string;
