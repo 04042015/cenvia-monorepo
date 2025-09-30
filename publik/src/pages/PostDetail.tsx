@@ -1,6 +1,7 @@
 // publik/src/pages/PostDetail.tsx
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import AdSlot from "@/components/ads/AdSlot";
 import { supabase } from "@/lib/supabaseClient";
 import dayjs from "dayjs";
@@ -13,7 +14,7 @@ import {
   Link as LinkIcon,
 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
-import OneSignalButton from "@/components/OneSignalButton"; // ⬅️ tambahkan ini
+import OneSignalButton from "@/components/OneSignalButton";
 
 interface Post {
   id: string;
@@ -101,9 +102,29 @@ const PostDetail = () => {
   if (!post) return <p className="text-center py-10">Loading...</p>;
 
   const shareUrl = `${window.location.origin}/post/${post.slug}`;
+  const ogImage =
+    post.thumbnail ||
+    `${window.location.origin}/api/og/${post.slug}`;
 
   return (
     <div className="container mx-auto px-3 pt-3 pb-6 max-w-3xl">
+      {/* 🔹 OG + Twitter Meta Tags */}
+      <Helmet>
+        <title>{post.title} | CENVIA</title>
+        <meta name="description" content={post.excerpt || post.title} />
+
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={post.excerpt || post.title} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:url" content={shareUrl} />
+        <meta property="og:type" content="article" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={post.excerpt || post.title} />
+        <meta name="twitter:image" content={ogImage} />
+      </Helmet>
+
       {/* Breadcrumb */}
       <nav className="text-xs text-gray-500 mb-2 text-center">
         <Link to="/" className="hover:underline">Home</Link>
