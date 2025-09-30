@@ -26,6 +26,7 @@ interface Post {
   views: number;
   created_at: string;
   published_at: string | null;
+  category_id?: string; // ✅ ditambahkan agar sesuai query
   author: {
     full_name: string | null;
     avatar_url: string | null;
@@ -60,8 +61,9 @@ const PostDetail = () => {
         .eq("status", "published")
         .single();
 
-      if (error) {
+      if (error || !data) {
         console.error("Gagal ambil post:", error);
+        setPost(null);
         return;
       }
 
@@ -104,9 +106,12 @@ const PostDetail = () => {
 
   if (!post) return <p className="text-center py-10">Loading...</p>;
 
-  const shareUrl = `${window.location.origin}/post/${post.slug}`;
+  const shareUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/post/${post.slug}`
+      : `/post/${post.slug}`;
   const ogImage =
-    post.thumbnail || `${window.location.origin}/api/og/${post.slug}`;
+    post.thumbnail || `${typeof window !== "undefined" ? window.location.origin : ""}/api/og/${post.slug}`;
 
   return (
     <div className="container mx-auto px-3 pt-3 pb-6 max-w-3xl">
