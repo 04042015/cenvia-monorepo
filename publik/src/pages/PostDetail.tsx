@@ -28,7 +28,6 @@ interface Post {
   category_id?: string;
   author: {
     full_name: string | null;
-    avatar_url: string | null;
   } | null;
   category: {
     id: string;
@@ -53,7 +52,7 @@ const PostDetail = () => {
         .select(
           `id, title, slug, content, excerpt, thumbnail, views, created_at, published_at,
            category_id,
-           author:profiles!posts_author_id_fkey(full_name, avatar_url),
+           author:profiles!posts_author_id_fkey(full_name),
            category:categories(id, name, slug, color)`
         )
         .eq("slug", slug)
@@ -74,7 +73,6 @@ const PostDetail = () => {
 
       setPost(data);
 
-      // related posts
       const { data: relatedPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail, category:categories(id, name, color)")
@@ -83,7 +81,6 @@ const PostDetail = () => {
         .limit(8);
       if (relatedPosts) setRelated(relatedPosts);
 
-      // recommended posts
       const { data: recommendedPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail")
@@ -91,7 +88,6 @@ const PostDetail = () => {
         .limit(8);
       if (recommendedPosts) setRecommended(recommendedPosts);
 
-      // other posts
       const { data: otherPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail")
@@ -111,7 +107,7 @@ const PostDetail = () => {
       : `/post/${post.slug}`;
 
   return (
-    <div className="container mx-auto px-3 pt-3 pb-6 max-w-3xl">
+    <div className="container mx-auto px-3 pt-20 pb-6 max-w-3xl">
       {/* Breadcrumb */}
       <nav className="text-xs text-gray-500 mb-2 text-center">
         <Link to="/" className="hover:underline">Home</Link>
@@ -141,11 +137,6 @@ const PostDetail = () => {
 
       {/* Meta info */}
       <div className="flex flex-wrap justify-center items-center text-xs text-gray-600 mb-3 gap-2">
-        <img
-          src={post.author?.avatar_url || "/default-avatar.png"}
-          alt={post.author?.full_name || "Admin"}
-          className="w-6 h-6 rounded-full object-cover"
-        />
         <span className="font-medium">{post.author?.full_name || "Admin"}</span>
         <span>•</span>
         <span>{dayjs(post.published_at || post.created_at).format("DD MMMM YYYY")}</span>
@@ -225,9 +216,7 @@ const PostDetail = () => {
       )}
 
       {/* Artikel utama */}
-      <article
-        className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body"
-      >
+      <article className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body">
         {post.content
           ? post.content.split(/<\/p>/i).map((part, i) => {
               if (!part.trim()) return null;
@@ -245,7 +234,7 @@ const PostDetail = () => {
           : <p className="italic text-gray-500">Konten belum tersedia</p>}
       </article>
 
-      {/* Baca Juga */}
+      {/* Related */}
       {related.length > 0 && (
         <div className="border-l-4 border-gray-300 pl-3 mb-6">
           <h2 className="font-bold text-base mb-2">Baca Juga</h2>
@@ -301,7 +290,7 @@ const PostDetail = () => {
         </div>
       </section>
 
-      {/* Other news */}
+      {/* Other */}
       <section className="mb-6">
         <h2 className="text-lg font-bold mb-3">Berita Cenvia Lainnya</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -353,7 +342,6 @@ const PostDetail = () => {
         </form>
       </div>
 
-      {/* OneSignal Notification Button */}
       <div className="mt-6 text-center">
         <OneSignalButton />
       </div>
