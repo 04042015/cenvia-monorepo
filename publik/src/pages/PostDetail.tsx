@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import OneSignalButton from "@/components/OneSignalButton";
+import { Helmet } from "react-helmet"; // ✅ Tambah Helmet
 
 interface Post {
   id: string;
@@ -106,7 +107,7 @@ const PostDetail = () => {
       ? `${window.location.origin}/post/${post.slug}`
       : `/post/${post.slug}`;
 
-  // ✅ OG Image API
+  // ✅ Tambah ogImage
   const ogImage =
     typeof window !== "undefined"
       ? `${window.location.origin}/api/og/${post.slug}`
@@ -114,6 +115,23 @@ const PostDetail = () => {
 
   return (
     <div className="container mx-auto px-3 pt-20 pb-6 max-w-3xl">
+      {/* ✅ Meta OG update */}
+      <Helmet>
+        <title>{post.title} | CENVIA</title>
+        <meta name="description" content={post.excerpt || post.title} />
+
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={post.excerpt || post.title} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:url" content={shareUrl} />
+        <meta property="og:type" content="article" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={post.excerpt || post.title} />
+        <meta name="twitter:image" content={ogImage} />
+      </Helmet>
+
       {/* Breadcrumb */}
       <nav className="text-xs text-gray-500 mb-2 text-center">
         <Link to="/" className="hover:underline">Home</Link>
