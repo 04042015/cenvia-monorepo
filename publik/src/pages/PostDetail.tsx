@@ -1,6 +1,6 @@
+// publik/src/pages/PostDetail.tsx
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import AdSlot from "@/components/ads/AdSlot";
 import { supabase } from "@/lib/supabaseClient";
 import dayjs from "dayjs";
@@ -109,28 +109,9 @@ const PostDetail = () => {
     typeof window !== "undefined"
       ? `${window.location.origin}/post/${post.slug}`
       : `/post/${post.slug}`;
-  const ogImage =
-    post.thumbnail || `${typeof window !== "undefined" ? window.location.origin : ""}/api/og/${post.slug}`;
 
   return (
     <div className="container mx-auto px-3 pt-3 pb-6 max-w-3xl">
-      {/* 🔹 OG + Twitter Meta Tags */}
-      <Helmet>
-        <title>{post.title} | CENVIA</title>
-        <meta name="description" content={post.excerpt || post.title} />
-
-        <meta property="og:title" content={post.title} />
-        <meta property="og:description" content={post.excerpt || post.title} />
-        <meta property="og:image" content={ogImage} />
-        <meta property="og:url" content={shareUrl} />
-        <meta property="og:type" content="article" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={post.title} />
-        <meta name="twitter:description" content={post.excerpt || post.title} />
-        <meta name="twitter:image" content={ogImage} />
-      </Helmet>
-
       {/* Breadcrumb */}
       <nav className="text-xs text-gray-500 mb-2 text-center">
         <Link to="/" className="hover:underline">Home</Link>
@@ -171,7 +152,6 @@ const PostDetail = () => {
         <span>•</span>
         <span>{post.views ?? 0} views</span>
       </div>
-
 
       {/* Share Section */}
       <div className="text-center mb-4">
@@ -219,12 +199,12 @@ const PostDetail = () => {
           <button
             onClick={() => {
               try {
-                 navigator.clipboard.writeText(shareUrl);
-              toast({ description: "Link berhasil disalin!" });
-               } catch (e) {
-               toast({ description: "Gagal menyalin link" });
-                }
-              }}
+                navigator.clipboard.writeText(shareUrl);
+                toast({ description: "Link berhasil disalin!" });
+              } catch (e) {
+                toast({ description: "Gagal menyalin link" });
+              }
+            }}
             className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700 text-xs"
           >
             <LinkIcon className="w-4 h-4" />
