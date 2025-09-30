@@ -106,6 +106,12 @@ const PostDetail = () => {
       ? `${window.location.origin}/post/${post.slug}`
       : `/post/${post.slug}`;
 
+  // ✅ OG Image API
+  const ogImage =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/api/og/${post.slug}`
+      : `/api/og/${post.slug}`;
+
   return (
     <div className="container mx-auto px-3 pt-20 pb-6 max-w-3xl">
       {/* Breadcrumb */}
