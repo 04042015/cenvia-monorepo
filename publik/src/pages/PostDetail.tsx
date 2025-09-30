@@ -220,9 +220,13 @@ const PostDetail = () => {
           </a>
           <button
             onClick={() => {
-              navigator.clipboard.writeText(shareUrl);
+              try {
+                 navigator.clipboard.writeText(shareUrl);
               toast({ description: "Link berhasil disalin!" });
-            }}
+               } catch (e) {
+               toast({ description: "Gagal menyalin link" });
+                }
+              }}
             className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700 text-xs"
           >
             <LinkIcon className="w-4 h-4" />
