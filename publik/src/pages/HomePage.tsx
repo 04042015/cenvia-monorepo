@@ -65,7 +65,7 @@ export default function HomePage() {
   const footerAds = ads.filter((ad) => ad.position === "footer");
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-20"> {/* ✅ Tambah padding-top biar tidak ketutupan navbar */}
       {/* Header Ads */}
       {headerAds.length > 0 && (
         <div className="space-y-4">
