@@ -1,4 +1,3 @@
-// publik/src/pages/PostDetail.tsx
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -26,7 +25,7 @@ interface Post {
   views: number;
   created_at: string;
   published_at: string | null;
-  category_id?: string; // ✅ ditambahkan agar sesuai query
+  category_id?: string;
   author: {
     full_name: string | null;
     avatar_url: string | null;
@@ -139,11 +138,11 @@ const PostDetail = () => {
           <>
             <span className="mx-1">›</span>
             <Link
-              to={`/category/${post.category.slug}`}
-              style={{ color: post.category.color }}
+              to={`/category/${post.category?.slug || "#"}`}
+              style={{ color: post.category?.color || "#000" }}
               className="font-medium hover:underline"
             >
-              {post.category.name}
+              {post.category?.name || "Umum"}
             </Link>
           </>
         )}
@@ -161,19 +160,18 @@ const PostDetail = () => {
 
       {/* Meta info */}
       <div className="flex flex-wrap justify-center items-center text-xs text-gray-600 mb-3 gap-2">
-        {post.author?.avatar_url && (
-          <img
-             src={post.author.avatar_url}
-             alt={post.author?.full_name || "Admin"}
-             className="w-6 h-6 rounded-full object-cover"
-          />
-        )}
+        <img
+          src={post.author?.avatar_url || "/default-avatar.png"}
+          alt={post.author?.full_name || "Admin"}
+          className="w-6 h-6 rounded-full object-cover"
+        />
         <span className="font-medium">{post.author?.full_name || "Admin"}</span>
         <span>•</span>
         <span>{dayjs(post.published_at || post.created_at).format("DD MMMM YYYY")}</span>
         <span>•</span>
         <span>{post.views ?? 0} views</span>
       </div>
+
 
       {/* Share Section */}
       <div className="text-center mb-4">
