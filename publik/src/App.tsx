@@ -22,6 +22,9 @@ import Interstitial from "./pages/Interstitial";
 import PopupAd from "./components/ads/PopupAd";
 import ScriptPopup from "./components/ads/ScriptPopup";
 
+// ✅ Import HelmetProvider
+import { HelmetProvider } from "react-helmet-async";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -29,29 +32,31 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <ScrollToTop />
+      <HelmetProvider>
+        <BrowserRouter>
+          <ScrollToTop />
 
-        {/* ✅ Popup global biar muncul di semua halaman */}
-        <PopupAd />
-        <ScriptPopup />
+          {/* ✅ Popup global biar muncul di semua halaman */}
+          <PopupAd />
+          <ScriptPopup />
 
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/post/:slug" element={<PostDetail />} />
-            <Route path="/category/:slug" element={<Category />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/advertise" element={<Advertise />} />
-            <Route path="/rss" element={<RSS />} />
-            <Route path="/interstitial/:slug" element={<Interstitial />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/post/:slug" element={<PostDetail />} />
+              <Route path="/category/:slug" element={<Category />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/advertise" element={<Advertise />} />
+              <Route path="/rss" element={<RSS />} />
+              <Route path="/interstitial/:slug" element={<Interstitial />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </BrowserRouter>
+      </HelmetProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
