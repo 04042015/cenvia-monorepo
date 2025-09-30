@@ -35,7 +35,7 @@ interface Post {
     name: string;
     slug: string;
     color: string;
-  };
+  } | null;
   tags?: string[];
 }
 
@@ -73,6 +73,7 @@ const PostDetail = () => {
 
       setPost(data);
 
+      // related posts
       const { data: relatedPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail, category:categories(id, name, color)")
@@ -81,6 +82,7 @@ const PostDetail = () => {
         .limit(8);
       if (relatedPosts) setRelated(relatedPosts);
 
+      // recommended posts
       const { data: recommendedPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail")
@@ -88,6 +90,7 @@ const PostDetail = () => {
         .limit(8);
       if (recommendedPosts) setRecommended(recommendedPosts);
 
+      // other posts
       const { data: otherPosts } = await supabase
         .from("posts")
         .select("id, title, slug, thumbnail")
@@ -103,8 +106,7 @@ const PostDetail = () => {
 
   const shareUrl = `${window.location.origin}/post/${post.slug}`;
   const ogImage =
-    post.thumbnail ||
-    `${window.location.origin}/api/og/${post.slug}`;
+    post.thumbnail || `${window.location.origin}/api/og/${post.slug}`;
 
   return (
     <div className="container mx-auto px-3 pt-3 pb-6 max-w-3xl">
@@ -128,14 +130,18 @@ const PostDetail = () => {
       {/* Breadcrumb */}
       <nav className="text-xs text-gray-500 mb-2 text-center">
         <Link to="/" className="hover:underline">Home</Link>
-        <span className="mx-1">›</span>
-        <Link
-          to={`/category/${post.category.slug}`}
-          style={{ color: post.category.color }}
-          className="font-medium hover:underline"
-        >
-          {post.category.name}
-        </Link>
+        {post.category && (
+          <>
+            <span className="mx-1">›</span>
+            <Link
+              to={`/category/${post.category.slug}`}
+              style={{ color: post.category.color }}
+              className="font-medium hover:underline"
+            >
+              {post.category.name}
+            </Link>
+          </>
+        )}
         <span className="mx-1">›</span>
         <span className="text-gray-700">{post.title}</span>
       </nav>
@@ -143,7 +149,7 @@ const PostDetail = () => {
       {/* Title */}
       <h1
         className="text-3xl sm:text-4xl font-black mb-4 leading-tight text-center"
-        style={{ color: post.category.color }}
+        style={{ color: post.category?.color || "#000" }}
       >
         {post.title}
       </h1>
@@ -233,28 +239,23 @@ const PostDetail = () => {
 
       {/* Artikel utama */}
       <article
-        className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body
-                   prose-p:font-medium prose-p:text-lg 
-                   prose-h1:font-extrabold prose-h1:text-4xl 
-                   prose-h2:font-extrabold prose-h2:text-3xl 
-                   prose-h3:font-extrabold prose-h3:text-2xl"
+        className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body"
       >
         {post.content
-          .split(/<\/p>/i)
-          .map((part, i) => {
-            if (!part.trim()) return null;
-
-            return (
-              <div key={i}>
-                <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
-                {i === 1 && (
-                  <div className="my-4">
-                    <AdSlot position="content" />
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          ? post.content.split(/<\/p>/i).map((part, i) => {
+              if (!part.trim()) return null;
+              return (
+                <div key={i}>
+                  <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
+                  {i === 1 && (
+                    <div className="my-4">
+                      <AdSlot position="content" />
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          : <p className="italic text-gray-500">Konten belum tersedia</p>}
       </article>
 
       {/* Baca Juga */}
@@ -364,7 +365,7 @@ const PostDetail = () => {
           </button>
         </form>
       </div>
-    
+
       {/* OneSignal Notification Button */}
       <div className="mt-6 text-center">
         <OneSignalButton />
