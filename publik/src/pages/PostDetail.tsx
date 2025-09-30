@@ -163,9 +163,9 @@ const PostDetail = () => {
       <div className="flex flex-wrap justify-center items-center text-xs text-gray-600 mb-3 gap-2">
         {post.author?.avatar_url && (
           <img
-            src={post.author.avatar_url}
-            alt={post.author.full_name || "Admin"}
-            className="w-6 h-6 rounded-full object-cover"
+             src={post.author.avatar_url}
+             alt={post.author?.full_name || "Admin"}
+             className="w-6 h-6 rounded-full object-cover"
           />
         )}
         <span className="font-medium">{post.author?.full_name || "Admin"}</span>
