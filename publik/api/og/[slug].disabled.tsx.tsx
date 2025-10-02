@@ -56,3 +56,4 @@ export default async function handler(req: Request) {
     { width: 1200, height: 630 }
   );
             }
+publik/api/og/[slug].disabled.tsx
