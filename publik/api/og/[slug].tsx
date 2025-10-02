@@ -1,6 +1,6 @@
 // publik/api/og/[slug].ts
 import { ImageResponse } from "@vercel/og";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 
 export const config = {
   runtime: "edge",
