@@ -96,9 +96,13 @@ export default function HomePage() {
                     />
                   )}
                   <div className="p-4">
-                    <h2 className="text-lg font-bold mb-2">{post.title}</h2>
+                    <h2 className="text-lg font-bold mb-2 line-clamp-2 leading-snug">
+                      {post.title}
+                    </h2>
                     {post.excerpt && (
-                      <p className="text-sm text-gray-600">{post.excerpt}</p>
+                      <p className="text-sm text-gray-600 line-clamp-3">
+                        {post.excerpt}
+                      </p>
                     )}
                   </div>
                 </Link>
@@ -128,4 +132,4 @@ export default function HomePage() {
       )}
     </div>
   );
-}
+    }
