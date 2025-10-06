@@ -1,4 +1,3 @@
-// publik/src/components/Layout.tsx
 import { ReactNode } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -22,34 +21,37 @@ export default function LayoutTight({ children, onNetworkClick }: LayoutProps) {
       {/* ✅ Popup Ads */}
       <PopupAd />
 
-      {/* ✅ Homepage Ad */}
-      <AdSlot position="homepage" />
+      {/* ✅ Tambahkan padding-top agar konten tidak ketutupan header */}
+      <div className="pt-[100px]"> {/* ✅ Added padding top fix */}
+        {/* ✅ Homepage Ad */}
+        <AdSlot position="homepage" />
 
-      {/* Main content (sangat rapat, tanpa pt) */}
-      <main className="flex-1 w-full px-4 pb-6 flex justify-center">
-        <div className="grid grid-cols-12 gap-6 w-full max-w-6xl">
-          {/* Left Ads */}
-          <aside className="hidden lg:block col-span-2">
-            <AdSlot position="left" />
-          </aside>
+        {/* Main content */}
+        <main className="flex-1 w-full px-4 pb-6 flex justify-center">
+          <div className="grid grid-cols-12 gap-6 w-full max-w-6xl">
+            {/* Left Ads */}
+            <aside className="hidden lg:block col-span-2">
+              <AdSlot position="left" />
+            </aside>
 
-          {/* Content */}
-          <div className="col-span-12 lg:col-span-8 space-y-4">
-            {children}
-            {/* ✅ Iklan pindah ke bawah konten */}
-            <AdSlot position="content" />
+            {/* Content */}
+            <div className="col-span-12 lg:col-span-8 space-y-4">
+              {children}
+              {/* ✅ Iklan pindah ke bawah konten */}
+              <AdSlot position="content" />
+            </div>
+
+            {/* Right Ads */}
+            <aside className="hidden lg:block col-span-2">
+              <AdSlot position="right" />
+            </aside>
           </div>
+        </main>
 
-          {/* Right Ads */}
-          <aside className="hidden lg:block col-span-2">
-            <AdSlot position="right" />
-          </aside>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <AdSlot position="footer" />
-      <Footer />
+        {/* Footer */}
+        <AdSlot position="footer" />
+        <Footer />
+      </div>
     </div>
   );
-}
+            }
