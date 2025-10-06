@@ -22,7 +22,7 @@ export default function LayoutTight({ children, onNetworkClick }: LayoutProps) {
       <PopupAd />
 
       {/* ✅ Tambahkan padding-top agar konten tidak ketutupan header */}
-      <div className="pt-[100px]"> {/* ✅ Added padding top fix */}
+      <div className="pt-[80px]"> {/* ✅ Added padding top fix */}
         {/* ✅ Homepage Ad */}
         <AdSlot position="homepage" />
 
