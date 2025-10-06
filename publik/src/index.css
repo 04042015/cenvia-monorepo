@@ -238,3 +238,18 @@
   margin: auto;
   display: block;
       }
+
+/* ================================
+   📰 Artikel Font Styling (Global)
+   ================================ */
+.article-body p,
+.article-body div,
+.article-body span {
+  font-weight: bold !important;
+  color: #1a1a1a;
+}
+
+/* ✅ Biar bagian “Baca Juga”, “Berita Terkait”, dll tampil lebih tebal lagi */
+h2, h3 {
+  font-weight: 800 !important;
+}
