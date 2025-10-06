@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useLocation } from "react-router-dom"; // ✅ Tambahan
 import Header from "./Header";
 import Footer from "./Footer";
 import AdSlot from "@/components/ads/AdSlot";
@@ -10,6 +11,9 @@ interface LayoutProps {
 }
 
 export default function LayoutTight({ children, onNetworkClick }: LayoutProps) {
+  const location = useLocation(); // ✅ Ambil lokasi halaman sekarang
+  const isPostDetail = location.pathname.startsWith("/post/"); // ✅ Deteksi halaman detail
+
   return (
     <div className="w-full min-h-screen flex flex-col bg-white">
       {/* Header */}
@@ -21,8 +25,8 @@ export default function LayoutTight({ children, onNetworkClick }: LayoutProps) {
       {/* ✅ Popup Ads */}
       <PopupAd />
 
-      {/* ✅ Tambahkan padding-top agar konten tidak ketutupan header */}
-      <div className="pt-[80px]"> {/* ✅ Added padding top fix */}
+      {/* ✅ Padding hanya jika BUKAN halaman PostDetail */}
+      <div className={!isPostDetail ? "pt-[80px]" : ""}>
         {/* ✅ Homepage Ad */}
         <AdSlot position="homepage" />
 
@@ -54,4 +58,4 @@ export default function LayoutTight({ children, onNetworkClick }: LayoutProps) {
       </div>
     </div>
   );
-            }
+}
