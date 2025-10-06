@@ -240,7 +240,7 @@ const PostDetail = () => {
       )}
 
       {/* Artikel utama */}
-<article className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body font-semibold"> 
+<article className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body font-extrabold"> 
   {/* 🆕 Tambah font-semibold agar teks isi artikel lebih tebal */}
   {post.content
     ? post.content.split(/<\/p>/i).map((part, i) => {
