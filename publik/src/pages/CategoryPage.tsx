@@ -1,3 +1,4 @@
+// publik/src/pages/CategoryPage.tsx
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
@@ -56,14 +57,14 @@ const CategoryPage = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-10 text-center text-gray-500">
+      <div className="container mx-auto px-4 py-10 text-center text-gray-500 pt-20">
         Loading...
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-10">
+    <div className="container mx-auto px-4 py-10 pt-20">
       {/* Judul kategori */}
       <h1 className="text-3xl font-bold mb-6">
         {posts.length > 0 ? posts[0].categories?.name : "Kategori"}
