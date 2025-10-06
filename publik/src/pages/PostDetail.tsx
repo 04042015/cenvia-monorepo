@@ -153,11 +153,11 @@ const PostDetail = () => {
 
       {/* Title */}
       <h1
-        className="text-3xl sm:text-4xl font-black mb-4 leading-tight text-center"
-        style={{ color: post.category?.color || "#000" }}
-      >
-        {post.title}
-      </h1>
+  className="text-2xl sm:text-3xl font-extrabold mb-4 leading-snug text-center"
+  style={{ color: post.category?.color || "#000" }}
+>
+  {post.title}
+</h1>
 
       {/* Meta info */}
       <div className="flex flex-wrap justify-center items-center text-xs text-gray-600 mb-3 gap-2">
@@ -262,7 +262,7 @@ const PostDetail = () => {
 {related.length > 0 && (
   <div className="border-l-4 border-gray-300 pl-3 mb-6">
     <h2 className="font-extrabold text-base mb-2">Baca Juga</h2>
-    <ul className="space-y-1 text-blue-600">
+    <ul className="space-y-1 text-blue-600 font-semibold">
       {related.slice(0, 2).map((p) => (
         <li key={p.id}>
           <Link to={`/post/${p.slug}`} className="hover:underline">
@@ -309,7 +309,7 @@ const PostDetail = () => {
             className="h-36 w-full object-cover"
           />
         )}
-        <div className="p-2 text-sm font-medium">{p.title}</div>
+        <div className="p-2 text-sm font-semibold">{p.title}</div>
       </Link>
     ))}
   </div>
@@ -332,7 +332,7 @@ const PostDetail = () => {
             className="h-36 w-full object-cover"
           />
         )}
-        <div className="p-2 text-sm font-medium">{p.title}</div>
+        <div className="p-2 text-sm font-semibold">{p.title}</div>
       </Link>
     ))}
   </div>
@@ -355,7 +355,7 @@ const PostDetail = () => {
             className="h-36 w-full object-cover"
           />
         )}
-        <div className="p-2 text-sm font-medium">{p.title}</div>
+        <div className="p-2 text-sm font-semibold">{p.title}</div>
       </Link>
     ))}
   </div>
