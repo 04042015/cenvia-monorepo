@@ -259,73 +259,107 @@ const PostDetail = () => {
       </article>
 
       {/* Related */}
-      {related.length > 0 && (
-        <div className="border-l-4 border-gray-300 pl-3 mb-6">
-          <h2 className="font-bold text-base mb-2">Baca Juga</h2>
-          <ul className="space-y-1 text-blue-600">
-            {related.slice(0, 2).map((p) => (
-              <li key={p.id}>
-                <Link to={`/post/${p.slug}`} className="hover:underline">
-                  {p.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+{related.length > 0 && (
+  <div className="border-l-4 border-gray-300 pl-3 mb-6">
+    <h2 className="font-extrabold text-base mb-2">Baca Juga</h2>
+    <ul className="space-y-1 text-blue-600">
+      {related.slice(0, 2).map((p) => (
+        <li key={p.id}>
+          <Link to={`/post/${p.slug}`} className="hover:underline">
+            {p.title}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
 
-      {/* Tags */}
-      {post.tags && post.tags.length > 0 && (
-        <div className="mb-6">
-          <h3 className="font-semibold mb-2 text-sm">Tags:</h3>
-          <div className="flex flex-wrap gap-2">
-            {post.tags.map((tag, i) => (
-              <Link key={i} to={`/tag/${tag}`} className="px-3 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded-full">
-                #{tag}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
+{/* Tags */}
+{post.tags && post.tags.length > 0 && (
+  <div className="mb-6">
+    <h3 className="font-semibold mb-2 text-sm">Tags:</h3>
+    <div className="flex flex-wrap gap-2">
+      {post.tags.map((tag, i) => (
+        <Link
+          key={i}
+          to={`/tag/${tag}`}
+          className="px-3 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded-full"
+        >
+          #{tag}
+        </Link>
+      ))}
+    </div>
+  </div>
+)}
 
-      {/* Related news */}
-      <section className="mb-6">
-        <h2 className="text-lg font-bold mb-3">Berita Terkait</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {related.map((p) => (
-            <Link key={p.id} to={`/post/${p.slug}`} className="block border rounded-lg overflow-hidden hover:shadow-md transition">
-              {p.thumbnail && <img src={p.thumbnail} alt={p.title} className="h-36 w-full object-cover" />}
-              <div className="p-2 text-sm font-medium">{p.title}</div>
-            </Link>
-          ))}
-        </div>
-      </section>
+{/* Related news */}
+<section className="mb-6">
+  <h2 className="text-lg font-extrabold mb-3">Berita Terkait</h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    {related.map((p) => (
+      <Link
+        key={p.id}
+        to={`/post/${p.slug}`}
+        className="block border rounded-lg overflow-hidden hover:shadow-md transition"
+      >
+        {p.thumbnail && (
+          <img
+            src={p.thumbnail}
+            alt={p.title}
+            className="h-36 w-full object-cover"
+          />
+        )}
+        <div className="p-2 text-sm font-medium">{p.title}</div>
+      </Link>
+    ))}
+  </div>
+</section>
 
-      {/* Recommended */}
-      <section className="mb-6">
-        <h2 className="text-lg font-bold mb-3">Rekomendasi Untukmu</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {recommended.map((p) => (
-            <Link key={p.id} to={`/post/${p.slug}`} className="block border rounded-lg overflow-hidden hover:shadow-md transition">
-              {p.thumbnail && <img src={p.thumbnail} alt={p.title} className="h-36 w-full object-cover" />}
-              <div className="p-2 text-sm font-medium">{p.title}</div>
-            </Link>
-          ))}
-        </div>
-      </section>
+{/* Recommended */}
+<section className="mb-6">
+  <h2 className="text-lg font-extrabold mb-3">Rekomendasi Untukmu</h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    {recommended.map((p) => (
+      <Link
+        key={p.id}
+        to={`/post/${p.slug}`}
+        className="block border rounded-lg overflow-hidden hover:shadow-md transition"
+      >
+        {p.thumbnail && (
+          <img
+            src={p.thumbnail}
+            alt={p.title}
+            className="h-36 w-full object-cover"
+          />
+        )}
+        <div className="p-2 text-sm font-medium">{p.title}</div>
+      </Link>
+    ))}
+  </div>
+</section>
 
-      {/* Other */}
-      <section className="mb-6">
-        <h2 className="text-lg font-bold mb-3">Berita Cenvia Lainnya</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {others.map((p) => (
-            <Link key={p.id} to={`/post/${p.slug}`} className="block border rounded-lg overflow-hidden hover:shadow-md transition">
-              {p.thumbnail && <img src={p.thumbnail} alt={p.title} className="h-36 w-full object-cover" />}
-              <div className="p-2 text-sm font-medium">{p.title}</div>
-            </Link>
-          ))}
-        </div>
-      </section>
+{/* Other */}
+<section className="mb-6">
+  <h2 className="text-lg font-extrabold mb-3">Berita Cenvia Lainnya</h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    {others.map((p) => (
+      <Link
+        key={p.id}
+        to={`/post/${p.slug}`}
+        className="block border rounded-lg overflow-hidden hover:shadow-md transition"
+      >
+        {p.thumbnail && (
+          <img
+            src={p.thumbnail}
+            alt={p.title}
+            className="h-36 w-full object-cover"
+          />
+        )}
+        <div className="p-2 text-sm font-medium">{p.title}</div>
+      </Link>
+    ))}
+  </div>
+</section>
 
       {/* Newsletter */}
       <div className="mt-6 p-3 border rounded-lg bg-gray-50 text-center">
