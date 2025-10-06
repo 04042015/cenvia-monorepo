@@ -240,7 +240,7 @@ const PostDetail = () => {
       )}
 
       {/* Artikel utama */}
-      <article className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body">
+<article className="prose prose-base max-w-none leading-relaxed text-justify mb-6 article-body font-bold">
         {post.content
           ? post.content.split(/<\/p>/i).map((part, i) => {
               if (!part.trim()) return null;
