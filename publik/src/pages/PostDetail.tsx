@@ -494,8 +494,7 @@ const PostDetail = () => {
       className="w-5 h-5 invert"
     />
   </button>
-</div>
-            
+</div>           
       )}
       
       <div className="mt-6 text-center">
