@@ -255,10 +255,10 @@ const PostDetail = () => {
       }}
       className="p-2 rounded-full bg-gray-600 hover:bg-gray-700 transition"
     >
-      <img
-        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/link.svg"
-        alt="Copy Link"
-        className="w-4 h-4 invert"
+      <img 
+        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linktree.svg" 
+        alt="Copy Link" 
+        className="w-4 h-4 invert" />
       />
     </button>
   </div>
@@ -483,8 +483,7 @@ const PostDetail = () => {
             }}
             className="bg-gray-600 hover:bg-gray-700 text-white p-3 rounded-full flex items-center justify-center"
           >
-            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/link.svg" alt="Copy Link" className="w-4 h-4 invert" />
-          </button>
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linktree.svg" alt="Copy Link" className="w-4 h-4 invert" />          </button>
         </div>
       )}
       
