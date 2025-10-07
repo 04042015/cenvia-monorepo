@@ -58,23 +58,23 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
       >
         <div className="p-6 relative">
           {/* Header */}
-<div className="flex items-center justify-between mb-6 sticky top-0 bg-white z-50 pb-3">
-  <div className="flex items-center gap-2">
-    <span className="material-symbols-outlined text-red-600 text-[26px]">
-      network_intel_node
-    </span>
-    <h2 className="text-2xl font-bold text-gray-900">Network</h2>
-  </div>
+          <div className="flex items-center justify-between mb-6 sticky top-0 bg-white z-50 pb-3">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-red-600 text-[26px]">
+                network_intel_node
+              </span>
+              <h2 className="text-2xl font-bold text-gray-900">Network</h2>
+            </div>
 
-  <Button
-    variant="ghost"
-    size="icon"
-    onClick={onClose}
-    className="hover:bg-gray-200 rounded-full p-2"
-  >
-    <X className="w-6 h-6 text-gray-800" />
-  </Button>
-</div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="hover:bg-gray-200 rounded-full p-2"
+            >
+              <X className="w-6 h-6 text-gray-800" />
+            </Button>
+          </div>
 
           {/* Categories */}
           <div>
@@ -86,25 +86,25 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
                 <a
                   key={cat.id}
                   href={`/category/${cat.slug}`}
-                  className="flex flex-col items-center gap-2 text-center group"
+                  className="flex items-center gap-3 text-sm font-medium text-gray-800 hover:text-blue-600 transition-colors"
                 >
-                  <div
-                    className="w-14 h-14 flex items-center justify-center rounded-full text-white font-bold text-lg shadow-md transition-transform group-hover:scale-105"
-                    style={{ backgroundColor: cat.color || "#2563eb" }}
-                  >
+                  {/* 🔹 Ikon bulat tanpa background tambahan */}
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-300 overflow-hidden">
                     {cat.icon ? (
                       <img
                         src={cat.icon}
                         alt={cat.name}
-                        className="w-7 h-7 object-contain rounded-full"
+                        className="w-6 h-6 object-contain"
                       />
                     ) : (
-                      cat.name.charAt(0)
+                      <span className="material-symbols-outlined text-gray-600 text-[20px]">
+                        category
+                      </span>
                     )}
                   </div>
-                  <span className="text-sm font-medium text-gray-800 group-hover:text-blue-600 transition-colors">
-                    {cat.name}
-                  </span>
+
+                  {/* Nama kategori */}
+                  <span>{cat.name}</span>
                 </a>
               ))}
             </div>
