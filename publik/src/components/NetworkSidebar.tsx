@@ -1,4 +1,3 @@
-// publik/src/components/NetworkSidebar.tsx
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,12 +39,7 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
   return (
     <>
       {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40"
-          onClick={onClose}
-        />
-      )}
+      {isOpen && <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />}
 
       {/* Sidebar */}
       <div
@@ -86,25 +80,25 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
                 <a
                   key={cat.id}
                   href={`/category/${cat.slug}`}
-                  className="flex items-center gap-3 text-sm font-medium text-gray-800 hover:text-blue-600 transition-colors"
+                  className="flex flex-col items-center gap-2 text-center group"
                 >
-                  {/* 🔹 Ikon bulat tanpa background tambahan */}
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-300 overflow-hidden">
-                    {cat.icon ? (
-                      <img
-                        src={cat.icon}
-                        alt={cat.name}
-                        className="w-6 h-6 object-contain"
-                      />
-                    ) : (
-                      <span className="material-symbols-outlined text-gray-600 text-[20px]">
-                        category
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Nama kategori */}
-                  <span>{cat.name}</span>
+                  {cat.icon ? (
+                    <img
+                      src={cat.icon}
+                      alt={cat.name}
+                      className="w-10 h-10 object-contain transition-transform group-hover:scale-110"
+                    />
+                  ) : (
+                    <div
+                      className="w-10 h-10 flex items-center justify-center text-white font-bold text-lg rounded-full shadow-md"
+                      style={{ backgroundColor: cat.color || "#2563eb" }}
+                    >
+                      {cat.name.charAt(0)}
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-gray-800 group-hover:text-blue-600 transition-colors">
+                    {cat.name}
+                  </span>
                 </a>
               ))}
             </div>
