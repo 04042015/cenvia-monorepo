@@ -116,9 +116,9 @@ function FooterLink({ to, text }: { to: string; text: string }) {
     <li>
       <Link
         to={to}
-        className="text-gray-300 hover:text-blue-400 transition-colors duration-200 flex items-center group"
+        className="text-gray-300 hover:text-red-400 transition-colors duration-200 flex items-center group"
       >
-        <span className="mr-2 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
+        <span className="mr-2 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">
           →
         </span>
         {text}
