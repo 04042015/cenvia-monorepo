@@ -446,7 +446,10 @@ const PostDetail = () => {
             rel="noopener noreferrer"
             className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full flex items-center justify-center"
           >
-            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" className="w-4 h-4 invert" />
+            <img 
+              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" 
+              alt="Facebook" 
+              className="w-4 h-4 invert" />
           </a>
           <a
             href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
@@ -454,7 +457,10 @@ const PostDetail = () => {
             rel="noopener noreferrer"
             className="bg-sky-500 hover:bg-sky-600 text-white p-3 rounded-full flex items-center justify-center"
           >
-            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="Twitter" className="w-4 h-4 invert" />
+            <img 
+              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" 
+              alt="Twitter" 
+              className="w-4 h-4 invert" />
           </a>
           <a
             href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
@@ -462,7 +468,10 @@ const PostDetail = () => {
             rel="noopener noreferrer"
             className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full flex items-center justify-center"
           >
-            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" alt="WhatsApp" className="w-4 h-4 invert" />
+            <img 
+              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" 
+              alt="WhatsApp" 
+              className="w-4 h-4 invert" />
           </a>
           <a
             href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
@@ -470,7 +479,10 @@ const PostDetail = () => {
             rel="noopener noreferrer"
             className="bg-blue-400 hover:bg-blue-500 text-white p-3 rounded-full flex items-center justify-center"
           >
-            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg" alt="Telegram" className="w-4 h-4 invert" />
+            <img 
+              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg" 
+              alt="Telegram" 
+              className="w-4 h-4 invert" />
           </a>
           <button
             onClick={() => {
@@ -483,7 +495,11 @@ const PostDetail = () => {
             }}
             className="bg-gray-600 hover:bg-gray-700 text-white p-3 rounded-full flex items-center justify-center"
           >
-            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linktree.svg" alt="Copy Link" className="w-4 h-4 invert" />          </button>
+            <img 
+              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linktree.svg" 
+              alt="Copy Link" 
+              className="w-4 h-4 invert" />        
+          </button>
         </div>
       )}
       
