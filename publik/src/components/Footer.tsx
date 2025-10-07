@@ -39,7 +39,9 @@ const Footer = () => {
                 className="w-12 h-12 mr-3 rounded-lg"
               />
               <div>
-                <h3 className="text-2xl font-bold tracking-wide">CENVIA</h3>
+                <h3 className="text-2xl font-extrabold text-white drop-shadow-sm tracking-wide">
+                  CENVIA
+                </h3>
               </div>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed mb-6">
@@ -51,7 +53,10 @@ const Footer = () => {
             <div className="flex items-center gap-3">
               <FooterIcon icon={<Facebook />} color="bg-blue-600" />
               <FooterIcon icon={<Twitter />} color="bg-sky-500" />
-              <FooterIcon icon={<Instagram />} color="bg-gradient-to-r from-purple-500 to-pink-500" />
+              <FooterIcon
+                icon={<Instagram />}
+                color="bg-gradient-to-r from-purple-500 to-pink-500"
+              />
               <FooterIcon icon={<Youtube />} color="bg-red-600" />
               <FooterIcon icon={<Linkedin />} color="bg-blue-700" />
             </div>
@@ -131,7 +136,7 @@ function FooterIcon({
 }) {
   return (
     <div
-      className={`w-8 h-8 p-2 rounded cursor-pointer transition-all duration-200 hover:scale-110 ${color} hover:brightness-110`}
+      className={`w-10 h-10 flex items-center justify-center rounded-full cursor-pointer transition-all duration-200 hover:scale-110 ${color} hover:brightness-110`}
     >
       {icon}
     </div>
