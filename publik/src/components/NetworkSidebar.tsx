@@ -75,28 +75,32 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
             <h3 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">
               Connection
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {categories.map((cat) => (
                 <a
                   key={cat.id}
                   href={`/category/${cat.slug}`}
-                  className="flex flex-col items-center gap-2 text-center group"
+                  className="flex items-center space-x-3 p-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors shadow-sm hover:shadow-md"
                 >
+                  {/* Icon bulat */}
                   {cat.icon ? (
                     <img
                       src={cat.icon}
                       alt={cat.name}
-                      className="w-10 h-10 object-contain transition-transform group-hover:scale-110"
+                      className="w-10 h-10 rounded-full object-cover border border-gray-200"
                     />
                   ) : (
                     <div
-                      className="w-10 h-10 flex items-center justify-center text-white font-bold text-lg rounded-full shadow-md"
+                      className="w-10 h-10 flex items-center justify-center text-white font-semibold text-lg rounded-full shadow-md"
                       style={{ backgroundColor: cat.color || "#2563eb" }}
                     >
                       {cat.name.charAt(0)}
                     </div>
                   )}
-                  <span className="text-sm font-medium text-gray-800 group-hover:text-blue-600 transition-colors">
+
+                  {/* Nama kategori */}
+                  <span className="text-gray-900 font-medium text-base">
                     {cat.name}
                   </span>
                 </a>
