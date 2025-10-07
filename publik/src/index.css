@@ -253,3 +253,15 @@
 h2, h3 {
   font-weight: 800 !important;
 }
+
+
+/* ================================
+   ✅ Share Icon Fix
+   ================================ */
+.share-icon {
+  filter: invert(1) brightness(2) contrast(1.1);
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+  vertical-align: middle;
+}
