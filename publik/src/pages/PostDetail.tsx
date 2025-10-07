@@ -4,14 +4,6 @@ import { useParams, Link } from "react-router-dom";
 import AdSlot from "@/components/ads/AdSlot";
 import { supabase } from "@/lib/supabaseClient";
 import dayjs from "dayjs";
-import {
-  Facebook,
-  Twitter,
-  MessageCircle,
-  Send,
-  Linkedin,
-  Link as LinkIcon,
-} from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import OneSignalButton from "@/components/OneSignalButton";
 import { Helmet } from "react-helmet-async"; // ✅ Tambah Helmet
@@ -100,6 +92,16 @@ const PostDetail = () => {
     if (slug) fetchPost();
   }, [slug]);
 
+  const [showFloatingShare, setShowFloatingShare] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowFloatingShare(window.scrollY > 400);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  
   if (!post) return <p className="text-center py-10">Loading...</p>;
 
   const shareUrl =
@@ -169,64 +171,99 @@ const PostDetail = () => {
       </div>
 
       {/* Share Section */}
-      <div className="text-center mb-4">
-        <div className="flex justify-center flex-wrap gap-2 mt-2">
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 text-xs"
-          >
-            <Facebook className="w-4 h-4" />
-          </a>
-          <a
-            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full bg-sky-500 text-white hover:bg-sky-600 text-xs"
-          >
-            <Twitter className="w-4 h-4" />
-          </a>
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 text-xs"
-          >
-            <MessageCircle className="w-4 h-4" />
-          </a>
-          <a
-            href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full bg-sky-700 text-white hover:bg-sky-800 text-xs"
-          >
-            <Send className="w-4 h-4" />
-          </a>
-          <a
-            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full bg-blue-800 text-white hover:bg-blue-900 text-xs"
-          >
-            <Linkedin className="w-4 h-4" />
-          </a>
-          <button
-            onClick={() => {
-              try {
-                navigator.clipboard.writeText(shareUrl);
-                toast({ description: "Link berhasil disalin!" });
-              } catch (e) {
-                toast({ description: "Gagal menyalin link" });
-              }
-            }}
-            className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700 text-xs"
-          >
-            <LinkIcon className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
+<div className="text-center mb-4">
+  <div className="flex justify-center flex-wrap gap-2 mt-2">
+    {/* Facebook */}
+    <a
+      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 transition"
+    >
+      <img
+        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg"
+        alt="Facebook"
+        className="w-4 h-4 invert"
+      />
+    </a>
 
+    {/* X / Twitter */}
+    <a
+      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="p-2 rounded-full bg-black hover:bg-neutral-800 transition"
+    >
+      <img
+        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg"
+        alt="X"
+        className="w-4 h-4 invert"
+      />
+    </a>
+
+    {/* WhatsApp */}
+    <a
+      href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="p-2 rounded-full bg-green-500 hover:bg-green-600 transition"
+    >
+      <img
+        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg"
+        alt="WhatsApp"
+        className="w-4 h-4 invert"
+      />
+    </a>
+
+    {/* Telegram */}
+    <a
+      href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="p-2 rounded-full bg-sky-600 hover:bg-sky-700 transition"
+    >
+      <img
+        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg"
+        alt="Telegram"
+        className="w-4 h-4 invert"
+      />
+    </a>
+
+    {/* LinkedIn */}
+    <a
+      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="p-2 rounded-full bg-blue-800 hover:bg-blue-900 transition"
+    >
+      <img
+        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg"
+        alt="LinkedIn"
+        className="w-4 h-4 invert"
+      />
+    </a>
+
+    {/* Copy Link */}
+    <button
+      onClick={() => {
+        try {
+          navigator.clipboard.writeText(shareUrl);
+          toast({ description: "Link berhasil disalin!" });
+        } catch (e) {
+          toast({ description: "Gagal menyalin link" });
+        }
+      }}
+      className="p-2 rounded-full bg-gray-600 hover:bg-gray-700 transition"
+    >
+      <img
+        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/link.svg"
+        alt="Copy Link"
+        className="w-4 h-4 invert"
+      />
+    </button>
+  </div>
+</div>
+      
       {/* Thumbnail */}
       {post.thumbnail && (
         <figure className="mb-4">
@@ -400,6 +437,57 @@ const PostDetail = () => {
         </form>
       </div>
 
+       {/* 🔥 Tombol Share Mengambang */}
+      {showFloatingShare && (
+        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-white/90 backdrop-blur-md border shadow-lg p-2 rounded-full animate-fadeIn">
+          <a
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full flex items-center justify-center"
+          >
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" className="w-4 h-4 invert" />
+          </a>
+          <a
+            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-sky-500 hover:bg-sky-600 text-white p-3 rounded-full flex items-center justify-center"
+          >
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" alt="Twitter" className="w-4 h-4 invert" />
+          </a>
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full flex items-center justify-center"
+          >
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" alt="WhatsApp" className="w-4 h-4 invert" />
+          </a>
+          <a
+            href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-blue-400 hover:bg-blue-500 text-white p-3 rounded-full flex items-center justify-center"
+          >
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg" alt="Telegram" className="w-4 h-4 invert" />
+          </a>
+          <button
+            onClick={() => {
+              try {
+                navigator.clipboard.writeText(shareUrl);
+                toast({ description: "Link berhasil disalin!" });
+              } catch {
+                toast({ description: "Gagal menyalin link" });
+              }
+            }}
+            className="bg-gray-600 hover:bg-gray-700 text-white p-3 rounded-full flex items-center justify-center"
+          >
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/link.svg" alt="Copy Link" className="w-4 h-4 invert" />
+          </button>
+        </div>
+      )}
+      
       <div className="mt-6 text-center">
         <OneSignalButton />
       </div>
