@@ -495,7 +495,7 @@ const PostDetail = () => {
     />
   </button>
 </div>           
-      )}
+      )
       
       <div className="mt-6 text-center">
         <OneSignalButton />
