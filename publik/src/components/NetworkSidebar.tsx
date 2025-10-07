@@ -101,7 +101,7 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
                   )}
 
                   {/* Nama kategori */}
-                  <span className="text-gray-900 font-medium text-base truncate">
+                  <span className="text-gray-900 font-bold text-base truncate">
                     {cat.name}
                   </span>
                 </a>
