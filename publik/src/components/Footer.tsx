@@ -64,7 +64,7 @@ const Footer = () => {
 
           {/* Explore Our Site */}
           <div className="lg:col-span-2">
-            <h3 className="text-xl font-bold mb-6 text-blue-400 uppercase tracking-wide">
+            <h3 className="text-xl font-bold mb-6 text-white-400 uppercase tracking-wide">
               Explore Our Site
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -82,7 +82,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div className="lg:col-span-1">
-            <h3 className="text-xl font-bold mb-6 text-blue-400 uppercase tracking-wide">
+            <h3 className="text-xl font-bold mb-6 text-white-400 uppercase tracking-wide">
               Quick Links
             </h3>
             <ul className="space-y-3">
