@@ -76,7 +76,8 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
               Connection
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* ✅ Grid responsif: 2 kolom di mobile, 4 kolom di desktop */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {categories.map((cat) => (
                 <a
                   key={cat.id}
@@ -100,7 +101,7 @@ const NetworkSidebar = ({ isOpen, onClose }: NetworkSidebarProps) => {
                   )}
 
                   {/* Nama kategori */}
-                  <span className="text-gray-900 font-medium text-base">
+                  <span className="text-gray-900 font-medium text-base truncate">
                     {cat.name}
                   </span>
                 </a>
