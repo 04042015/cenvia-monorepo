@@ -248,7 +248,7 @@ const PostDetail = () => {
       onClick={() => {
         try {
           navigator.clipboard.writeText(shareUrl);
-          toast({ description: "Link berhasil disalin!" });
+          toast({ description: "Disalin!" });
         } catch (e) {
           toast({ description: "Gagal menyalin link" });
         }
@@ -437,7 +437,7 @@ const PostDetail = () => {
         </form>
       </div>
 
-       {/* 🔥 Tombol Share Mengambang */}
+            {/* 🔥 Tombol Share Mengambang */}
       {showFloatingShare && (
         <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-white/90 backdrop-blur-md border shadow-lg p-2 rounded-full animate-fadeIn">
           <a
@@ -476,7 +476,7 @@ const PostDetail = () => {
             onClick={() => {
               try {
                 navigator.clipboard.writeText(shareUrl);
-                toast({ description: "Link berhasil disalin!" });
+                toast({ description: "Disalin!" });
               } catch {
                 toast({ description: "Gagal menyalin link" });
               }
