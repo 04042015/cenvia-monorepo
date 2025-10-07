@@ -437,70 +437,67 @@ const PostDetail = () => {
         </form>
       </div>
 
-            {/* 🔥 Tombol Share Mengambang */}
-      {showFloatingShare && (
-        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-white/90 backdrop-blur-md border shadow-lg p-2 rounded-full animate-fadeIn">
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full flex items-center justify-center"
-          >
-            <img 
-              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" 
-              alt="Facebook" 
-              className="w-4 h-4 invert" />
-          </a>
-          <a
-            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-sky-500 hover:bg-sky-600 text-white p-3 rounded-full flex items-center justify-center"
-          >
-            <img 
-              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg" 
-              alt="Twitter" 
-              className="w-4 h-4 invert" />
-          </a>
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full flex items-center justify-center"
-          >
-            <img 
-              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" 
-              alt="WhatsApp" 
-              className="w-4 h-4 invert" />
-          </a>
-          <a
-            href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-blue-400 hover:bg-blue-500 text-white p-3 rounded-full flex items-center justify-center"
-          >
-            <img 
-              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg" 
-              alt="Telegram" 
-              className="w-4 h-4 invert" />
-          </a>
-          <button
-            onClick={() => {
-              try {
-                navigator.clipboard.writeText(shareUrl);
-                toast({ description: "Disalin!" });
-              } catch {
-                toast({ description: "Gagal menyalin link" });
-              }
-            }}
-            className="bg-gray-600 hover:bg-gray-700 text-white p-3 rounded-full flex items-center justify-center"
-          >
-            <img 
-              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linktree.svg" 
-              alt="Copy Link" 
-              className="w-4 h-4 invert" />        
-          </button>
-        </div>
+      {/* 🔄 Floating Share Buttons */}
+<div className="fixed bottom-4 right-4 flex flex-col gap-3 z-50">
+  {/* Facebook */}
+  <a
+    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full shadow-lg flex items-center justify-center"
+    title="Share to Facebook"
+  >
+    <img
+      src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg"
+      alt="Facebook"
+      className="w-5 h-5 invert"
+    />
+  </a>
+
+  {/* Twitter */}
+  <a
+    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="bg-sky-500 hover:bg-sky-600 p-3 rounded-full shadow-lg flex items-center justify-center"
+    title="Share to Twitter"
+  >
+    <img
+      src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg"
+      alt="Twitter"
+      className="w-5 h-5 invert"
+    />
+  </a>
+
+  {/* WhatsApp */}
+  <a
+    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(window.location.href)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="bg-green-500 hover:bg-green-600 p-3 rounded-full shadow-lg flex items-center justify-center"
+    title="Share to WhatsApp"
+  >
+    <img
+      src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg"
+      alt="WhatsApp"
+      className="w-5 h-5 invert"
+    />
+  </a>
+
+  {/* Copy Link */}
+  <button
+    onClick={handleCopyLink}
+    className="bg-gray-700 hover:bg-gray-800 p-3 rounded-full shadow-lg flex items-center justify-center"
+    title="Copy Link"
+  >
+    <img
+      src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/link.svg"
+      alt="Copy Link"
+      className="w-5 h-5 invert"
+    />
+  </button>
+</div>
+            
       )}
       
       <div className="mt-6 text-center">
