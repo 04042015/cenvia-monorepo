@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabaseClient";
 import dayjs from "dayjs";
 import { toast } from "@/components/ui/use-toast";
 import OneSignalButton from "@/components/OneSignalButton";
+import { Helmet } from "react-helmet";
 
 interface Post {
   id: string;
@@ -257,7 +258,7 @@ const PostDetail = () => {
       <img 
         src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linktree.svg" 
         alt="Copy Link" 
-        className="w-4 h-4 invert" />
+        className="w-4 h-4 invert" 
       />
     </button>
   </div>
