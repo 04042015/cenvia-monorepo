@@ -439,13 +439,13 @@ const ogImage = post.thumbnail || "/default-og-image.jpg";
       </div>
 
             {/* 🔗 Tombol Share Mengambang */}
-<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-3 bg-white dark:bg-gray-800 shadow-xl px-2 py-1 rounded-full scale-95">
+<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-2 bg-white dark:bg-gray-800 shadow-xl px-3 py-1.5 rounded-full">
   {/* Facebook */}
   <a
     href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
     target="_blank"
     rel="noopener noreferrer"
-    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1877F2]"
+    className="w-7 h-7 flex items-center justify-center rounded-full bg-[#1877F2]"
   >
     <img
       src="https://cdn.simpleicons.org/facebook/FFFFFF"
@@ -459,7 +459,7 @@ const ogImage = post.thumbnail || "/default-og-image.jpg";
     href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
       target="_blank"
     rel="noopener noreferrer"
-    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#229ED9]"
+    className="w-7 h-7 flex items-center justify-center rounded-full bg-[#229ED9]"
   >
     <img
       src="https://cdn.simpleicons.org/telegram/FFFFFF"
@@ -473,7 +473,7 @@ const ogImage = post.thumbnail || "/default-og-image.jpg";
     href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
     target="_blank"
     rel="noopener noreferrer"
-    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#25D366]"
+    className="w-7 h-7 flex items-center justify-center rounded-full bg-[#25D366]"
   >
     <img
       src="https://cdn.simpleicons.org/whatsapp/FFFFFF"
@@ -487,7 +487,7 @@ const ogImage = post.thumbnail || "/default-og-image.jpg";
     href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
     target="_blank"
     rel="noopener noreferrer"
-    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1DA1F2]"
+    className="w-7 h-7 flex items-center justify-center rounded-full bg-[#1DA1F2]"
   >
     <img
       src="https://cdn.simpleicons.org/x/FFFFFF"
@@ -502,7 +502,7 @@ const ogImage = post.thumbnail || "/default-og-image.jpg";
       navigator.clipboard.writeText(window.location.href);
       alert("✅ Link disalin!");
     }}
-    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#3E3E3E]"
+    className="w-7 h-7 flex items-center justify-center rounded-full bg-[#3E3E3E]"
   >
     <img
         src="https://img.icons8.com/ios-filled/50/FFFFFF/link.png"
