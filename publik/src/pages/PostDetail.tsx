@@ -114,6 +114,8 @@ const shareUrl =
     ? `${window.location.origin}/post/${post.slug}`
     : `/post/${post.slug}`;
 
+const ogImage = post.thumbnail || "/default-og-image.jpg";
+  
   return (
     <div className="container mx-auto px-3 pt-20 pb-6 max-w-3xl">
       {/* ✅ Meta OG update */}
@@ -440,7 +442,7 @@ const shareUrl =
 <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-3 bg-white dark:bg-gray-800 shadow-xl px-2 py-1 rounded-full scale-95">
   {/* Facebook */}
   <a
-    href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
+    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
     target="_blank"
     rel="noopener noreferrer"
     className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1877F2]"
@@ -454,8 +456,8 @@ const shareUrl =
 
   {/* Telegram */}
   <a
-    href={`https://t.me/share/url?url=${window.location.href}`}
-    target="_blank"
+    href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
+      target="_blank"
     rel="noopener noreferrer"
     className="w-10 h-10 flex items-center justify-center rounded-full bg-[#229ED9]"
   >
@@ -468,7 +470,7 @@ const shareUrl =
 
   {/* WhatsApp */}
   <a
-    href={`https://api.whatsapp.com/send?text=${window.location.href}`}
+    href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
     target="_blank"
     rel="noopener noreferrer"
     className="w-10 h-10 flex items-center justify-center rounded-full bg-[#25D366]"
@@ -482,7 +484,7 @@ const shareUrl =
 
   {/* Twitter / X */}
   <a
-    href={`https://twitter.com/intent/tweet?url=${window.location.href}`}
+    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
     target="_blank"
     rel="noopener noreferrer"
     className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1DA1F2]"
