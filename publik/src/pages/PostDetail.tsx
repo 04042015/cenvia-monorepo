@@ -6,7 +6,6 @@ import { supabase } from "@/lib/supabaseClient";
 import dayjs from "dayjs";
 import { toast } from "@/components/ui/use-toast";
 import OneSignalButton from "@/components/OneSignalButton";
-import { Helmet } from "react-helmet-async"; // ✅ Tambah Helmet
 
 interface Post {
   id: string;
