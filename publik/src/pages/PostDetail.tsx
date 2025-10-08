@@ -437,7 +437,7 @@ const shareUrl =
       </div>
 
             {/* 🔗 Tombol Share Mengambang */}
-<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-3 bg-white dark:bg-gray-800 shadow-xl px-2 py-1 rounded-full">
+<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-3 bg-white dark:bg-gray-800 shadow-xl px-2 py-1 rounded-full scale-95">
   {/* Facebook */}
   <a
     href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
