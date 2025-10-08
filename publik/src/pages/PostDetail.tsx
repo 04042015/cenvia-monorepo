@@ -197,7 +197,7 @@ const PostDetail = () => {
       <img
         src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg"
         alt="X"
-        className="w-4 h-4 invert"
+        className="share-icon" />
       />
     </a>
 
@@ -211,7 +211,7 @@ const PostDetail = () => {
       <img
         src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg"
         alt="WhatsApp"
-        className="w-4 h-4 invert"
+        className="share-icon" />
       />
     </a>
 
