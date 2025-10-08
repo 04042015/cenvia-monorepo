@@ -95,16 +95,22 @@ const PostDetail = () => {
 const [showFloatingShare, setShowFloatingShare] = useState(false);
 
 useEffect(() => {
-  const handleScroll = () => {
-    const header = document.querySelector("h1");
-    if (!header) return;
+  const header = document.querySelector("h1");
+  if (!header) return;
 
-    const rect = header.getBoundingClientRect();
-    setShowFloatingShare(rect.bottom < 0);
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      // Jika judul TIDAK terlihat → tampilkan tombol share
+      setShowFloatingShare(!entry.isIntersecting);
+    },
+    { threshold: 0.1 } // sedikit toleransi
+  );
+
+  observer.observe(header);
+
+  return () => {
+    observer.disconnect();
   };
-
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
 }, []);
 
 if (!post) return <p className="text-center py-10">Loading...</p>;
