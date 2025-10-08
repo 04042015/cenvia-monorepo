@@ -92,28 +92,27 @@ const PostDetail = () => {
     if (slug) fetchPost();
   }, [slug]);
 
-  const [showFloatingShare, setShowFloatingShare] = useState(false);
+const [showFloatingShare, setShowFloatingShare] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowFloatingShare(window.scrollY > 400);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-  
-  if (!post) return <p className="text-center py-10">Loading...</p>;
+useEffect(() => {
+  const handleScroll = () => {
+    const header = document.querySelector("h1");
+    if (!header) return;
 
-  const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/post/${post.slug}`
-      : `/post/${post.slug}`;
+    const rect = header.getBoundingClientRect();
+    setShowFloatingShare(rect.bottom < 0);
+  };
 
-  // ✅ Tambah ogImage
-  const ogImage =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/api/og/${post.slug}`
-      : `/api/og/${post.slug}`;
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
+if (!post) return <p className="text-center py-10">Loading...</p>;
+
+const shareUrl =
+  typeof window !== "undefined"
+    ? `${window.location.origin}/post/${post.slug}`
+    : `/post/${post.slug}`;
 
   return (
     <div className="container mx-auto px-3 pt-20 pb-6 max-w-3xl">
@@ -438,7 +437,7 @@ const PostDetail = () => {
       </div>
 
             {/* 🔗 Tombol Share Mengambang */}
-<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-3 bg-white dark:bg-gray-800 shadow-xl px-4 py-2 rounded-full">
+<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-3 bg-white dark:bg-gray-800 shadow-xl px-2 py-1 rounded-full">
   {/* Facebook */}
   <a
     href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
