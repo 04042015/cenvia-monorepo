@@ -92,9 +92,7 @@ const PostDetail = () => {
     if (slug) fetchPost();
   }, [slug]);
 
-if (!post) return <p className="text-center py-10">Loading...</p>;
-
-  // 👇 Pastikan ini ada
+    // 👇 Pastikan ini ada
 const [showFloatingShare, setShowFloatingShare] = useState(false);
 
 useEffect(() => {
@@ -116,6 +114,8 @@ useEffect(() => {
   return () => window.removeEventListener("scroll", handleScroll);
 }, []);
   
+if (!post) return <p className="text-center py-10">Loading...</p>;
+
 const shareUrl =
   typeof window !== "undefined"
     ? `${window.location.origin}/post/${post.slug}`
