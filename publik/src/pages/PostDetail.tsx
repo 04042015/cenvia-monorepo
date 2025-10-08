@@ -439,7 +439,8 @@ const ogImage = post.thumbnail || "/default-og-image.jpg";
       </div>
 
             {/* 🔗 Tombol Share Mengambang */}
-<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-2 bg-white dark:bg-gray-800 shadow-xl px-3 py-1.5 rounded-full">
+     {showFloatingShare && (
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-2 bg-white dark:bg-gray-800 shadow-xl px-3 py-1.5 rounded-full">
   {/* Facebook */}
   <a
     href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
@@ -511,7 +512,7 @@ const ogImage = post.thumbnail || "/default-og-image.jpg";
       />
   </button>
 </div>
-      
+    )}  
       <div className="mt-6 text-center">
         <OneSignalButton />
       </div>
