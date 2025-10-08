@@ -92,29 +92,30 @@ const PostDetail = () => {
     if (slug) fetchPost();
   }, [slug]);
 
+if (!post) return <p className="text-center py-10">Loading...</p>;
+
+  // 👇 Pastikan ini ada
 const [showFloatingShare, setShowFloatingShare] = useState(false);
 
 useEffect(() => {
-  const header = document.querySelector("h1");
-  if (!header) return;
+  const handleScroll = () => {
+    const title = document.querySelector("h1");
+    if (!title) return;
 
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      // Jika judul TIDAK terlihat → tampilkan tombol share
-      setShowFloatingShare(!entry.isIntersecting);
-    },
-    { threshold: 0.1 } // sedikit toleransi
-  );
-
-  observer.observe(header);
-
-  return () => {
-    observer.disconnect();
+    const rect = title.getBoundingClientRect();
+    // tampilkan tombol jika judul sudah lewat ke atas layar
+    if (rect.bottom < 0) {
+      setShowFloatingShare(true);
+    } else {
+      setShowFloatingShare(false);
+    }
   };
+
+  window.addEventListener("scroll", handleScroll);
+  handleScroll(); // jalankan sekali saat awal
+  return () => window.removeEventListener("scroll", handleScroll);
 }, []);
-
-if (!post) return <p className="text-center py-10">Loading...</p>;
-
+  
 const shareUrl =
   typeof window !== "undefined"
     ? `${window.location.origin}/post/${post.slug}`
