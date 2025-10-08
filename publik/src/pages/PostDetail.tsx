@@ -197,7 +197,7 @@ const PostDetail = () => {
       <img
         src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg"
         alt="X"
-        className="share-icon" />
+        className="w-4 h-4 invert"
       />
     </a>
 
@@ -211,7 +211,7 @@ const PostDetail = () => {
       <img
         src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg"
         alt="WhatsApp"
-        className="share-icon" />
+        className="w-4 h-4 invert"
       />
     </a>
 
@@ -471,7 +471,7 @@ const PostDetail = () => {
             <img 
               src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" 
               alt="WhatsApp" 
-              className="w-4 h-4 invert" />
+              className="share-icon" />
           </a>
           <a
             href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
@@ -482,7 +482,7 @@ const PostDetail = () => {
             <img 
               src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg" 
               alt="Telegram" 
-              className="w-4 h-4 invert" />
+              className="share-icon" />
           </a>
           <button
             onClick={() => {
