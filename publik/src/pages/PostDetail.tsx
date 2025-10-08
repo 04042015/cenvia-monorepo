@@ -255,10 +255,10 @@ const PostDetail = () => {
       }}
       className="p-2 rounded-full bg-gray-600 hover:bg-gray-700 transition"
     >
-      <img 
-        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linktree.svg" 
-        alt="Copy Link" 
-        className="w-4 h-4 invert" 
+      <img
+        src="https://img.icons8.com/ios-filled/50/FFFFFF/link.png"
+        alt="Copy Link"
+        className="w-4 h-4"
       />
     </button>
   </div>
@@ -449,7 +449,7 @@ const PostDetail = () => {
     <img
       src="https://cdn.simpleicons.org/facebook/FFFFFF"
       alt="Facebook"
-      className="w-5 h-5"
+      className="w-3 h-3"
     />
   </a>
 
@@ -463,7 +463,7 @@ const PostDetail = () => {
     <img
       src="https://cdn.simpleicons.org/telegram/FFFFFF"
       alt="Telegram"
-      className="w-5 h-5"
+      className="w-3 h-3"
     />
   </a>
 
@@ -477,7 +477,7 @@ const PostDetail = () => {
     <img
       src="https://cdn.simpleicons.org/whatsapp/FFFFFF"
       alt="WhatsApp"
-      className="w-5 h-5"
+      className="w-3 h-3"
     />
   </a>
 
@@ -491,7 +491,7 @@ const PostDetail = () => {
     <img
       src="https://cdn.simpleicons.org/x/FFFFFF"
       alt="X (Twitter)"
-      className="w-5 h-5"
+      className="w-3 h-3"
     />
   </a>
 
@@ -504,10 +504,10 @@ const PostDetail = () => {
     className="w-10 h-10 flex items-center justify-center rounded-full bg-[#3E3E3E]"
   >
     <img
-      src="https://cdn.simpleicons.org/link/FFFFFF"
-      alt="Copy Link"
-      className="w-5 h-5"
-    />
+        src="https://img.icons8.com/ios-filled/50/FFFFFF/link.png"
+        alt="Copy Link"
+        className="w-3 h-3"
+      />
   </button>
 </div>
       
