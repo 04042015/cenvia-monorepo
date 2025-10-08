@@ -122,8 +122,19 @@ const shareUrl =
     : `/post/${post.slug}`;
 
 const ogImage = post.thumbnail || "/default-og-image.jpg";
-  
-  return (
+
+// 🔍 DEBUG scroll state (sementara aja)
+console.log("showFloatingShare:", showFloatingShare); // kalau mau lihat di log
+// atau tampilkan langsung di layar:
+const debugScroll = (
+  <p className="fixed top-2 left-2 bg-white text-black z-[9999] text-xs px-2 py-1 rounded">
+    Scroll: {showFloatingShare ? "ON" : "OFF"}
+  </p>
+);
+
+return (
+  <>
+    {debugScroll} {/* tampilkan indikator di layar */}
     <div className="container mx-auto px-3 pt-20 pb-6 max-w-3xl">
       {/* ✅ Meta OG update */}
       <Helmet>
