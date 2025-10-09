@@ -529,13 +529,14 @@ return (
         className="w-3 h-3"
       />
   </button>
-</div>
-    )}  
-      <div className="mt-6 text-center">
-        <OneSignalButton />
-      </div>
     </div>
-  );
+  )}  
+
+  <div className="mt-6 text-center">
+    <OneSignalButton />
+  </div>
+</div>
+);
 };
 
 export default PostDetail;
