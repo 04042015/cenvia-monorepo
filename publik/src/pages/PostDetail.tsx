@@ -519,22 +519,22 @@ return (
   <button
     onClick={() => {
       navigator.clipboard.writeText(window.location.href);
-      alert("✅ Link disalin!");
+      alert("disalin!");
     }}
     className="w-7 h-7 flex items-center justify-center rounded-full bg-[#3E3E3E]"
   >
     <img
-        src="https://img.icons8.com/ios-filled/50/FFFFFF/link.png"
-        alt="Copy Link"
-        className="w-3 h-3"
-      />
+      src="https://img.icons8.com/ios-filled/50/FFFFFF/link.png"
+      alt="Copy Link"
+      className="w-3 h-3"
+    />
   </button>
-    </div>
-  )}  
+</div>
+)}
 
-  <div className="mt-6 text-center">
-    <OneSignalButton />
-  </div>
+<div className="mt-6 text-center">
+  <OneSignalButton />
+</div>
 </div>
 );
 };
