@@ -439,13 +439,13 @@ const ogImage = post.thumbnail || "https://cenvia.vercel.app/default-og-image.jp
       </div>
 
             {/* 🔗 Tombol Share Mengambang */}
-<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-3 bg-white dark:bg-gray-800 shadow-xl px-2 py-1 rounded-full scale-95">
+<div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-lg px-1.5 py-1 rounded-full">
   {/* Facebook */}
   <a
     href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
     target="_blank"
     rel="noopener noreferrer"
-    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1877F2]"
+    className="w-6 h-6 flex items-center justify-center rounded-full bg-[#1877F2]"
   >
     <img
       src="https://cdn.simpleicons.org/facebook/FFFFFF"
@@ -459,7 +459,7 @@ const ogImage = post.thumbnail || "https://cenvia.vercel.app/default-og-image.jp
     href={`https://t.me/share/url?url=${window.location.href}`}
     target="_blank"
     rel="noopener noreferrer"
-    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#229ED9]"
+    className="w-6 h-6 flex items-center justify-center rounded-full bg-[#229ED9]"
   >
     <img
       src="https://cdn.simpleicons.org/telegram/FFFFFF"
@@ -473,7 +473,7 @@ const ogImage = post.thumbnail || "https://cenvia.vercel.app/default-og-image.jp
     href={`https://api.whatsapp.com/send?text=${window.location.href}`}
     target="_blank"
     rel="noopener noreferrer"
-    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#25D366]"
+    className="w-6 h-6 flex items-center justify-center rounded-full bg-[#25D366]"
   >
     <img
       src="https://cdn.simpleicons.org/whatsapp/FFFFFF"
@@ -487,7 +487,7 @@ const ogImage = post.thumbnail || "https://cenvia.vercel.app/default-og-image.jp
     href={`https://twitter.com/intent/tweet?url=${window.location.href}`}
     target="_blank"
     rel="noopener noreferrer"
-    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1DA1F2]"
+    className="w-6 h-6 flex items-center justify-center rounded-full bg-[#000000]"
   >
     <img
       src="https://cdn.simpleicons.org/x/FFFFFF"
@@ -500,9 +500,9 @@ const ogImage = post.thumbnail || "https://cenvia.vercel.app/default-og-image.jp
   <button
     onClick={() => {
       navigator.clipboard.writeText(window.location.href);
-      alert("✅ Link disalin!");
+      alert("Disalin!");
     }}
-    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#3E3E3E]"
+    className="w-6 h-6 flex items-center justify-center rounded-full bg-[#3E3E3E]"
   >
     <img
         src="https://img.icons8.com/ios-filled/50/FFFFFF/link.png"
