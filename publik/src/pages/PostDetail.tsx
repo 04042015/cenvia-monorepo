@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { toast } from "@/components/ui/use-toast";
 import OneSignalButton from "@/components/OneSignalButton";
 import { Helmet } from "react-helmet-async";
+import { useRef } from "react";
 
 interface Post {
   id: string;
@@ -92,45 +93,24 @@ const PostDetail = () => {
     if (slug) fetchPost();
   }, [slug]);
 
-    // 👇 Pastikan ini ada
 const [showFloatingShare, setShowFloatingShare] = useState(false);
+const titleRef = useRef<HTMLHeadingElement | null>(null);
 
 useEffect(() => {
-  const handleScroll = () => {
-    const title = document.querySelector("h1");
-    if (!title) return;
+  if (!titleRef.current) return;
 
-    const rect = title.getBoundingClientRect();
-    // tampilkan tombol jika judul sudah lewat ke atas layar
-    if (rect.bottom < 0) {
-      setShowFloatingShare(true);
-    } else {
-      setShowFloatingShare(false);
-    }
-  };
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+      // kalau judul keluar dari layar → tampilkan tombol share
+      setShowFloatingShare(!entry.isIntersecting);
+    },
+    { threshold: 0 }
+  );
 
-  window.addEventListener("scroll", handleScroll);
-  handleScroll(); // jalankan sekali saat awal
-  return () => window.removeEventListener("scroll", handleScroll);
+  observer.observe(titleRef.current);
+  return () => observer.disconnect();
 }, []);
-  
-if (!post) return <p className="text-center py-10">Loading...</p>;
-
-const shareUrl =
-  typeof window !== "undefined"
-    ? `${window.location.origin}/post/${post.slug}`
-    : `/post/${post.slug}`;
-
-const ogImage = post.thumbnail || "/default-og-image.jpg";
-
-// 🔍 DEBUG scroll state (sementara aja)
-console.log("showFloatingShare:", showFloatingShare); // kalau mau lihat di log
-// atau tampilkan langsung di layar:
-const debugScroll = (
-  <p className="fixed top-2 left-2 bg-white text-black z-[9999] text-xs px-2 py-1 rounded">
-    Scroll: {showFloatingShare ? "ON" : "OFF"}
-  </p>
-);
 
 return (
   <>
@@ -174,11 +154,10 @@ return (
 
       {/* Title */}
       <h1
+  ref={titleRef}
   className="text-2xl sm:text-3xl font-extrabold mb-4 leading-snug text-center"
   style={{ color: post.category?.color || "#000" }}
 >
-  {post.title}
-</h1>
 
       {/* Meta info */}
       <div className="flex flex-wrap justify-center items-center text-xs text-gray-600 mb-3 gap-2">
