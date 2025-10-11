@@ -533,9 +533,10 @@ return (
 )}
 
 <div className="mt-6 text-center">
-  <OneSignalButton />
-</div>
-</div>
+        <OneSignalButton />
+      </div>
+    </div>
+  </>
 );
 };
 
