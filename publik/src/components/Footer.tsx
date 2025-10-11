@@ -1,3 +1,4 @@
+// publik/src/components/Footer.tsx
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
@@ -93,6 +94,10 @@ const Footer = () => {
               <FooterLink to="/disclaimer" text="Disclaimer" />
               <FooterLink to="/advertise" text="Advertise with Us" />
               <FooterLink to="/rss" text="RSS Feed" />
+              {/* ✅ Tambahan penting untuk SEO & kepercayaan */}
+              <FooterLink to="/editorial" text="Editorial Team" />
+              <FooterLink to="/career" text="Career" />
+              <FooterLink to="/partnership" text="Partnership" />
             </ul>
           </div>
         </div>
