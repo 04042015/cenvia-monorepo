@@ -114,6 +114,8 @@ const shareUrl =
     ? `${window.location.origin}/post/${post.slug}`
     : `/post/${post.slug}`;
 
+const ogImage = post.thumbnail || "https://cenvia.vercel.app/default-og-image.jpg"; // ✅ Tambahkan ini
+
   return (
     <div className="container mx-auto px-3 pt-20 pb-6 max-w-3xl">
       {/* ✅ Meta OG update */}
