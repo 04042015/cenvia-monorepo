@@ -92,452 +92,348 @@ const PostDetail = () => {
     if (slug) fetchPost();
   }, [slug]);
 
-    // 👇 Pastikan ini ada
-const [showFloatingShare, setShowFloatingShare] = useState(false);
+  // 👇 Floating share visibility
+  const [showFloatingShare, setShowFloatingShare] = useState(false);
 
-useEffect(() => {
-  const handleScroll = () => {
-    const title = document.querySelector("h1");
-    if (!title) return;
+  useEffect(() => {
+    const handleScroll = () => {
+      const title = document.querySelector("h1");
+      if (!title) return;
 
-    const rect = title.getBoundingClientRect();
-    // tampilkan tombol jika judul sudah lewat ke atas layar
-    if (rect.bottom < 0) {
-      setShowFloatingShare(true);
-    } else {
-      setShowFloatingShare(false);
-    }
-  };
+      const rect = title.getBoundingClientRect();
+      // tampilkan tombol jika judul sudah lewat ke atas layar
+      if (rect.bottom < 0) {
+        setShowFloatingShare(true);
+      } else {
+        setShowFloatingShare(false);
+      }
+    };
 
-  window.addEventListener("scroll", handleScroll);
-  handleScroll(); // jalankan sekali saat awal
-  return () => window.removeEventListener("scroll", handleScroll);
-}, []);
-  
-if (!post) return <p className="text-center py-10">Loading...</p>;
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // jalankan sekali saat awal
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-const shareUrl =
-  typeof window !== "undefined"
-    ? `${window.location.origin}/post/${post.slug}`
-    : `/post/${post.slug}`;
+  if (!post) return <p className="text-center py-10">Loading...</p>;
 
-const ogImage = post.thumbnail || "/default-og-image.jpg";
+  const shareUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/post/${post.slug}`
+      : `/post/${post.slug}`;
 
-// 🔍 DEBUG scroll state (sementara aja)
-console.log("showFloatingShare:", showFloatingShare); // kalau mau lihat di log
-// atau tampilkan langsung di layar:
-const debugScroll = (
-  <p className="fixed top-2 left-2 bg-white text-black z-[9999] text-xs px-2 py-1 rounded">
-    Scroll: {showFloatingShare ? "ON" : "OFF"}
-  </p>
-);
+  const ogImage = post.thumbnail || "/default-og-image.jpg";
 
-return (
-  <>
-    {debugScroll} {/* tampilkan indikator di layar */}
-    <div className="container mx-auto px-3 pt-20 pb-6 max-w-3xl">
-      {/* ✅ Meta OG update */}
-      <Helmet>
-        <title>{post.title} | CENVIA</title>
-        <meta name="description" content={post.excerpt || post.title} />
+  return (
+    <>
+      {/* Debug optional */}
+      {/* <p className="fixed top-2 left-2 bg-white text-black z-[9999] text-xs px-2 py-1 rounded">
+        Scroll: {showFloatingShare ? "ON" : "OFF"}
+      </p> */}
 
-        <meta property="og:title" content={post.title} />
-        <meta property="og:description" content={post.excerpt || post.title} />
-        <meta property="og:image" content={ogImage} />
-        <meta property="og:url" content={shareUrl} />
-        <meta property="og:type" content="article" />
+      <div className="container mx-auto px-3 pt-20 pb-6 max-w-3xl">
+        <Helmet>
+          <title>{post.title} | CENVIA</title>
+          <meta name="description" content={post.excerpt || post.title} />
+          <meta property="og:title" content={post.title} />
+          <meta property="og:description" content={post.excerpt || post.title} />
+          <meta property="og:image" content={ogImage} />
+          <meta property="og:url" content={shareUrl} />
+          <meta property="og:type" content="article" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={post.title} />
+          <meta name="twitter:description" content={post.excerpt || post.title} />
+          <meta name="twitter:image" content={ogImage} />
+        </Helmet>
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={post.title} />
-        <meta name="twitter:description" content={post.excerpt || post.title} />
-        <meta name="twitter:image" content={ogImage} />
-      </Helmet>
-
-      {/* Breadcrumb */}
-      <nav className="text-xs text-gray-500 mb-2 text-center">
-        <Link to="/" className="hover:underline">Home</Link>
-        {post.category && (
-          <>
-            <span className="mx-1">›</span>
-            <Link
-              to={`/category/${post.category?.slug || "#"}`}
-              style={{ color: post.category?.color || "#000" }}
-              className="font-medium hover:underline"
-            >
-              {post.category?.name || "Umum"}
-            </Link>
-          </>
-        )}
-        <span className="mx-1">›</span>
-        <span className="text-gray-700">{post.title}</span>
-      </nav>
-
-      {/* Title */}
-      <h1
-  className="text-2xl sm:text-3xl font-extrabold mb-4 leading-snug text-center"
-  style={{ color: post.category?.color || "#000" }}
->
-  {post.title}
-</h1>
-
-      {/* Meta info */}
-      <div className="flex flex-wrap justify-center items-center text-xs text-gray-600 mb-3 gap-2">
-        <span className="font-medium">{post.author?.full_name || "Admin"}</span>
-        <span>•</span>
-        <span>{dayjs(post.published_at || post.created_at).format("DD MMMM YYYY")}</span>
-        <span>•</span>
-        <span>{post.views ?? 0} views</span>
-      </div>
-
-      {/* Share Section */}
-<div className="text-center mb-4">
-  <div className="flex justify-center flex-wrap gap-2 mt-2">
-    {/* Facebook */}
-    <a
-      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 transition"
-    >
-      <img
-        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg"
-        alt="Facebook"
-        className="w-4 h-4 invert"
-      />
-    </a>
-
-    {/* X / Twitter */}
-    <a
-      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="p-2 rounded-full bg-black hover:bg-neutral-800 transition"
-    >
-      <img
-        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg"
-        alt="X"
-        className="w-4 h-4 invert"
-      />
-    </a>
-
-    {/* WhatsApp */}
-    <a
-      href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="p-2 rounded-full bg-green-500 hover:bg-green-600 transition"
-    >
-      <img
-        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg"
-        alt="WhatsApp"
-        className="w-4 h-4 invert"
-      />
-    </a>
-
-    {/* Telegram */}
-    <a
-      href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="p-2 rounded-full bg-sky-600 hover:bg-sky-700 transition"
-    >
-      <img
-        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg"
-        alt="Telegram"
-        className="w-4 h-4 invert"
-      />
-    </a>
-
-    {/* LinkedIn */}
-    <a
-      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="p-2 rounded-full bg-blue-800 hover:bg-blue-900 transition"
-    >
-      <img
-        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg"
-        alt="LinkedIn"
-        className="w-4 h-4 invert"
-      />
-    </a>
-
-    {/* Copy Link */}
-    <button
-      onClick={() => {
-        try {
-          navigator.clipboard.writeText(shareUrl);
-          toast({ description: "Disalin!" });
-        } catch (e) {
-          toast({ description: "Gagal menyalin link" });
-        }
-      }}
-      className="p-2 rounded-full bg-gray-600 hover:bg-gray-700 transition"
-    >
-      <img
-        src="https://img.icons8.com/ios-filled/50/FFFFFF/link.png"
-        alt="Copy Link"
-        className="w-4 h-4"
-      />
-    </button>
-  </div>
-</div>
-      
-      {/* Thumbnail */}
-      {post.thumbnail && (
-        <figure className="mb-4">
-          <img src={post.thumbnail} alt={post.title} className="w-full max-w-3xl mx-auto rounded-lg shadow-sm" />
-          {post.excerpt && (
-            <figcaption className="text-xs text-gray-500 mt-1 italic text-center">
-              {post.excerpt}
-            </figcaption>
-          )}
-        </figure>
-      )}
-
-      {/* Artikel utama */}
-<article className="prose prose-base max-w-none leading-relaxed text-left mb-6 article-body font-bold">
-        {post.content
-          ? post.content.split(/<\/p>/i).map((part, i) => {
-              if (!part.trim()) return null;
-              return (
-                <div key={i}>
-                  <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
-                  {i === 1 && (
-                    <div className="my-4">
-                      <AdSlot position="content" />
-                    </div>
-                  )}
-                </div>
-              );
-            })
-          : <p className="italic text-gray-500">Konten belum tersedia</p>}
-      </article>
-
-      {/* Related */}
-{related.length > 0 && (
-  <div className="border-l-4 border-gray-300 pl-3 mb-6">
-    <h2 className="font-extrabold text-base mb-2">Baca Juga</h2>
-    <ul className="space-y-1 text-blue-600 font-semibold">
-      {related.slice(0, 2).map((p) => (
-        <li key={p.id}>
-          <Link to={`/post/${p.slug}`} className="hover:underline">
-            {p.title}
+        {/* Breadcrumb */}
+        <nav className="text-xs text-gray-500 mb-2 text-center">
+          <Link to="/" className="hover:underline">
+            Home
           </Link>
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
+          {post.category && (
+            <>
+              <span className="mx-1">›</span>
+              <Link
+                to={`/category/${post.category?.slug || "#"}`}
+                style={{ color: post.category?.color || "#000" }}
+                className="font-medium hover:underline"
+              >
+                {post.category?.name || "Umum"}
+              </Link>
+            </>
+          )}
+          <span className="mx-1">›</span>
+          <span className="text-gray-700">{post.title}</span>
+        </nav>
 
-{/* Tags */}
-{post.tags && post.tags.length > 0 && (
-  <div className="mb-6">
-    <h3 className="font-semibold mb-2 text-sm">Tags:</h3>
-    <div className="flex flex-wrap gap-2">
-      {post.tags.map((tag, i) => (
-        <Link
-          key={i}
-          to={`/tag/${tag}`}
-          className="px-3 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded-full"
+        {/* Title */}
+        <h1
+          className="text-2xl sm:text-3xl font-extrabold mb-4 leading-snug text-center"
+          style={{ color: post.category?.color || "#000" }}
         >
-          #{tag}
-        </Link>
-      ))}
-    </div>
-  </div>
-)}
+          {post.title}
+        </h1>
 
-{/* Related news */}
-<section className="mb-6">
-  <h2 className="text-lg font-extrabold mb-3">Berita Terkait</h2>
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-    {related.map((p) => (
-      <Link
-        key={p.id}
-        to={`/post/${p.slug}`}
-        className="block border rounded-lg overflow-hidden hover:shadow-md transition"
-      >
-        {p.thumbnail && (
-          <img
-            src={p.thumbnail}
-            alt={p.title}
-            className="h-36 w-full object-cover"
-          />
+        {/* Meta */}
+        <div className="flex flex-wrap justify-center items-center text-xs text-gray-600 mb-3 gap-2">
+          <span className="font-medium">{post.author?.full_name || "Admin"}</span>
+          <span>•</span>
+          <span>{dayjs(post.published_at || post.created_at).format("DD MMMM YYYY")}</span>
+          <span>•</span>
+          <span>{post.views ?? 0} views</span>
+        </div>
+
+        {/* Tombol share biasa */}
+        <div className="text-center mb-4">
+          <div className="flex justify-center flex-wrap gap-2 mt-2">
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                shareUrl
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full bg-blue-600 hover:bg-blue-700 transition"
+            >
+              <img
+                src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg"
+                alt="Facebook"
+                className="w-4 h-4 invert"
+              />
+            </a>
+
+            <a
+              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full bg-black hover:bg-neutral-800 transition"
+            >
+              <img
+                src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg"
+                alt="X"
+                className="w-4 h-4 invert"
+              />
+            </a>
+
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full bg-green-500 hover:bg-green-600 transition"
+            >
+              <img
+                src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg"
+                alt="WhatsApp"
+                className="w-4 h-4 invert"
+              />
+            </a>
+
+            <a
+              href={`https://t.me/share/url?url=${encodeURIComponent(
+                shareUrl
+              )}&text=${encodeURIComponent(post.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full bg-sky-600 hover:bg-sky-700 transition"
+            >
+              <img
+                src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg"
+                alt="Telegram"
+                className="w-4 h-4 invert"
+              />
+            </a>
+
+            <a
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                shareUrl
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full bg-blue-800 hover:bg-blue-900 transition"
+            >
+              <img
+                src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg"
+                alt="LinkedIn"
+                className="w-4 h-4 invert"
+              />
+            </a>
+
+            <button
+              onClick={() => {
+                try {
+                  navigator.clipboard.writeText(shareUrl);
+                  toast({ description: "Disalin!" });
+                } catch {
+                  toast({ description: "Gagal menyalin link" });
+                }
+              }}
+              className="p-2 rounded-full bg-gray-600 hover:bg-gray-700 transition"
+            >
+              <img
+                src="https://img.icons8.com/ios-filled/50/FFFFFF/link.png"
+                alt="Copy Link"
+                className="w-4 h-4"
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Thumbnail */}
+        {post.thumbnail && (
+          <figure className="mb-4">
+            <img
+              src={post.thumbnail}
+              alt={post.title}
+              className="w-full max-w-3xl mx-auto rounded-lg shadow-sm"
+            />
+            {post.excerpt && (
+              <figcaption className="text-xs text-gray-500 mt-1 italic text-center">
+                {post.excerpt}
+              </figcaption>
+            )}
+          </figure>
         )}
-        <div className="p-2 text-sm font-semibold">{p.title}</div>
-      </Link>
-    ))}
-  </div>
-</section>
 
-{/* Recommended */}
-<section className="mb-6">
-  <h2 className="text-lg font-extrabold mb-3">Rekomendasi Untukmu</h2>
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-    {recommended.map((p) => (
-      <Link
-        key={p.id}
-        to={`/post/${p.slug}`}
-        className="block border rounded-lg overflow-hidden hover:shadow-md transition"
-      >
-        {p.thumbnail && (
-          <img
-            src={p.thumbnail}
-            alt={p.title}
-            className="h-36 w-full object-cover"
-          />
-        )}
-        <div className="p-2 text-sm font-semibold">{p.title}</div>
-      </Link>
-    ))}
-  </div>
-</section>
-
-{/* Other */}
-<section className="mb-6">
-  <h2 className="text-lg font-extrabold mb-3">Berita Cenvia Lainnya</h2>
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-    {others.map((p) => (
-      <Link
-        key={p.id}
-        to={`/post/${p.slug}`}
-        className="block border rounded-lg overflow-hidden hover:shadow-md transition"
-      >
-        {p.thumbnail && (
-          <img
-            src={p.thumbnail}
-            alt={p.title}
-            className="h-36 w-full object-cover"
-          />
-        )}
-        <div className="p-2 text-sm font-semibold">{p.title}</div>
-      </Link>
-    ))}
-  </div>
-</section>
-
-      {/* Newsletter */}
-      <div className="mt-6 p-3 border rounded-lg bg-gray-50 text-center">
-        <p className="text-sm font-medium mb-2">Subscribe untuk update berita terbaru</p>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            const form = e.target as HTMLFormElement;
-            const input = form.elements.namedItem("email") as HTMLInputElement;
-            const email = input.value;
-            if (!email) {
-              alert("Masukkan email dulu");
-              return;
-            }
-            supabase.from("subscribers").insert([{ email }])
-              .then(() => {
-                alert("Terima kasih, email tersimpan");
-                input.value = "";
+        {/* Konten utama */}
+        <article className="prose prose-base max-w-none leading-relaxed text-left mb-6 article-body font-bold">
+          {post.content
+            ? post.content.split(/<\/p>/i).map((part, i) => {
+                if (!part.trim()) return null;
+                return (
+                  <div key={i}>
+                    <div dangerouslySetInnerHTML={{ __html: part + "</p>" }} />
+                    {i === 1 && (
+                      <div className="my-4">
+                        <AdSlot position="content" />
+                      </div>
+                    )}
+                  </div>
+                );
               })
-              .catch(() => {
-                alert("Gagal menyimpan, coba lagi");
-              });
-          }}
-          className="flex justify-center gap-0"
-        >
-          <input
-            name="email"
-            type="email"
-            placeholder="Email anda"
-            className="border px-2 py-1 rounded-l-md text-sm w-2/3"
-          />
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-3 py-1 text-sm rounded-r-md"
-          >
-            Subscribe
-          </button>
-        </form>
+            : <p className="italic text-gray-500">Konten belum tersedia</p>}
+        </article>
+
+        {/* Related */}
+        {related.length > 0 && (
+          <div className="border-l-4 border-gray-300 pl-3 mb-6">
+            <h2 className="font-extrabold text-base mb-2">Baca Juga</h2>
+            <ul className="space-y-1 text-blue-600 font-semibold">
+              {related.slice(0, 2).map((p) => (
+                <li key={p.id}>
+                  <Link to={`/post/${p.slug}`} className="hover:underline">
+                    {p.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Tags */}
+        {post.tags && post.tags.length > 0 && (
+          <div className="mb-6">
+            <h3 className="font-semibold mb-2 text-sm">Tags:</h3>
+            <div className="flex flex-wrap gap-2">
+              {post.tags.map((tag, i) => (
+                <Link
+                  key={i}
+                  to={`/tag/${tag}`}
+                  className="px-3 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded-full"
+                >
+                  #{tag}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 🔘 Floating Share Bar */}
+        {showFloatingShare && (
+          <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[9999] flex gap-2 bg-white dark:bg-gray-800 shadow-lg px-3 py-1.5 rounded-full transition-all duration-300">
+            {/* Facebook */}
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                shareUrl
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-7 h-7 flex items-center justify-center rounded-full bg-[#1877F2]"
+            >
+              <img
+                src="https://cdn.simpleicons.org/facebook/FFFFFF"
+                alt="Facebook"
+                className="w-3 h-3"
+              />
+            </a>
+
+            {/* Telegram */}
+            <a
+              href={`https://t.me/share/url?url=${encodeURIComponent(
+                shareUrl
+              )}&text=${encodeURIComponent(post.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-7 h-7 flex items-center justify-center rounded-full bg-[#229ED9]"
+            >
+              <img
+                src="https://cdn.simpleicons.org/telegram/FFFFFF"
+                alt="Telegram"
+                className="w-3 h-3"
+              />
+            </a>
+
+            {/* WhatsApp */}
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-7 h-7 flex items-center justify-center rounded-full bg-[#25D366]"
+            >
+              <img
+                src="https://cdn.simpleicons.org/whatsapp/FFFFFF"
+                alt="WhatsApp"
+                className="w-3 h-3"
+              />
+            </a>
+
+            {/* X / Twitter */}
+            <a
+              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                shareUrl
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-7 h-7 flex items-center justify-center rounded-full bg-[#1DA1F2]"
+            >
+              <img
+                src="https://cdn.simpleicons.org/x/FFFFFF"
+                alt="X"
+                className="w-3 h-3"
+              />
+            </a>
+
+            {/* Copy Link */}
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                alert("disalin!");
+              }}
+              className="w-7 h-7 flex items-center justify-center rounded-full bg-[#3E3E3E]"
+            >
+              <img
+                src="https://img.icons8.com/ios-filled/50/FFFFFF/link.png"
+                alt="Copy Link"
+                className="w-3 h-3"
+              />
+            </button>
+          </div>
+        )}
+
+        <div className="mt-10 text-center">
+          <OneSignalButton />
+        </div>
       </div>
-
-            {/* 🔗 Tombol Share Mengambang */}
-     {showFloatingShare && (
-  <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-2 bg-white dark:bg-gray-800 shadow-xl px-3 py-1.5 rounded-full transition-all duration-300">
-    {/* Facebook */}
-  <a
-    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="w-7 h-7 flex items-center justify-center rounded-full bg-[#1877F2]"
-  >
-    <img
-      src="https://cdn.simpleicons.org/facebook/FFFFFF"
-      alt="Facebook"
-      className="w-3 h-3"
-    />
-  </a>
-
-  {/* Telegram */}
-  <a
-    href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
-      target="_blank"
-    rel="noopener noreferrer"
-    className="w-7 h-7 flex items-center justify-center rounded-full bg-[#229ED9]"
-  >
-    <img
-      src="https://cdn.simpleicons.org/telegram/FFFFFF"
-      alt="Telegram"
-      className="w-3 h-3"
-    />
-  </a>
-
-  {/* WhatsApp */}
-  <a
-    href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="w-7 h-7 flex items-center justify-center rounded-full bg-[#25D366]"
-  >
-    <img
-      src="https://cdn.simpleicons.org/whatsapp/FFFFFF"
-      alt="WhatsApp"
-      className="w-3 h-3"
-    />
-  </a>
-
-  {/* Twitter / X */}
-  <a
-    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="w-7 h-7 flex items-center justify-center rounded-full bg-[#1DA1F2]"
-  >
-    <img
-      src="https://cdn.simpleicons.org/x/FFFFFF"
-      alt="X (Twitter)"
-      className="w-3 h-3"
-    />
-  </a>
-
-  {/* Copy Link */}
-  <button
-    onClick={() => {
-      navigator.clipboard.writeText(window.location.href);
-      alert("disalin!");
-    }}
-    className="w-7 h-7 flex items-center justify-center rounded-full bg-[#3E3E3E]"
-  >
-    <img
-      src="https://img.icons8.com/ios-filled/50/FFFFFF/link.png"
-      alt="Copy Link"
-      className="w-3 h-3"
-    />
-  </button>
-</div>
-)}
-
-<div className="mt-6 text-center">
-        <OneSignalButton />
-      </div>
-    </div>
-  </>
-);
+    </>
+  );
 };
 
 export default PostDetail;
