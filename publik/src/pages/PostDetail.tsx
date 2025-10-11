@@ -515,7 +515,6 @@ return (
         <OneSignalButton />
       </div>
     </div>
-  </>
 );
 };
 
