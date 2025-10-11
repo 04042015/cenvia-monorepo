@@ -18,6 +18,7 @@ import RSS from "./pages/RSS";
 import ScrollToTop from "./components/ScrollToTop";
 import Interstitial from "./pages/Interstitial";
 import Disclaimer from "./pages/Disclaimer";
+import Editorial from "./pages/Editorial";
 
 // ✅ Import ads
 import PopupAd from "./components/ads/PopupAd";
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/rss" element={<RSS />} />
               <Route path="/interstitial/:slug" element={<Interstitial />} />
               <Route path="/disclaimer" element={<Disclaimer />} />
+              <Route path="/editorial" element={<Editorial />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
@@ -64,4 +66,5 @@ const App = () => (
 );
 
 export default App;
+
 
