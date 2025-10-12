@@ -35,10 +35,17 @@ export default async function handler(req, res) {
       ${urls}
     </urlset>`;
 
-    res.setHeader('Content-Type', 'application/xml');
-    res.status(200).send(sitemap);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
+res.status(200).send(sitemap.trim());
+  } 
+  catch (err) {
+  console.error(err);
+  const errorXML = `<?xml version="1.0" encoding="UTF-8"?>
+  <error>
+    <message>Internal Server Error</message>
+  </error>`;
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.status(500).send(errorXML);
   }
 }
