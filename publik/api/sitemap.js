@@ -5,7 +5,7 @@ const supabase = createClient(
   process.env.SUPABASE_PUBLISHABLE_KEY
 );
 
-export default async function handler(req, res) {
+export async function GET(req, res) {
   try {
     const { data: posts, error } = await supabase
       .from('posts') // ganti sesuai nama tabel
