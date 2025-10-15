@@ -117,14 +117,7 @@ const shareUrl =
 
 const ogImage = post.thumbnail || "https://cenvia.vercel.app/default-og-image.jpg"; // ✅ Tambahkan ini
 
-<NewsSchema article={{
-  title: article.title,
-  description: article.description,
-  imageUrl: article.image_url,
-  slug: article.slug,
-  publishedAt: article.created_at,
-  updatedAt: article.updated_at
-}} />
+
   
   return (
     <div className="container mx-auto px-3 pt-20 pb-6 max-w-3xl">
@@ -145,6 +138,17 @@ const ogImage = post.thumbnail || "https://cenvia.vercel.app/default-og-image.jp
         <meta name="twitter:image" content={ogImage} />
       </Helmet>
 
+      
+{/* ✅ Structured data schema */}
+<NewsSchema article={{
+  title: post.title,
+  description: post.excerpt || post.title,
+  imageUrl: post.thumbnail || "https://cenvia.vercel.app/default-og-image.jpg",
+  slug: post.slug,
+  publishedAt: post.published_at || post.created_at,
+  updatedAt: post.created_at
+}} />
+      
       {/* Breadcrumb */}
       <nav className="text-xs text-gray-500 mb-2 text-center">
         <Link to="/" className="hover:underline">Home</Link>
