@@ -27,6 +27,9 @@ import ScriptPopup from "./components/ads/ScriptPopup";
 // ✅ Import HelmetProvider
 import { HelmetProvider } from "react-helmet-async";
 
+// ✅ Tambahkan import ini
+import OrganizationSchema from "@/components/OrganizationSchema";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -38,6 +41,9 @@ const App = () => (
         <BrowserRouter>
           <ScrollToTop />
 
+          {/* ✅ Schema organisasi Google News */}
+          <OrganizationSchema />
+          
           {/* ✅ Popup global biar muncul di semua halaman */}
           <PopupAd />
           <ScriptPopup />
@@ -66,5 +72,6 @@ const App = () => (
 );
 
 export default App;
+
 
 
