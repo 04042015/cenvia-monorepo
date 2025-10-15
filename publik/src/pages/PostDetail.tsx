@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { toast } from "@/components/ui/use-toast";
 import OneSignalButton from "@/components/OneSignalButton";
 import { Helmet } from "react-helmet-async";
+import NewsSchema from "@/components/NewsSchema";
 
 interface Post {
   id: string;
@@ -116,6 +117,15 @@ const shareUrl =
 
 const ogImage = post.thumbnail || "https://cenvia.vercel.app/default-og-image.jpg"; // ✅ Tambahkan ini
 
+<NewsSchema article={{
+  title: article.title,
+  description: article.description,
+  imageUrl: article.image_url,
+  slug: article.slug,
+  publishedAt: article.created_at,
+  updatedAt: article.updated_at
+}} />
+  
   return (
     <div className="container mx-auto px-3 pt-20 pb-6 max-w-3xl">
       {/* ✅ Meta OG update */}
