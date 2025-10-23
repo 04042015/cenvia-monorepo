@@ -9,5 +9,11 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "https://service.prerender.io/https://cenvia.vercel.app/$1"
+    }
   ]
 }
