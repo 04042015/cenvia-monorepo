@@ -8,6 +8,7 @@ import { toast } from "@/components/ui/use-toast";
 import OneSignalButton from "@/components/OneSignalButton";
 import { Helmet } from "react-helmet-async";
 import NewsSchema from "@/components/NewsSchema";
+import { setMetaTags } from "@/utils/setMetaTags";
 
 interface Post {
   id: string;
@@ -92,6 +93,22 @@ const PostDetail = () => {
 
     if (slug) fetchPost();
   }, [slug]);
+
+  useEffect(() => {
+    if (post) {
+      setMetaTags({
+        title: `${post.title} - CENVIA`,
+        description:
+          post.description ||
+          post.excerpt ||
+          "Berita terkini dari CENVIA",
+        image:
+          post.thumbnail ||
+          "https://kuoawzlabmwhvfcahcfm.supabase.co/storage/v1/object/public/assets/logo-cenvia.jpg",
+        url: `https://cenvia.vercel.app/post/${post.slug}`,
+      });
+    }
+  }, [post]);
 
 const [showFloatingShare, setShowFloatingShare] = useState(false);
 
